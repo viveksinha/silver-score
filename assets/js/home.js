@@ -67,9 +67,7 @@
     pitchEl.innerHTML =
       '<strong class="pitch-stat">' +
       data.totalRatings.toLocaleString() +
-      '</strong> IMDb ratings across <strong class="pitch-stat">' +
-      data.mainItems.toLocaleString() +
-      '</strong> titles. One through line: tension, craft, and stories that don’t talk down. Start with picks below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full archive</a>.';
+      '</strong> IMDb ratings. One through line: tension, craft, and stories that don’t talk down. Start with picks below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full archive</a>.';
   }
 
   function daysSinceRated(iso) {
