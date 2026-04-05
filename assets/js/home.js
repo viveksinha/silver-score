@@ -77,7 +77,7 @@
   var pitchEl = document.getElementById('hero-pitch');
   if (pitchEl) {
     pitchEl.innerHTML =
-      '~<strong class="pitch-stat">10,000</strong> hours across <strong class="pitch-stat">1,000+</strong> titles on IMDb. One through line: tension, craft, and stories that don’t talk down. Start with picks below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full archive</a>.';
+      '~<strong class="pitch-stat">8,500+</strong> hours across <strong class="pitch-stat">1,000+</strong> titles on IMDb. One through line: tension, craft, and stories that don’t talk down. Start with picks below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full archive</a>.';
   }
 
   function daysSinceRated(iso) {
@@ -423,7 +423,7 @@
   }).length;
 
   var statCards = [
-    { value: '~10,000', label: 'Est. hours watched', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
+    { value: '~8,500+', label: 'Est. hours watched', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
     { value: '1,000+', label: 'Titles rated', icon: '◆', mod: 'stat-card--b' },
     { value: movieCount, label: 'Films', icon: '▣', mod: 'stat-card--c' },
     { value: tvCount, label: 'Series & minis', icon: '▤', mod: 'stat-card--d' },
