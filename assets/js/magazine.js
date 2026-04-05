@@ -28,7 +28,7 @@ const MAGAZINE = {
       slug: 'spy-thriller-escape',
       title: 'Spy & Thriller Escape Room',
       thesis:
-        'Agencies, aliases, and anxiety — the shows we return to when we want competence porn with consequences.',
+        'Agencies, aliases, and anxiety — the shows we return to when we want people who are scary-good at hard jobs, with real stakes.',
       spoiler: 'No spoilers',
       ids: [
         'tt4063800',
@@ -67,17 +67,17 @@ const MAGAZINE = {
   calendarHighlights: [
     {
       title: 'Korea on the calendar',
-      dek: 'Film and series we’re tracking — on Upcoming, use the Korean filter on the timeline.',
+      dek: 'Film and series we’re watching for — on Upcoming, pick Korea.',
       href: 'upcoming.html',
     },
     {
       title: 'French lane — releases we’re eyeing',
-      dek: 'Filter Upcoming by French for the current strip.',
+      dek: 'On Upcoming, pick French for what’s landing next.',
       href: 'upcoming.html',
     },
     {
       title: 'Japan — screens big and small',
-      dek: 'Animated, live-action, and hybrids landing soon — Japanese tab on the upcoming timeline.',
+      dek: 'Animated, live-action, and hybrids landing soon — on Upcoming, pick Japan.',
       href: 'upcoming.html',
     },
   ],

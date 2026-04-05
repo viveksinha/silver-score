@@ -96,7 +96,7 @@
     return { updateHeaderClasses: updateHeaderClasses, activate: activate };
   }
 
-  /** Wikidata / export original language string for filtering (matches table sort column). */
+  /** Original-language label for filtering (matches table sort column). */
   function languageKey(item) {
     if (!item) return '';
     return String(item.languageLabel || item.languageHint || '').trim();

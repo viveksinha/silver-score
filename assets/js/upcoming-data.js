@@ -175,7 +175,7 @@ window.UPCOMING_RELEASES = [
     imdbRating: "TBD",
     imdbUrl: "https://www.imdb.com/title/tt26598805",
     releaseDate: "2026–2027",
-    description: "Lars Kepler's Joona Linna universe: ex-soldier detective, a lethal serial killer, and an FBI agent. Nordic procedural DNA with US scope.",
+    description: "Lars Kepler's Joona Linna universe: ex-soldier detective, a lethal serial killer, and an FBI agent. Nordic procedural grit with US scope.",
     platform: "Apple TV+",
     tags: ["Nordic", "Crime"]
   },

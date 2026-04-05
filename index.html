@@ -43,24 +43,24 @@
 <main>
 <div class="container">
   <header class="mag-hero">
-    <span class="eyebrow">Cinema magazine + data</span>
+    <span class="eyebrow">Film, TV &amp; honest scores</span>
     <h1>We rate everything. Then we curate what matters.</h1>
     <p class="hero-sub" id="hero-pitch">Loading…</p>
   </header>
 
   <div class="stats-grid stats-grid--band" id="stats-grid"></div>
 
-  <section class="insight-strip" id="insight-strip" aria-label="Key takeaways"></section>
+  <section class="insight-strip" id="insight-strip" aria-label="Quick snapshot"></section>
 
   <section class="section fade-in" aria-labelledby="picks-heading">
     <div class="section-head">
-      <h2 class="section-title" id="picks-heading">Staff picks <span class="badge">Perfect 10s</span></h2>
-      <div class="seg-group" id="picks-seg" role="group" aria-label="Staff picks time range">
+      <h2 class="section-title" id="picks-heading">Top picks <span class="badge">Perfect 10s</span></h2>
+      <div class="seg-group" id="picks-seg" role="group" aria-label="Sort top picks">
         <button type="button" class="seg-btn seg-btn--active" data-picks-mode="recent" aria-pressed="true">Recent</button>
         <button type="button" class="seg-btn" data-picks-mode="alltime" aria-pressed="false">All time</button>
       </div>
     </div>
-    <p class="section-lede" id="picks-lede">Highest scores — <strong>Recent</strong> sorts by when we rated them; <strong>All time</strong> by IMDb crowd score.</p>
+    <p class="section-lede" id="picks-lede">Our straight 10s — <strong>Recent</strong> is newest first; <strong>All time</strong> is strongest IMDb score.</p>
     <div class="featured-grid" id="featured-picks"></div>
     <div class="section-actions">
       <a class="btn-outline" href="pages/read.html#curated-lists">Browse all lists</a>
@@ -71,12 +71,12 @@
   <section class="section fade-in" aria-labelledby="radar-heading">
     <div class="section-head">
       <h2 class="section-title" id="radar-heading">Under the radar <span class="badge">Low votes, high scores</span></h2>
-      <div class="seg-group" id="radar-seg" role="group" aria-label="Under the radar time range">
+      <div class="seg-group" id="radar-seg" role="group" aria-label="Sort under-the-radar list">
         <button type="button" class="seg-btn seg-btn--active" data-radar-mode="recent" aria-pressed="true">Recent</button>
         <button type="button" class="seg-btn" data-radar-mode="alltime" aria-pressed="false">All time</button>
       </div>
     </div>
-    <p class="section-lede">We rated these 8+ while fewer than 50k people had voted on IMDb. <strong>Recent</strong> favors titles we logged in the last ~18 months, then fills out.</p>
+    <p class="section-lede">We rated these 8+ when fewer than 50k people had voted on IMDb. <strong>Recent</strong> starts with what we rated in the last ~18 months.</p>
     <div class="featured-grid" id="radar-teaser"></div>
     <div class="section-actions">
       <a class="btn-outline" href="pages/hidden-gems.html">See the full shelf</a>
@@ -85,16 +85,16 @@
 
   <section class="section fade-in" aria-labelledby="world-heading">
     <h2 class="section-title" id="world-heading">Beyond English <span class="badge">World cinema &amp; TV</span></h2>
-    <p class="section-lede">Titles with a different original title or non-Latin script on IMDb — a rough proxy for non-English-first storytelling.</p>
+    <p class="section-lede">Different original title or non-Latin script on IMDb — mostly film and TV that wasn’t English-first.</p>
     <div class="featured-grid" id="world-picks"></div>
     <div class="section-actions">
-      <a class="btn-outline" href="pages/browse.html">Search the archive</a>
+      <a class="btn-outline" href="pages/browse.html">Search the full list</a>
     </div>
   </section>
 
   <section class="section fade-in" aria-labelledby="recent-heading">
-    <h2 class="section-title" id="recent-heading">Recently seen <span class="badge">Rated on</span></h2>
-    <p class="section-lede">Up to fifteen newest “rated on” rows (scroll inside the frame). Original language when Wikidata lists a non-English filming language for the title.</p>
+    <h2 class="section-title" id="recent-heading">Recently seen <span class="badge">New ratings</span></h2>
+    <p class="section-lede">The 15 titles we rated most recently (table scrolls sideways on small screens). Original language when IMDb lists it.</p>
     <div class="filter-bar">
       <select id="recent-lang-filter" aria-label="Filter by original language">
         <option value="">All languages</option>
@@ -104,7 +104,7 @@
       <table class="data-table" id="recent-table">
         <thead>
           <tr>
-            <th>Rated on</th>
+            <th>Date rated</th>
             <th>Title</th>
             <th>Original language</th>
             <th>Year</th>
@@ -123,24 +123,24 @@
 
   <section class="section fade-in" aria-labelledby="season-heading">
     <h2 class="section-title" id="season-heading">This month <span class="badge">Editorial</span></h2>
-    <p class="section-lede"><span class="coming-soon">Seasonal digest coming</span> — we’re lining up a short “what we’re watching next” note without turning the home page into an activity feed.</p>
+    <p class="section-lede"><span class="coming-soon">Coming soon</span> — a short monthly note on what we’re watching next.</p>
   </section>
 
   <div class="charts-row">
     <section class="section chart-panel fade-in" aria-labelledby="rating-dist-heading">
-      <h2 class="section-title" id="rating-dist-heading">How we distribute stars <span class="badge">Histogram</span></h2>
+      <h2 class="section-title" id="rating-dist-heading">How we use the 1–10 scale <span class="badge">Chart</span></h2>
       <div class="bar-chart" id="rating-chart"></div>
     </section>
     <section class="section chart-panel fade-in" aria-labelledby="decade-heading">
       <h2 class="section-title" id="decade-heading">By decade <span class="badge">Release year</span></h2>
-      <p class="section-lede chart-panel-lede">Where release years cluster in the catalogue (not when we hit play).</p>
+      <p class="section-lede chart-panel-lede">By release year — not the day we saved the rating.</p>
       <div class="bar-chart" id="decade-chart"></div>
     </section>
   </div>
 
   <section class="section fade-in" aria-labelledby="directors-heading">
     <h2 class="section-title" id="directors-heading">Directors we keep booking <span class="badge">3+ titles</span></h2>
-    <p class="section-lede">Averages and volume — <strong>Vibe</strong> blends our average, how many titles we’ve seen, and star tier (click headers to sort).</p>
+    <p class="section-lede"><strong>Score</strong> mixes our average, how many of their films we’ve seen, and star level. Click headers to sort.</p>
     <div class="filter-bar">
       <select id="directors-lang-filter" aria-label="Filter directors by original language of their titles">
         <option value="">All languages</option>
@@ -154,7 +154,7 @@
             <th data-sort-key="name" data-sort-default="asc">Director</th>
             <th data-sort-key="count" data-sort-default="desc">Titles</th>
             <th data-sort-key="avg" data-sort-default="desc">Our avg</th>
-            <th data-sort-key="vibe" data-sort-default="desc">Vibe</th>
+            <th data-sort-key="vibe" data-sort-default="desc">Score</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -164,7 +164,7 @@
 
   <section class="section fade-in" aria-labelledby="loved-heading">
     <h2 class="section-title" id="loved-heading">We liked it more than IMDb <span class="badge">Gap ≥ 1.5</span></h2>
-    <p class="section-lede">Where our score sits 1.5+ above the crowd — often smaller films or shows that haven’t broken through yet.</p>
+    <p class="section-lede">We’re 1.5+ above the IMDb average — often smaller films and shows still finding their audience.</p>
     <div class="filter-bar">
       <select id="loved-lang-filter" aria-label="Filter by original language">
         <option value="">All languages</option>

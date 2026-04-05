@@ -77,7 +77,7 @@
   var pitchEl = document.getElementById('hero-pitch');
   if (pitchEl) {
     pitchEl.innerHTML =
-      '~<strong class="pitch-stat">8,500+</strong> hours across <strong class="pitch-stat">1,000+</strong> titles on IMDb. One through line: tension, craft, and stories that don’t talk down. Start with picks below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full archive</a>.';
+      '~<strong class="pitch-stat">8,500+</strong> hours across <strong class="pitch-stat">1,000+</strong> titles on IMDb. We keep coming back to <strong class="pitch-stat">tension, craft, and stories that don’t talk down</strong>. Start below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full list</a>.';
   }
 
   function daysSinceRated(iso) {
@@ -143,24 +143,40 @@
 
   var ctv = crime && thriller ? crime.avgMyRating - thriller.avgMyRating : 0;
   var lean = ctv > 0 ? 'Crime' : ctv < 0 ? 'Thriller' : 'Balanced';
+  var crimeThrillerLabel = '—';
+  if (crime && thriller) {
+    if (ctv === 0) {
+      crimeThrillerLabel =
+        'Crime avg ' +
+        crime.avgMyRating +
+        ' · Thriller avg ' +
+        thriller.avgMyRating +
+        ' — evenly matched';
+    } else {
+      crimeThrillerLabel =
+        'Crime avg ' +
+        crime.avgMyRating +
+        ' · Thriller avg ' +
+        thriller.avgMyRating +
+        ' — a nudge toward <strong>' +
+        lean +
+        '</strong>';
+    }
+  }
   document.getElementById('insight-strip').innerHTML =
     '<div class="insight-card"><div class="insight-stat">' +
     (topGenre ? topGenre.genre : '—') +
-    '</div><div class="insight-label">Top genre by our average (15+ titles seen): ' +
+    '</div><div class="insight-label">Genre we rate highest (only counting types with 15+ titles): ' +
     (topGenre ? topGenre.avgMyRating : '') +
     '</div></div>' +
     '<div class="insight-card"><div class="insight-stat">' +
     (crime && thriller ? Math.abs(ctv).toFixed(2) : '—') +
-    '</div><div class="insight-label">Points warmer toward <strong>' +
-    lean +
-    '</strong> vs the other — our avg Crime ' +
-    (crime ? crime.avgMyRating : '—') +
-    ' vs Thriller ' +
-    (thriller ? thriller.avgMyRating : '—') +
+    '</div><div class="insight-label">' +
+    crimeThrillerLabel +
     '</div></div>' +
     '<div class="insight-card"><div class="insight-stat">' +
     tens +
-    '</div><div class="insight-label">Perfect 10s we’d still argue for after a second glass of wine</div></div>';
+    '</div><div class="insight-label">Perfect 10s we’d still defend tomorrow</div></div>';
 
   var tensBase = data.topRated.filter(function (i) {
     return i.myRating === 10;
@@ -423,7 +439,7 @@
   }).length;
 
   var statCards = [
-    { value: '~8,500+', label: 'Est. hours watched', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
+    { value: '~8,500+', label: 'Rough watch hours', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
     { value: '1,000+', label: 'Titles rated', icon: '◆', mod: 'stat-card--b' },
     { value: movieCount, label: 'Films', icon: '▣', mod: 'stat-card--c' },
     { value: tvCount, label: 'Series & minis', icon: '▤', mod: 'stat-card--d' },
@@ -602,7 +618,7 @@
               '">' +
               d.avg +
               '</span></td>' +
-              '<td title="Composite: avg, title count, star tier"><span class="vibe-stars">' +
+              '<td title="Our average, number of titles, and star level combined"><span class="vibe-stars">' +
               directorVibeStars(d) +
               '</span> <span class="vibe-num">' +
               vs +

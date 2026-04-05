@@ -45,13 +45,13 @@
   <header class="hero">
     <span class="eyebrow">Archive</span>
     <h1>Browse everything we’ve rated</h1>
-    <p class="hero-sub">Search the full library, or switch to <strong>Genre DNA</strong> for how our taste stacks up against IMDb by category.</p>
+    <p class="hero-sub">Search the full list, or open <strong>Genres</strong> to see how our scores line up with IMDb by category.</p>
   </header>
 
   <div class="browse-panels section">
     <div class="tab-panels-toolbar" role="tablist" aria-label="Browse mode">
       <button type="button" class="panel-tab active" role="tab" aria-selected="true" id="tab-archive" data-panel="archive">All titles</button>
-      <button type="button" class="panel-tab" role="tab" aria-selected="false" id="tab-genre" data-panel="genre-dna">Genre DNA</button>
+      <button type="button" class="panel-tab" role="tab" aria-selected="false" id="tab-genre" data-panel="genre-dna">Genres</button>
     </div>
 
     <div id="panel-archive" class="tab-panel active" role="tabpanel" aria-labelledby="tab-archive">
@@ -122,15 +122,15 @@
         <div class="bar-chart" id="genre-bars"></div>
       </section>
       <section class="section fade-in" aria-labelledby="verdict-heading">
-        <h2 class="section-title" id="verdict-heading">Love vs. avoid <span class="badge">Verdict</span></h2>
+        <h2 class="section-title" id="verdict-heading">What we love and what we skip <span class="badge">By genre</span></h2>
         <p class="section-lede">
-          Genres ranked by our average rating. Love = avg 7.8+, Like = 7.3–7.7, Meh = 7.0–7.2, Not our thing = &lt;7.0
+          Sorted by our average: Love it (7.8+), Like (7.3–7.7), Mixed (7.0–7.2), Not for us (&lt;7.0)
         </p>
         <div class="genre-grid" id="genre-cards"></div>
       </section>
       <section class="section fade-in" aria-labelledby="compare-heading">
         <h2 class="section-title" id="compare-heading">Our rating vs IMDb average <span class="badge">By genre</span></h2>
-        <p class="section-lede">Do we rate genres higher or lower than the crowd?</p>
+        <p class="section-lede">Our average next to IMDb’s — where do we run hotter or cooler?</p>
         <div class="table-scroll">
           <table class="data-table" id="genre-compare">
             <thead>
@@ -140,7 +140,7 @@
                 <th data-sort-key="avgMyRating" data-sort-default="desc">Our avg</th>
                 <th data-sort-key="avgImdbRating" data-sort-default="desc">IMDb avg</th>
                 <th data-sort-key="gap" data-sort-default="desc">Gap</th>
-                <th>Verdict</th>
+                <th>How we feel</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -326,7 +326,7 @@
             const rc = rcFor(i);
             const langRaw = i.languageLabel || i.languageHint;
             const lang = langRaw
-              ? `<span class="lang-pill" title="Wikidata / export when available">${langRaw}</span>`
+              ? `<span class="lang-pill" title="Original language when we have it">${langRaw}</span>`
               : '—';
             return `<tr>
         <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>

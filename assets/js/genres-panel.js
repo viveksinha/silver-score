@@ -1,5 +1,5 @@
 /**
- * Genre DNA panel — call initGenrePanel(DATA) after DOM is ready.
+ * Genres tab on Browse — call initGenrePanel(DATA) after DOM is ready.
  * Expects elements: #genre-bars, #genre-cards, #genre-compare tbody, #genre-select, #genre-top tbody
  * Load table-sort.js before this file when sortable genre tables are used.
  */
@@ -42,16 +42,16 @@ function initGenrePanel(data) {
   function makeCard(g) {
     let verdict, vclass;
     if (g.avgMyRating >= 7.8) {
-      verdict = 'LOVE';
+      verdict = 'Love it';
       vclass = 'verdict-love';
     } else if (g.avgMyRating >= 7.3) {
-      verdict = 'LIKE';
+      verdict = 'Like';
       vclass = 'verdict-like';
     } else if (g.avgMyRating >= 7.0) {
-      verdict = 'MEH';
+      verdict = 'Mixed';
       vclass = 'verdict-meh';
     } else {
-      verdict = 'NOT MY THING';
+      verdict = 'Not for us';
       vclass = 'verdict-avoid';
     }
     const barPct = (((g.avgMyRating - 5) / 5) * 100).toFixed(0);
@@ -75,10 +75,10 @@ function initGenrePanel(data) {
     const gap = (g.avgMyRating - g.avgImdbRating).toFixed(2);
     const gapColor = gap > 0 ? 'var(--green)' : gap < -0.3 ? 'var(--red)' : 'var(--text-secondary)';
     let verdict;
-    if (g.avgMyRating >= 7.8) verdict = '<span class="genre-verdict verdict-love">LOVE</span>';
-    else if (g.avgMyRating >= 7.3) verdict = '<span class="genre-verdict verdict-like">LIKE</span>';
-    else if (g.avgMyRating >= 7.0) verdict = '<span class="genre-verdict verdict-meh">MEH</span>';
-    else verdict = '<span class="genre-verdict verdict-avoid">SKIP</span>';
+    if (g.avgMyRating >= 7.8) verdict = '<span class="genre-verdict verdict-love">Love it</span>';
+    else if (g.avgMyRating >= 7.3) verdict = '<span class="genre-verdict verdict-like">Like</span>';
+    else if (g.avgMyRating >= 7.0) verdict = '<span class="genre-verdict verdict-meh">Mixed</span>';
+    else verdict = '<span class="genre-verdict verdict-avoid">Not for us</span>';
     return `<tr>
       <td><a href="${imdbGenreUrl(g.genre)}" target="_blank" rel="noopener noreferrer"><strong>${g.genre}</strong></a></td>
       <td>${g.count}</td>
