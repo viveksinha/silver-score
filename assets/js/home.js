@@ -36,7 +36,13 @@
   function itemDirectors(i) {
     var d = i.directors;
     if (d == null || d === '') return [];
-    return typeof d === 'string' ? [d] : d;
+    if (Array.isArray(d)) return d;
+    if (typeof d === 'string') {
+      return d.split(',').map(function (s) {
+        return s.trim();
+      }).filter(Boolean);
+    }
+    return [];
   }
 
   function imdbGenreUrl(g) {
