@@ -1,34 +1,30 @@
-# Silver Score (static site)
+# Silver Score
 
-This repository is **only** the public static site. Point your host (e.g. [GitHub Pages](https://pages.github.com/)) at the **repository root** so `index.html` is the site entry.
+**[Visit the site →](https://viveksinha.github.io/silver-score-site/)**
 
-## Regenerating `assets/js/data.js`
+Silver Score is a **cinema magazine and watchlist** in one calm, readable site: hundreds of rated films and series, editorial lists with a point of view, and charts that show how our taste actually behaves—not a generic leaderboard, but a shelf we live on.
 
-`data.js` is **generated**; it is not hand-edited. Build it from the parent **movies** workspace on your machine (same folder layout as a full checkout: `movies/site/` = this repo, `movies/private/` = local export + caches, not published).
+Open it on your phone or desktop, switch **light** or **dark** in the nav, and wander.
 
-From the **`movies/`** directory (parent of `site/`):
+---
 
-```bash
-python3 scripts/build_from_export.py
-```
+## What you’ll find inside
 
-- Input: `private/data/ratings-export.json`
-- Output: `site/assets/js/data.js` (this tree)
+- **Home** — A living dashboard: staff picks, “under the radar” high scores with quiet IMDb vote counts, world-cinema highlights, recently rated rows, star distribution, decade spread, directors we keep coming back to, and the titles we liked more than the crowd.
+- **Lists & essays** — Curated rows with a thesis, plus longer reads—one hub for point-of-view programming, not just titles in a row.
+- **Under the Radar** — Things we rated highly that still feel like secrets: worth your attention before word-of-mouth catches up.
+- **Upcoming** — A timeline of what we’re watching for next—filter by mood, region, or streamer-style tags when you want a narrower lens.
+- **Browse** — Search the full archive or dive into **genre DNA**: how our averages line up against IMDb by category.
+- **About** — Who’s behind the voice and why tension, craft, and stories that don’t talk down matter here.
 
-Optional private merges (same machine, under `movies/private/data/`): Rotten Tomatoes (`rt-scores.json`), language overrides (`original-languages.json`), Wikidata cache, TV watch enrichment — see `scripts/build_from_export.py` in the parent project.
+---
 
-Flags: `--no-html`, `--no-wikidata` (see script help).
+## Why it’s worth a bookmark
 
-## Original language
+If you like **slow burns, thrillers, prestige TV, and stories that trust the audience**, this site is a filter bubble we built on purpose—honest scores, IMDb links everywhere you need them, and magazine-style framing so the catalogue feels like a conversation, not a spreadsheet.
 
-Titles carry **`languageLabel`** when the build resolved a **non-English** original filming language (Wikidata + overrides). English-only rows omit it.
+**[Go to Silver Score](https://viveksinha.github.io/silver-score-site/)**
 
-## Runtime hours on the home page
+---
 
-`totalWatchHours` sums **per catalogue row** (export `runtime` in minutes). Films are roughly one feature each; TV rows use one runtime per series unless you add **TV enrichment** in the private build (see parent `scripts/build_from_export.py`).
-
-## Layout
-
-- `index.html` — home
-- `pages/` — other HTML
-- `assets/css/`, `assets/js/` — static assets
+*Source for this site: [github.com/viveksinha/silver-score-site](https://github.com/viveksinha/silver-score-site)*
