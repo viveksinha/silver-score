@@ -47,6 +47,12 @@
   <p class="spoiler-line" id="list-spoiler"></p>
   <p class="lead" id="list-thesis"></p>
 
+  <div class="filter-bar" style="margin-top:1.25rem">
+    <select id="language-filter" aria-label="Filter by original language">
+      <option value="">All languages</option>
+    </select>
+  </div>
+
   <div class="table-scroll" style="margin-top:1.5rem">
     <table class="data-table" id="list-table">
       <thead>
@@ -69,7 +75,7 @@
 </main>
 
 <footer>
-  <div class="container">Silver Score &middot; 933 IMDb ratings &middot; April 2026</div>
+  <div class="container">Silver Score &middot; ~10,000 hours &middot; 1,000+ titles &middot; April 2026</div>
 </footer>
 
 <script src="../assets/js/theme.js"></script>
@@ -104,6 +110,7 @@
   }
 
   const listRows = meta.ids.map((id) => byId.get(id)).filter(Boolean);
+  S.fillLanguageFilterOptions(document.getElementById('language-filter'), listRows);
   function votesN(i) {
     const v = i.votes;
     if (v == null || v === '') return 0;
@@ -127,7 +134,14 @@
   const listTbody = document.querySelector('#list-table tbody');
 
   function renderListTable() {
-    const rows = S.sortRows(listRows, listSort, listSpec);
+    const langF = document.getElementById('language-filter').value;
+    const base =
+      langF === '__none__'
+        ? listRows.filter((i) => !S.languageKey(i))
+        : langF
+          ? listRows.filter((i) => S.languageKey(i) === langF)
+          : listRows;
+    const rows = S.sortRows(base, listSort, listSpec);
     listTbody.innerHTML = rows
       .map((i) => {
         const rc =
@@ -158,6 +172,7 @@
   }
 
   S.bindSortableTable(listTable, { state: listSort, spec: listSpec, onChange: renderListTable });
+  document.getElementById('language-filter').addEventListener('change', renderListTable);
   renderListTable();
 })();
 </script>

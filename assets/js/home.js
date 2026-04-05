@@ -33,6 +33,12 @@
     return String(L);
   }
 
+  function itemDirectors(i) {
+    var d = i.directors;
+    if (d == null || d === '') return [];
+    return typeof d === 'string' ? [d] : d;
+  }
+
   function imdbGenreUrl(g) {
     return (
       'https://www.imdb.com/search/title/?genres=' +
@@ -65,9 +71,7 @@
   var pitchEl = document.getElementById('hero-pitch');
   if (pitchEl) {
     pitchEl.innerHTML =
-      '<strong class="pitch-stat">' +
-      data.totalRatings.toLocaleString() +
-      '</strong> IMDb ratings. One through line: tension, craft, and stories that don’t talk down. Start with picks below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full archive</a>.';
+      '~<strong class="pitch-stat">10,000</strong> hours across <strong class="pitch-stat">1,000+</strong> titles on IMDb. One through line: tension, craft, and stories that don’t talk down. Start with picks below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full archive</a>.';
   }
 
   function daysSinceRated(iso) {
@@ -320,69 +324,86 @@
     })
     .slice(0, 15);
 
-  document.getElementById('recent-table-body').innerHTML = recentSeen
-    .map(function (i) {
-      var rowLang = displayLang(i);
-      var rel = relativeRated(i.dateRated);
-      var genres = (i.genres || [])
-        .map(function (g) {
-          return (
-            '<a href="' +
-            imdbGenreUrl(g) +
-            '" target="_blank" rel="noopener noreferrer" class="recent-meta-link">' +
-            g +
-            '</a>'
-          );
-        })
-        .join(', ');
-      return (
-        '<tr>' +
-        '<td><time class="recent-time" datetime="' +
-        i.dateRated +
-        '">' +
-        formatRatedOn(i.dateRated) +
-        '</time>' +
-        (rel ? ' <span class="recent-rel">' + rel + '</span>' : '') +
-        '</td>' +
-        '<td><a href="' +
-        i.url +
-        '" target="_blank" rel="noopener noreferrer"><strong>' +
-        i.title +
-        '</strong></a></td>' +
-        '<td class="recent-lang">' +
-        (rowLang
-          ? '<span class="lang-pill" title="Original filming language when known">' +
-            rowLang +
-            '</span>'
-          : '<span class="recent-muted">—</span>') +
-        '</td>' +
-        '<td>' +
-        i.year +
-        '</td>' +
-        '<td>' +
-        formatBadge(i.type) +
-        '</td>' +
-        '<td><span class="rating-badge rating-' +
-        (i.myRating >= 10 ? '10' : i.myRating >= 9 ? '9' : i.myRating >= 8 ? '8' : '7') +
-        '">' +
-        i.myRating +
-        '</span></td>' +
-        '<td><span class="imdb-badge">' +
-        i.imdbRating +
-        '</span></td>' +
-        '<td class="recent-mono">' +
-        votesN(i).toLocaleString() +
-        '</td>' +
-        '<td class="rt-cell">' +
-        RT.cellHtml(i) +
-        '</td>' +
-        '<td class="recent-genres">' +
-        genres +
-        '</td>' +
-        '</tr>'
-      );
-    })
-    .join('');
+  var recentLangEl = document.getElementById('recent-lang-filter');
+  if (recentLangEl && S.fillLanguageFilterOptions) {
+    S.fillLanguageFilterOptions(recentLangEl, recentSeen);
+  }
+  function recentRowsFiltered() {
+    var lf = recentLangEl ? recentLangEl.value : '';
+    return recentSeen.filter(function (i) {
+      var k = S.languageKey(i);
+      if (lf === '__none__') return !k;
+      if (lf) return k === lf;
+      return true;
+    });
+  }
+  function renderRecentTable() {
+    document.getElementById('recent-table-body').innerHTML = recentRowsFiltered()
+      .map(function (i) {
+        var rowLang = displayLang(i);
+        var rel = relativeRated(i.dateRated);
+        var genres = (i.genres || [])
+          .map(function (g) {
+            return (
+              '<a href="' +
+              imdbGenreUrl(g) +
+              '" target="_blank" rel="noopener noreferrer" class="recent-meta-link">' +
+              g +
+              '</a>'
+            );
+          })
+          .join(', ');
+        return (
+          '<tr>' +
+          '<td><time class="recent-time" datetime="' +
+          i.dateRated +
+          '">' +
+          formatRatedOn(i.dateRated) +
+          '</time>' +
+          (rel ? ' <span class="recent-rel">' + rel + '</span>' : '') +
+          '</td>' +
+          '<td><a href="' +
+          i.url +
+          '" target="_blank" rel="noopener noreferrer"><strong>' +
+          i.title +
+          '</strong></a></td>' +
+          '<td class="recent-lang">' +
+          (rowLang
+            ? '<span class="lang-pill" title="Original filming language when known">' +
+              rowLang +
+              '</span>'
+            : '<span class="recent-muted">—</span>') +
+          '</td>' +
+          '<td>' +
+          i.year +
+          '</td>' +
+          '<td>' +
+          formatBadge(i.type) +
+          '</td>' +
+          '<td><span class="rating-badge rating-' +
+          (i.myRating >= 10 ? '10' : i.myRating >= 9 ? '9' : i.myRating >= 8 ? '8' : '7') +
+          '">' +
+          i.myRating +
+          '</span></td>' +
+          '<td><span class="imdb-badge">' +
+          i.imdbRating +
+          '</span></td>' +
+          '<td class="recent-mono">' +
+          votesN(i).toLocaleString() +
+          '</td>' +
+          '<td class="rt-cell">' +
+          RT.cellHtml(i) +
+          '</td>' +
+          '<td class="recent-genres">' +
+          genres +
+          '</td>' +
+          '</tr>'
+        );
+      })
+      .join('');
+  }
+  if (recentLangEl) recentLangEl.addEventListener('change', renderRecentTable);
+  renderRecentTable();
 
   var grid = document.getElementById('stats-grid');
   var tvCount = data.allItems.filter(function (i) {
@@ -396,13 +417,14 @@
   }).length;
 
   var statCards = [
-    { value: data.totalRatings, label: 'Total ratings', icon: '◆', mod: 'stat-card--a' },
-    { value: movieCount, label: 'Films', icon: '▣', mod: 'stat-card--b' },
-    { value: tvCount, label: 'Series & minis', icon: '▤', mod: 'stat-card--c' },
-    { value: data.avgRating.toFixed(1), label: 'Our average', icon: '★', mod: 'stat-card--d' },
-    { value: tens, label: 'Perfect 10s', icon: '✦', mod: 'stat-card--e' },
-    { value: nonEnCount, label: 'Non-English lean', icon: '⌁', mod: 'stat-card--f' },
-    { value: data.genreStats.length, label: 'Genre tags', icon: '※', mod: 'stat-card--g' },
+    { value: '~10,000', label: 'Est. hours watched', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
+    { value: '1,000+', label: 'Titles rated', icon: '◆', mod: 'stat-card--b' },
+    { value: movieCount, label: 'Films', icon: '▣', mod: 'stat-card--c' },
+    { value: tvCount, label: 'Series & minis', icon: '▤', mod: 'stat-card--d' },
+    { value: data.avgRating.toFixed(1), label: 'Our average', icon: '★', mod: 'stat-card--e' },
+    { value: tens, label: 'Perfect 10s', icon: '✦', mod: 'stat-card--f' },
+    { value: nonEnCount, label: 'Non-English lean', icon: '⌁', mod: 'stat-card--g' },
+    { value: data.genreStats.length, label: 'Genre tags', icon: '※', mod: 'stat-card--h' },
   ];
   grid.innerHTML = statCards
     .map(function (s) {
@@ -493,6 +515,22 @@
   };
 
   var directorStats = data.directorStats;
+  var directorsLangEl = document.getElementById('directors-lang-filter');
+  if (directorsLangEl && S.fillLanguageFilterOptions) {
+    S.fillLanguageFilterOptions(directorsLangEl, data.allItems);
+  }
+  function directorsRowsFiltered() {
+    var lf = directorsLangEl ? directorsLangEl.value : '';
+    if (!lf) return directorStats;
+    return directorStats.filter(function (d) {
+      return data.allItems.some(function (i) {
+        if (itemDirectors(i).indexOf(d.name) < 0) return false;
+        var k = S.languageKey(i);
+        if (lf === '__none__') return !k;
+        return k === lf;
+      });
+    });
+  }
   var sortStateDirectors = { key: 'vibe', dir: 'desc' };
   var specDirectors = {
     name: { type: 'string', val: function (d) {
@@ -528,7 +566,7 @@
     if (dirScroll) dirScroll.teardown();
     dirScroll = global.createSilverScoreInfiniteScroll({
       getItems: function () {
-        return S.sortRows(directorStats, sortStateDirectors, specDirectors);
+        return S.sortRows(directorsRowsFiltered(), sortStateDirectors, specDirectors);
       },
       pageSize: PAGE_SIZE,
       anchorAfter: directorsTable,
@@ -578,9 +616,23 @@
     spec: specDirectors,
     onChange: mountDirectors,
   });
+  if (directorsLangEl) directorsLangEl.addEventListener('change', mountDirectors);
   mountDirectors();
 
   var loved = data.lovedMore;
+  var lovedLangEl = document.getElementById('loved-lang-filter');
+  if (lovedLangEl && S.fillLanguageFilterOptions) {
+    S.fillLanguageFilterOptions(lovedLangEl, loved);
+  }
+  function lovedRowsFiltered() {
+    var lf = lovedLangEl ? lovedLangEl.value : '';
+    if (!lf) return loved;
+    return loved.filter(function (i) {
+      var k = S.languageKey(i);
+      if (lf === '__none__') return !k;
+      return k === lf;
+    });
+  }
   var sortStateLoved = { key: 'gap', dir: 'desc' };
   var specLoved = {
     title: { type: 'string', val: function (i) {
@@ -628,7 +680,7 @@
     if (lovedScroll) lovedScroll.teardown();
     lovedScroll = global.createSilverScoreInfiniteScroll({
       getItems: function () {
-        return S.sortRows(loved, sortStateLoved, specLoved);
+        return S.sortRows(lovedRowsFiltered(), sortStateLoved, specLoved);
       },
       pageSize: PAGE_SIZE,
       anchorAfter: lovedTable,
@@ -679,8 +731,22 @@
     spec: specLoved,
     onChange: mountLoved,
   });
+  if (lovedLangEl) lovedLangEl.addEventListener('change', mountLoved);
   mountLoved();
 
+  var topLangEl = document.getElementById('top-lang-filter');
+  if (topLangEl && S.fillLanguageFilterOptions) {
+    S.fillLanguageFilterOptions(topLangEl, tensBase);
+  }
+  function topRowsFiltered() {
+    var lf = topLangEl ? topLangEl.value : '';
+    if (!lf) return tensBase;
+    return tensBase.filter(function (i) {
+      var k = S.languageKey(i);
+      if (lf === '__none__') return !k;
+      return k === lf;
+    });
+  }
   var sortStateTop = { key: 'imdbRating', dir: 'desc' };
   var specTop = {
     title: { type: 'string', val: function (i) {
@@ -724,7 +790,7 @@
     if (topScroll) topScroll.teardown();
     topScroll = global.createSilverScoreInfiniteScroll({
       getItems: function () {
-        return S.sortRows(tensBase, sortStateTop, specTop);
+        return S.sortRows(topRowsFiltered(), sortStateTop, specTop);
       },
       pageSize: PAGE_SIZE,
       anchorAfter: topTable,
@@ -783,6 +849,7 @@
     spec: specTop,
     onChange: mountTop,
   });
+  if (topLangEl) topLangEl.addEventListener('change', mountTop);
   mountTop();
 
   var observer = new IntersectionObserver(

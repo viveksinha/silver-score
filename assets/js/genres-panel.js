@@ -171,11 +171,17 @@ function initGenrePanel(data) {
   }
 
   const genreTopTable = document.getElementById('genre-top');
+  const langTopSelect = document.getElementById('genre-top-lang-filter');
+  const lk =
+    S && typeof S.languageKey === 'function'
+      ? (i) => S.languageKey(i)
+      : (i) => String((i && (i.languageLabel || i.languageHint)) || '').trim();
   const tieTitle = (a, b) =>
     String(a.title || '').localeCompare(String(b.title || ''), undefined, { sensitivity: 'base', numeric: true });
   const genreTopSort = { key: 'myRating', dir: 'desc' };
   const genreTopSpec = {
     title: { type: 'string', val: (i) => i.title },
+    language: { type: 'string', val: (i) => lk(i), tiebreak: tieTitle },
     year: { type: 'number', val: (i) => i.year, tiebreak: tieTitle },
     myRating: { type: 'number', val: (i) => i.myRating, tiebreak: tieTitle },
     imdbRating: { type: 'number', val: (i) => i.imdbRating, tiebreak: tieTitle },
@@ -203,9 +209,14 @@ function initGenrePanel(data) {
         const html = items
           .map((i, idx) => {
             const rank = startIndex + idx + 1;
+            const langRaw = lk(i);
+            const langCell = langRaw
+              ? `<span class="lang-pill">${langRaw}</span>`
+              : '—';
             return `<tr>
       <td>${rank}</td>
       <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
+      <td style="font-size:0.75rem;max-width:7rem">${langCell}</td>
       <td>${i.year}</td>
       <td><span class="rating-badge rating-${i.myRating >= 10 ? '10' : i.myRating >= 9 ? '9' : i.myRating >= 8 ? '8' : '7'}">${i.myRating}</span></td>
       <td><span class="imdb-badge">${i.imdbRating}</span></td>
@@ -239,14 +250,23 @@ function initGenrePanel(data) {
       opt.textContent = `${g.genre} (${g.count})`;
       select.appendChild(opt);
     });
-    select.addEventListener('change', () => {
+    if (langTopSelect && S && typeof S.fillLanguageFilterOptions === 'function') {
+      S.fillLanguageFilterOptions(langTopSelect, data.allItems);
+    }
+    function syncGenreTopPool() {
       const genre = select.value;
-      genreTopPool = genre ? data.allItems.filter((i) => i.genres.includes(genre)) : [];
+      const lang = langTopSelect ? langTopSelect.value : '';
+      let pool = genre ? data.allItems.filter((i) => i.genres.includes(genre)) : [];
+      if (lang === '__none__') pool = pool.filter((i) => !lk(i));
+      else if (lang) pool = pool.filter((i) => lk(i) === lang);
+      genreTopPool = pool;
       genreTopSort.key = 'myRating';
       genreTopSort.dir = 'desc';
       if (genreTopBinder) genreTopBinder.updateHeaderClasses();
       mountGenreTop();
-    });
+    }
+    select.addEventListener('change', syncGenreTopPool);
+    if (langTopSelect) langTopSelect.addEventListener('change', syncGenreTopPool);
   }
 
   const observer = new IntersectionObserver(

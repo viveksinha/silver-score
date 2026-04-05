@@ -96,8 +96,57 @@
     return { updateHeaderClasses: updateHeaderClasses, activate: activate };
   }
 
+  /** Wikidata / export original language string for filtering (matches table sort column). */
+  function languageKey(item) {
+    if (!item) return '';
+    return String(item.languageLabel || item.languageHint || '').trim();
+  }
+
+  /**
+   * First option must be `<option value="">All languages</option>`.
+   * Adds "Not listed" (__none__) when any row has an empty key.
+   */
+  function fillLanguageFilterOptions(selectEl, items) {
+    if (!selectEl || !items || !items.length) return;
+    var keys = [];
+    var anyEmpty = false;
+    for (var i = 0; i < items.length; i++) {
+      var k = languageKey(items[i]);
+      if (k) keys.push(k);
+      else anyEmpty = true;
+    }
+    var seen = {};
+    var uniq = [];
+    for (var j = 0; j < keys.length; j++) {
+      if (!seen[keys[j]]) {
+        seen[keys[j]] = true;
+        uniq.push(keys[j]);
+      }
+    }
+    uniq.sort(function (a, b) {
+      return String(a).localeCompare(String(b), undefined, { sensitivity: 'base', numeric: true });
+    });
+    while (selectEl.options.length > 1) {
+      selectEl.remove(1);
+    }
+    if (anyEmpty) {
+      var o0 = document.createElement('option');
+      o0.value = '__none__';
+      o0.textContent = 'Not listed';
+      selectEl.appendChild(o0);
+    }
+    for (var u = 0; u < uniq.length; u++) {
+      var o = document.createElement('option');
+      o.value = uniq[u];
+      o.textContent = uniq[u];
+      selectEl.appendChild(o);
+    }
+  }
+
   global.silverScoreTableSort = {
     sortRows: sortRows,
     bindSortableTable: bindSortableTable,
+    languageKey: languageKey,
+    fillLanguageFilterOptions: fillLanguageFilterOptions,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

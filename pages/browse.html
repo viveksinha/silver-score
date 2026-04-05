@@ -75,6 +75,9 @@
         <select id="genre-filter" aria-label="Filter by genre">
           <option value="">All Genres</option>
         </select>
+        <select id="language-filter" aria-label="Filter by original language">
+          <option value="">All languages</option>
+        </select>
         <select id="sort-by" aria-label="Sort by">
           <option value="myRating" selected>Our rating (high)</option>
           <option value="dateRated">Recently rated</option>
@@ -148,6 +151,9 @@
         <h2 class="section-title" id="top-genre-heading">Top picks per genre <span class="badge">Best of each</span></h2>
         <div class="filter-bar">
           <select id="genre-select" aria-label="Choose genre"><option value="">Select a genre…</option></select>
+          <select id="genre-top-lang-filter" aria-label="Filter by original language">
+            <option value="">All languages</option>
+          </select>
         </div>
         <div class="table-scroll">
           <table class="data-table" id="genre-top">
@@ -155,6 +161,7 @@
               <tr>
                 <th>#</th>
                 <th data-sort-key="title" data-sort-default="asc">Title</th>
+                <th data-sort-key="language" data-sort-default="asc">Original language</th>
                 <th data-sort-key="year" data-sort-default="desc">Year</th>
                 <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
                 <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
@@ -173,7 +180,7 @@
 </main>
 
 <footer>
-  <div class="container">Silver Score &middot; 933 IMDb ratings &middot; April 2026</div>
+  <div class="container">Silver Score &middot; ~10,000 hours &middot; 1,000+ titles &middot; April 2026</div>
 </footer>
 
 <script src="../assets/js/theme.js"></script>
@@ -265,17 +272,23 @@
     opt.textContent = g;
     gf.appendChild(opt);
   });
+  S.fillLanguageFilterOptions(document.getElementById('language-filter'), allItems);
 
   function buildFiltered() {
     const search = document.getElementById('search').value.toLowerCase();
     const typeF = document.getElementById('type-filter').value;
     const ratingF = document.getElementById('rating-filter').value;
     const genreF = document.getElementById('genre-filter').value;
+    const langF = document.getElementById('language-filter').value;
 
     filtered = allItems.filter((i) => {
       if (search && !i.title.toLowerCase().includes(search)) return false;
       if (typeF && i.type !== typeF) return false;
       if (genreF && !i.genres.includes(genreF)) return false;
+      const lk = S.languageKey(i);
+      if (langF === '__none__') {
+        if (lk) return false;
+      } else if (langF && lk !== langF) return false;
       if (ratingF) {
         const r = parseInt(ratingF, 10);
         if (r === 6) {
@@ -367,6 +380,7 @@
   document.getElementById('type-filter').addEventListener('change', applyFilters);
   document.getElementById('rating-filter').addEventListener('change', applyFilters);
   document.getElementById('genre-filter').addEventListener('change', applyFilters);
+  document.getElementById('language-filter').addEventListener('change', applyFilters);
   document.getElementById('sort-by').addEventListener('change', function () {
     applySortSelectToState();
     if (browseBinder) browseBinder.updateHeaderClasses();

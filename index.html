@@ -95,6 +95,11 @@
   <section class="section fade-in" aria-labelledby="recent-heading">
     <h2 class="section-title" id="recent-heading">Recently seen <span class="badge">Rated on</span></h2>
     <p class="section-lede">Up to fifteen newest “rated on” rows (scroll inside the frame). Original language when Wikidata lists a non-English filming language for the title.</p>
+    <div class="filter-bar">
+      <select id="recent-lang-filter" aria-label="Filter by original language">
+        <option value="">All languages</option>
+      </select>
+    </div>
     <div class="table-scroll table-scroll--recent">
       <table class="data-table" id="recent-table">
         <thead>
@@ -136,6 +141,11 @@
   <section class="section fade-in" aria-labelledby="directors-heading">
     <h2 class="section-title" id="directors-heading">Directors we keep booking <span class="badge">3+ titles</span></h2>
     <p class="section-lede">Averages and volume — <strong>Vibe</strong> blends our average, how many titles we’ve seen, and star tier (click headers to sort).</p>
+    <div class="filter-bar">
+      <select id="directors-lang-filter" aria-label="Filter directors by original language of their titles">
+        <option value="">All languages</option>
+      </select>
+    </div>
     <div class="table-scroll">
       <table class="data-table" id="directors-table">
         <thead>
@@ -155,6 +165,11 @@
   <section class="section fade-in" aria-labelledby="loved-heading">
     <h2 class="section-title" id="loved-heading">We liked it more than IMDb <span class="badge">Gap ≥ 1.5</span></h2>
     <p class="section-lede">Where our score sits 1.5+ above the crowd — often smaller films or shows that haven’t broken through yet.</p>
+    <div class="filter-bar">
+      <select id="loved-lang-filter" aria-label="Filter by original language">
+        <option value="">All languages</option>
+      </select>
+    </div>
     <div class="table-scroll">
       <table class="data-table" id="loved-table">
         <thead><tr><th data-sort-key="title" data-sort-default="asc">Title</th><th data-sort-key="year" data-sort-default="desc">Year</th><th data-sort-key="myRating" data-sort-default="desc">Our rating</th><th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th><th data-sort-key="votes" data-sort-default="desc">IMDb votes</th><th>RT</th><th data-sort-key="gap" data-sort-default="desc">Gap</th></tr></thead>
@@ -165,6 +180,11 @@
 
   <section class="section fade-in" aria-labelledby="favorites-heading">
     <h2 class="section-title" id="favorites-heading">All-time tens <span class="badge">Table</span></h2>
+    <div class="filter-bar">
+      <select id="top-lang-filter" aria-label="Filter by original language">
+        <option value="">All languages</option>
+      </select>
+    </div>
     <div class="table-scroll">
       <table class="data-table" id="top-table">
         <thead><tr><th data-sort-key="title" data-sort-default="asc">Title</th><th data-sort-key="year" data-sort-default="desc">Year</th><th data-sort-key="type" data-sort-default="asc">Format</th><th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th><th data-sort-key="votes" data-sort-default="desc">IMDb votes</th><th>RT</th><th data-sort-key="genres" data-sort-default="asc">Genres</th></tr></thead>
@@ -177,7 +197,7 @@
 
 <footer>
   <div class="container">
-    Silver Score &middot; 933 IMDb ratings &middot; April 2026
+    Silver Score &middot; ~10,000 hours &middot; 1,000+ titles &middot; April 2026
   </div>
 </footer>
 
