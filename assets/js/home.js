@@ -62,84 +62,14 @@
     return '';
   }
 
-  function approxWatchHours(items) {
-    var min = 0;
-    for (var i = 0; i < items.length; i++) {
-      var r = items[i].runtime;
-      if (r && typeof r === 'number' && r > 0) min += r;
-    }
-    return Math.round((min / 60) * 10) / 10;
-  }
-
-  var catalogHours =
-    typeof data.totalWatchHours === 'number' ? data.totalWatchHours : approxWatchHours(data.allItems);
-  var tvEnriched =
-    typeof data.watchHoursTvEnrichedCount === 'number' ? data.watchHoursTvEnrichedCount : 0;
-  var tvTotalCount =
-    typeof data.watchHoursTvTotalCount === 'number' ? data.watchHoursTvTotalCount : 0;
-  var tvFullyEnriched = data.watchHoursTvFullyEnriched === true;
-  var tvFromCache =
-    typeof data.watchHoursTvCacheCount === 'number' ? data.watchHoursTvCacheCount : 0;
-  var tvFromManual =
-    typeof data.watchHoursTvManualEnrichmentCount === 'number'
-      ? data.watchHoursTvManualEnrichmentCount
-      : 0;
-
-  function tvHoursProvenance() {
-    if (tvFromCache > 0 && tvFromManual > 0) return 'mixed';
-    if (tvFromCache > 0) return 'cache';
-    if (tvFromManual > 0) return 'manual';
-    return 'none';
-  }
-
-  function heroPitchHtml(hoursStr) {
-    var baseNav =
-      ' One through line: tension, craft, and stories that don’t talk down. Start with picks below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full archive</a>.';
-    var head =
+  var pitchEl = document.getElementById('hero-pitch');
+  if (pitchEl) {
+    pitchEl.innerHTML =
       '<strong class="pitch-stat">' +
       data.totalRatings.toLocaleString() +
       '</strong> IMDb ratings across <strong class="pitch-stat">' +
       data.mainItems.toLocaleString() +
-      '</strong> titles — <strong class="pitch-stat">~' +
-      hoursStr +
-      '</strong> hours';
-    if (tvEnriched > 0) {
-      var prov = tvHoursProvenance();
-      if (tvFullyEnriched) {
-        var fullDetail = '';
-        if (prov === 'cache') {
-          fullDetail =
-            '<strong class="pitch-stat">Feature films</strong> use one runtime each; <strong class="pitch-stat">every series</strong> uses summed per-episode minutes (by season) from your private <strong class="pitch-stat">tv-runtime-cache</strong>, filled via TMDB. The refresh script only updates new or changed titles.';
-        } else if (prov === 'manual') {
-          fullDetail =
-            '<strong class="pitch-stat">Feature films</strong> use one runtime each; <strong class="pitch-stat">series</strong> use your private <strong class="pitch-stat">tv-watch-enrichment</strong> file (episode totals or watched minutes). Edit if you stopped a run early.';
-        } else {
-          fullDetail =
-            '<strong class="pitch-stat">Feature films</strong> use one runtime each; <strong class="pitch-stat">series</strong> combine private <strong class="pitch-stat">tv-runtime-cache</strong> (TMDB per-episode sums) and <strong class="pitch-stat">tv-watch-enrichment</strong> overrides where present.';
-        }
-        return head + ' — ' + fullDetail + baseNav;
-      }
-      return (
-        head +
-        ' — TV includes full-series-style totals for <strong class="pitch-stat">' +
-        tvEnriched.toLocaleString() +
-        '</strong> of <strong class="pitch-stat">' +
-        tvTotalCount.toLocaleString() +
-        '</strong> series (cache and/or enrichment); the rest still use one IMDb runtime per row. Run the cache refresh and rebuild to add more.' +
-        baseNav
-      );
-    }
-    return (
-      head +
-      ' from IMDb runtimes <strong class="pitch-stat">per catalogue row</strong> (each film once; each TV show once with a single listed runtime — <strong class="pitch-stat">not</strong> every episode × seasons).' +
-      baseNav
-    );
-  }
-
-  var pitchEl = document.getElementById('hero-pitch');
-  if (pitchEl) {
-    var hoursStr = catalogHours.toLocaleString(undefined, { maximumFractionDigits: 1 });
-    pitchEl.innerHTML = heroPitchHtml(hoursStr);
+      '</strong> titles. One through line: tension, craft, and stories that don’t talk down. Start with picks below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full archive</a>.';
   }
 
   function daysSinceRated(iso) {
@@ -473,24 +403,8 @@
     { value: tvCount, label: 'Series & minis', icon: '▤', mod: 'stat-card--c' },
     { value: data.avgRating.toFixed(1), label: 'Our average', icon: '★', mod: 'stat-card--d' },
     { value: tens, label: 'Perfect 10s', icon: '✦', mod: 'stat-card--e' },
-    {
-      value: '~' + catalogHours + 'h',
-      label: tvEnriched > 0 ? 'Est. watch time' : 'Runtime / row',
-      icon: '⏱',
-      mod: 'stat-card--f stat-card--hours',
-      tip:
-        tvEnriched > 0
-          ? tvFullyEnriched
-            ? tvFromCache > 0 && tvFromManual > 0
-              ? 'Films: one export runtime each. TV: tv-runtime-cache (TMDB per-episode minutes by season) plus tv-watch-enrichment overrides.'
-              : tvFromCache > 0
-                ? 'Films: one export runtime each. TV: tv-runtime-cache.json — sum of TMDB episode runtimes per season; refresh script updates only new/changed catalogue rows.'
-                : 'Films: one export runtime each. TV: tv-watch-enrichment.json (episodes × minutes or watchedMinutes). Edit for partial watches.'
-            : 'Some TV rows use the runtime cache or enrichment; others still use a single IMDb runtime each — refresh the cache and rebuild to cover more.'
-          : 'Sum of each title’s one IMDb runtime field (minutes → hours). Films ≈ feature length. TV adds one figure per series unless you build tv-runtime-cache.json (TMDB episodes) or tv-watch-enrichment.json.',
-    },
-    { value: nonEnCount, label: 'Non-English lean', icon: '⌁', mod: 'stat-card--g' },
-    { value: data.genreStats.length, label: 'Genre tags', icon: '※', mod: 'stat-card--h' },
+    { value: nonEnCount, label: 'Non-English lean', icon: '⌁', mod: 'stat-card--f' },
+    { value: data.genreStats.length, label: 'Genre tags', icon: '※', mod: 'stat-card--g' },
   ];
   grid.innerHTML = statCards
     .map(function (s) {
