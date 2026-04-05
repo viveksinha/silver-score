@@ -63,33 +63,21 @@ const MAGAZINE = {
       ]
     }
   ],
-  essays: [
+  /** Short hub cards pointing at Upcoming (not full lists). */
+  calendarHighlights: [
     {
-      slug: 'nordic-noir-why-it-hits',
-      title: 'Why Nordic Noir Hits Different',
-      dek: 'Cold cases, colder weather, and the pacing that trusts you.',
-      date: 'April 2026',
-      href: 'essay-nordic-noir.html',
-    },
-    {
-      slug: 'lane-korean-upcoming',
       title: 'Korea on the calendar',
       dek: 'Film and series we’re tracking — on Upcoming, use the Korean filter on the timeline.',
-      date: 'April 2026',
       href: 'upcoming.html',
     },
     {
-      slug: 'lane-french-upcoming',
       title: 'French lane — releases we’re eyeing',
-      dek: 'Same hub as Nordic notes: editorial voice, catalogue data. Filter Upcoming by French for the current strip.',
-      date: 'April 2026',
+      dek: 'Filter Upcoming by French for the current strip.',
       href: 'upcoming.html',
     },
     {
-      slug: 'lane-japanese-upcoming',
       title: 'Japan — screens big and small',
       dek: 'Animated, live-action, and hybrids landing soon — Japanese tab on the upcoming timeline.',
-      date: 'April 2026',
       href: 'upcoming.html',
     },
   ],

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Magazine — Silver Score</title>
+  <title>Lists — Silver Score</title>
   <script>
   (function(){
     var k = 'silver-score-theme';
@@ -44,26 +44,24 @@
 <div class="container">
   <header class="hero">
     <span class="eyebrow">Magazine</span>
-    <h1>Lists &amp; essays</h1>
-    <p class="hero-sub">Curated rows with a thesis, plus longer reads — one hub. <a href="#curated-lists">Jump to lists</a> · <a href="#essays">Jump to essays</a></p>
+    <h1>Curated lists</h1>
+    <p class="hero-sub">Thesis-driven rows — each one a point of view, not a leaderboard. <a href="#curated-lists">Jump to lists</a> · <a href="#calendar-lanes">On the calendar</a></p>
   </header>
 
   <section class="section fade-in" id="curated-lists" aria-labelledby="lists-hub-heading">
     <h2 class="section-title" id="lists-hub-heading">Curated lists <span class="badge">Thesis-driven</span></h2>
     <p class="section-lede">Each list is a point of view — not a leaderboard. Open one for IMDb-linked rows, original language when known, and our scores side by side.</p>
-    <p class="magazine-strip"><a href="#essays">Essays &amp; notes →</a></p>
     <div class="hub-grid" id="list-hub"></div>
-  </section>
-
-  <section class="section fade-in" id="essays" aria-labelledby="essays-hub-heading">
-    <h2 class="section-title" id="essays-hub-heading">Essays &amp; notes <span class="badge">Longer reads</span></h2>
-    <p class="section-lede">Short pieces on why certain corners of film and TV keep pulling us back.</p>
-    <p class="magazine-strip"><a href="#curated-lists">← Curated lists</a></p>
-    <div class="hub-grid" id="essay-hub"></div>
     <p style="margin-top:2rem;color:var(--text-secondary);font-size:0.9rem">
       <span class="coming-soon">RSS &amp; seasonal digests</span> — planned; for now, bookmark the site or drop a line via
       <a href="about.html">About</a>.
     </p>
+  </section>
+
+  <section class="section fade-in" id="calendar-lanes" aria-labelledby="calendar-heading">
+    <h2 class="section-title" id="calendar-heading">On the calendar <span class="badge">Upcoming</span></h2>
+    <p class="section-lede">Regional lenses on what we’re tracking next — open <a href="upcoming.html">Upcoming</a> for the full timeline and filters.</p>
+    <div class="hub-grid" id="highlight-hub"></div>
   </section>
 </div>
 </main>
@@ -92,20 +90,18 @@
     })
     .join('');
 
-  document.getElementById('essay-hub').innerHTML = MAGAZINE.essays
-    .map(function (e) {
+  document.getElementById('highlight-hub').innerHTML = MAGAZINE.calendarHighlights
+    .map(function (h) {
       return (
         '<article class="hub-card"><h2><a href="' +
-        e.href +
+        h.href +
         '">' +
-        e.title +
+        h.title +
         '</a></h2><p>' +
-        e.dek +
-        '</p><p class="hub-link" style="color:var(--text-dim)">' +
-        e.date +
+        h.dek +
         '</p><a class="hub-link" href="' +
-        e.href +
-        '">Read →</a></article>'
+        h.href +
+        '">Open Upcoming →</a></article>'
       );
     })
     .join('');

@@ -11,7 +11,7 @@ Open it on your phone or desktop, switch **light** or **dark** in the nav, and w
 ## What you’ll find inside
 
 - **Home** — A living dashboard: staff picks, “under the radar” high scores with quiet IMDb vote counts, world-cinema highlights, recently rated rows, star distribution, decade spread, directors we keep coming back to, and the titles we liked more than the crowd.
-- **Lists & essays** — Curated rows with a thesis, plus longer reads—one hub for point-of-view programming, not just titles in a row.
+- **Lists** — Curated rows with a thesis—one hub for point-of-view programming, not just titles in a row.
 - **Under the Radar** — Things we rated highly that still feel like secrets: worth your attention before word-of-mouth catches up.
 - **Upcoming** — A timeline of what we’re watching for next—filter by mood, region, or streamer-style tags when you want a narrower lens.
 - **Browse** — Search the full archive or dive into **genre DNA**: how our averages line up against IMDb by category.
