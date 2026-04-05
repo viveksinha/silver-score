@@ -78,6 +78,19 @@
   var tvTotalCount =
     typeof data.watchHoursTvTotalCount === 'number' ? data.watchHoursTvTotalCount : 0;
   var tvFullyEnriched = data.watchHoursTvFullyEnriched === true;
+  var tvFromCache =
+    typeof data.watchHoursTvCacheCount === 'number' ? data.watchHoursTvCacheCount : 0;
+  var tvFromManual =
+    typeof data.watchHoursTvManualEnrichmentCount === 'number'
+      ? data.watchHoursTvManualEnrichmentCount
+      : 0;
+
+  function tvHoursProvenance() {
+    if (tvFromCache > 0 && tvFromManual > 0) return 'mixed';
+    if (tvFromCache > 0) return 'cache';
+    if (tvFromManual > 0) return 'manual';
+    return 'none';
+  }
 
   function heroPitchHtml(hoursStr) {
     var baseNav =
@@ -91,20 +104,28 @@
       hoursStr +
       '</strong> hours';
     if (tvEnriched > 0) {
+      var prov = tvHoursProvenance();
       if (tvFullyEnriched) {
-        return (
-          head +
-          ' estimated from <strong class="pitch-stat">feature runtimes</strong> plus <strong class="pitch-stat">full series lengths</strong> (episodes × typical length from your private TV enrichment file — generate with the TMDB helper script). Edit that JSON if you stopped a series early.' +
-          baseNav
-        );
+        var fullDetail = '';
+        if (prov === 'cache') {
+          fullDetail =
+            '<strong class="pitch-stat">Feature films</strong> use one runtime each; <strong class="pitch-stat">every series</strong> uses summed per-episode minutes (by season) from your private <strong class="pitch-stat">tv-runtime-cache</strong>, filled via TMDB. The refresh script only updates new or changed titles.';
+        } else if (prov === 'manual') {
+          fullDetail =
+            '<strong class="pitch-stat">Feature films</strong> use one runtime each; <strong class="pitch-stat">series</strong> use your private <strong class="pitch-stat">tv-watch-enrichment</strong> file (episode totals or watched minutes). Edit if you stopped a run early.';
+        } else {
+          fullDetail =
+            '<strong class="pitch-stat">Feature films</strong> use one runtime each; <strong class="pitch-stat">series</strong> combine private <strong class="pitch-stat">tv-runtime-cache</strong> (TMDB per-episode sums) and <strong class="pitch-stat">tv-watch-enrichment</strong> overrides where present.';
+        }
+        return head + ' — ' + fullDetail + baseNav;
       }
       return (
         head +
-        ' — TV includes full-series estimates for <strong class="pitch-stat">' +
+        ' — TV includes full-series-style totals for <strong class="pitch-stat">' +
         tvEnriched.toLocaleString() +
         '</strong> of <strong class="pitch-stat">' +
         tvTotalCount.toLocaleString() +
-        '</strong> series; remaining series still use one IMDb runtime per row. Add rows to the enrichment file and rebuild to raise the total.' +
+        '</strong> series (cache and/or enrichment); the rest still use one IMDb runtime per row. Run the cache refresh and rebuild to add more.' +
         baseNav
       );
     }
@@ -460,9 +481,13 @@
       tip:
         tvEnriched > 0
           ? tvFullyEnriched
-            ? 'Films: one export runtime each. TV: private enrichment (episodes × minutes per episode, or watchedMinutes). Assumes completed runs unless you edited the JSON.'
-            : 'Mixed: enriched TV rows use full-series minutes from private/data/tv-watch-enrichment.json; other TV rows still use a single IMDb runtime each — add entries to close the gap.'
-          : 'Sum of each title’s one IMDb runtime field (minutes → hours). Films ≈ feature length. TV adds one figure per series (often ~one episode), not full seasons — use tv-watch-enrichment + rebuild for real series totals.',
+            ? tvFromCache > 0 && tvFromManual > 0
+              ? 'Films: one export runtime each. TV: tv-runtime-cache (TMDB per-episode minutes by season) plus tv-watch-enrichment overrides.'
+              : tvFromCache > 0
+                ? 'Films: one export runtime each. TV: tv-runtime-cache.json — sum of TMDB episode runtimes per season; refresh script updates only new/changed catalogue rows.'
+                : 'Films: one export runtime each. TV: tv-watch-enrichment.json (episodes × minutes or watchedMinutes). Edit for partial watches.'
+            : 'Some TV rows use the runtime cache or enrichment; others still use a single IMDb runtime each — refresh the cache and rebuild to cover more.'
+          : 'Sum of each title’s one IMDb runtime field (minutes → hours). Films ≈ feature length. TV adds one figure per series unless you build tv-runtime-cache.json (TMDB episodes) or tv-watch-enrichment.json.',
     },
     { value: nonEnCount, label: 'Non-English lean', icon: '⌁', mod: 'stat-card--g' },
     { value: data.genreStats.length, label: 'Genre tags', icon: '※', mod: 'stat-card--h' },
