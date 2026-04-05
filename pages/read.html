@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magazine — Silver Score</title>
+  <script>
+  (function(){
+    var k = 'silver-score-theme';
+    var t = localStorage.getItem(k) || localStorage.getItem('movies-site-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="container">
+    <a class="logo-link" href="../index.html" aria-label="Silver Score home">
+      <img src="../assets/favicon.svg" alt="" class="logo-icon" width="30" height="30" />
+      <span class="logo-wordmark">Silver Score</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="read.html#curated-lists">Lists</a>
+      <a href="read.html#essays">Essays</a>
+      <a href="hidden-gems.html">Under the Radar</a>
+      <a href="upcoming.html">Upcoming</a>
+      <a href="browse.html">Browse</a>
+      <a href="about.html">About</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch theme" title="Theme">Light</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="container">
+  <header class="hero">
+    <span class="eyebrow">Magazine</span>
+    <h1>Lists &amp; essays</h1>
+    <p class="hero-sub">Curated rows with a thesis, plus longer reads — one hub. <a href="#curated-lists">Jump to lists</a> · <a href="#essays">Jump to essays</a></p>
+  </header>
+
+  <section class="section fade-in" id="curated-lists" aria-labelledby="lists-hub-heading">
+    <h2 class="section-title" id="lists-hub-heading">Curated lists <span class="badge">Thesis-driven</span></h2>
+    <p class="section-lede">Each list is a point of view — not a leaderboard. Open one for IMDb-linked rows, original language when known, and our scores side by side.</p>
+    <p class="magazine-strip"><a href="#essays">Essays &amp; notes →</a></p>
+    <div class="hub-grid" id="list-hub"></div>
+  </section>
+
+  <section class="section fade-in" id="essays" aria-labelledby="essays-hub-heading">
+    <h2 class="section-title" id="essays-hub-heading">Essays &amp; notes <span class="badge">Longer reads</span></h2>
+    <p class="section-lede">Short pieces on why certain corners of film and TV keep pulling us back.</p>
+    <p class="magazine-strip"><a href="#curated-lists">← Curated lists</a></p>
+    <div class="hub-grid" id="essay-hub"></div>
+    <p style="margin-top:2rem;color:var(--text-secondary);font-size:0.9rem">
+      <span class="coming-soon">RSS &amp; seasonal digests</span> — planned; for now, bookmark the site or drop a line via
+      <a href="about.html">About</a>.
+    </p>
+  </section>
+</div>
+</main>
+
+<footer>
+  <div class="container">Silver Score &middot; 933 IMDb ratings &middot; April 2026</div>
+</footer>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/magazine.js"></script>
+<script>
+(function () {
+  document.getElementById('list-hub').innerHTML = MAGAZINE.lists
+    .map(function (l) {
+      return (
+        '<article class="hub-card"><h2>' +
+        l.title +
+        '</h2><p>' +
+        l.thesis +
+        '</p><p class="spoiler-line" style="margin:0 0 1rem;font-size:0.65rem">Spoiler policy: ' +
+        l.spoiler +
+        '</p><a class="hub-link" href="list.html#' +
+        l.slug +
+        '">Open list →</a></article>'
+      );
+    })
+    .join('');
+
+  document.getElementById('essay-hub').innerHTML = MAGAZINE.essays
+    .map(function (e) {
+      return (
+        '<article class="hub-card"><h2><a href="' +
+        e.href +
+        '">' +
+        e.title +
+        '</a></h2><p>' +
+        e.dek +
+        '</p><p class="hub-link" style="color:var(--text-dim)">' +
+        e.date +
+        '</p><a class="hub-link" href="' +
+        e.href +
+        '">Read →</a></article>'
+      );
+    })
+    .join('');
+
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(function (el) {
+    obs.observe(el);
+  });
+})();
+</script>
+</body>
+</html>

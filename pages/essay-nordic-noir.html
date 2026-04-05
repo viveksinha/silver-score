@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Nordic Noir Hits Different — Silver Score</title>
+  <script>
+  (function(){
+    var k = 'silver-score-theme';
+    var t = localStorage.getItem(k) || localStorage.getItem('movies-site-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="container">
+    <a class="logo-link" href="../index.html" aria-label="Silver Score home">
+      <img src="../assets/favicon.svg" alt="" class="logo-icon" width="30" height="30" />
+      <span class="logo-wordmark">Silver Score</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="read.html#curated-lists">Lists</a>
+      <a href="read.html#essays" class="active">Essays</a>
+      <a href="hidden-gems.html">Under the Radar</a>
+      <a href="upcoming.html">Upcoming</a>
+      <a href="browse.html">Browse</a>
+      <a href="about.html">About</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch theme" title="Theme">Light</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<article class="container prose-article">
+  <p class="eyebrow" style="margin-top:1.5rem"><a href="read.html#essays" style="color:inherit">← Essays</a></p>
+  <h1>Why Nordic noir hits different</h1>
+  <p class="byline">Silver Score &middot; April 2026</p>
+  <p class="spoiler-line">Spoiler policy: No spoilers — tone and craft only.</p>
+
+  <p class="lead">We keep returning to Scandinavian crime drama not for the body count, but for the silences between lines — the sense that institutions, weather, and family history are all co-conspirators.</p>
+
+  <p>Nordic noir asks you to sit with ambiguity. Detectives look exhausted because the job never ends in a tidy ribbon; the landscape is wide and empty, so the frame can’t hide behind constant motion. When a show trusts you to notice a half-finished sentence or a glance at the sea, it earns the slow episodes that would feel padded in a louder tradition.</p>
+
+  <h2>What to pair with it</h2>
+  <p>If you liked the moral fog of <em>The Bureau</em> or <em>Slow Horses</em>, try <a href="list.html#nordic-noir-and-neighbours">our Nordic neighbours list</a> — same appetite for systems that fail humans, different latitude.</p>
+
+  <p style="margin-top:2rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim)">Print-friendly: use your browser’s reader view when we add a dedicated reader skin in a later pass.</p>
+</article>
+</main>
+
+<footer>
+  <div class="container">Silver Score &middot; 933 IMDb ratings &middot; April 2026</div>
+</footer>
+
+<script src="../assets/js/theme.js"></script>
+</body>
+</html>

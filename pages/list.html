@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List — Silver Score</title>
+  <script>
+  (function(){
+    var k = 'silver-score-theme';
+    var t = localStorage.getItem(k) || localStorage.getItem('movies-site-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="container">
+    <a class="logo-link" href="../index.html" aria-label="Silver Score home">
+      <img src="../assets/favicon.svg" alt="" class="logo-icon" width="30" height="30" />
+      <span class="logo-wordmark">Silver Score</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="read.html#curated-lists" class="active">Lists</a>
+      <a href="read.html#essays">Essays</a>
+      <a href="hidden-gems.html">Under the Radar</a>
+      <a href="upcoming.html">Upcoming</a>
+      <a href="browse.html">Browse</a>
+      <a href="about.html">About</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch theme" title="Theme">Light</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="container prose-article">
+  <p class="eyebrow" style="margin-top:1.5rem"><a href="read.html#curated-lists" style="color:inherit">← All lists</a></p>
+  <h1 id="list-title">List</h1>
+  <p class="spoiler-line" id="list-spoiler"></p>
+  <p class="lead" id="list-thesis"></p>
+
+  <div class="table-scroll" style="margin-top:1.5rem">
+    <table class="data-table" id="list-table">
+      <thead>
+        <tr>
+          <th data-sort-key="title" data-sort-default="asc">Title</th>
+          <th data-sort-key="language" data-sort-default="asc">Original language</th>
+          <th data-sort-key="year" data-sort-default="desc">Year</th>
+          <th data-sort-key="type" data-sort-default="asc">Format</th>
+          <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
+          <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
+          <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
+          <th>RT</th>
+          <th data-sort-key="genres" data-sort-default="asc">Genres</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="container">Silver Score &middot; 933 IMDb ratings &middot; April 2026</div>
+</footer>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/table-sort.js"></script>
+<script src="../assets/js/rt-link.js"></script>
+<script src="../assets/js/magazine.js"></script>
+<script>
+(function () {
+  const data = DATA;
+  const S = silverScoreTableSort;
+  const slug = (location.hash || '').replace(/^#/, '') || MAGAZINE.lists[0].slug;
+  const meta = MAGAZINE.lists.find((l) => l.slug === slug) || MAGAZINE.lists[0];
+  if (!meta) return;
+
+  document.title = meta.title + ' — Silver Score';
+  document.getElementById('list-title').textContent = meta.title;
+  document.getElementById('list-spoiler').textContent = 'Spoiler policy: ' + meta.spoiler;
+  document.getElementById('list-thesis').textContent = meta.thesis;
+
+  const byId = new Map(data.allItems.map((i) => [i.id, i]));
+
+  function imdbGenreUrl(g) {
+    return `https://www.imdb.com/search/title/?genres=${encodeURIComponent(g.toLowerCase().replace(/ /g, '-'))}`;
+  }
+
+  function formatBadge(type) {
+    if (type === 'Movie') return '<span class="format-badge film">Film</span>';
+    if (type === 'TV Series') return '<span class="format-badge series">Series</span>';
+    if (type === 'TV Mini Series') return '<span class="format-badge mini">Miniseries</span>';
+    return '<span class="format-badge">' + (type || '—') + '</span>';
+  }
+
+  const listRows = meta.ids.map((id) => byId.get(id)).filter(Boolean);
+  function votesN(i) {
+    const v = i.votes;
+    if (v == null || v === '') return 0;
+    return Number(v);
+  }
+  const tieTitle = (a, b) =>
+    String(a.title || '').localeCompare(String(b.title || ''), undefined, { sensitivity: 'base', numeric: true });
+  const listSort = { key: 'myRating', dir: 'desc' };
+  const listSpec = {
+    title: { type: 'string', val: (i) => i.title },
+    language: { type: 'string', val: (i) => i.languageLabel || i.languageHint || '', tiebreak: tieTitle },
+    year: { type: 'number', val: (i) => i.year, tiebreak: tieTitle },
+    type: { type: 'string', val: (i) => i.type },
+    myRating: { type: 'number', val: (i) => i.myRating, tiebreak: tieTitle },
+    imdbRating: { type: 'number', val: (i) => i.imdbRating, tiebreak: tieTitle },
+    votes: { type: 'number', val: votesN, tiebreak: tieTitle },
+    genres: { type: 'string', val: (i) => (i.genres || []).join(', '), tiebreak: tieTitle },
+  };
+
+  const listTable = document.getElementById('list-table');
+  const listTbody = document.querySelector('#list-table tbody');
+
+  function renderListTable() {
+    const rows = S.sortRows(listRows, listSort, listSpec);
+    listTbody.innerHTML = rows
+      .map((i) => {
+        const rc =
+          i.myRating >= 10
+            ? 'rating-10'
+            : i.myRating >= 9
+              ? 'rating-9'
+              : i.myRating >= 8
+                ? 'rating-8'
+                : 'rating-7';
+        const langRaw = i.languageLabel || i.languageHint;
+        const lang = langRaw
+          ? `<span class="lang-pill">${langRaw}</span>`
+          : '—';
+        return `<tr>
+      <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
+      <td style="font-size:0.75rem;max-width:7rem">${lang}</td>
+      <td>${i.year}</td>
+      <td>${formatBadge(i.type)}</td>
+      <td><span class="rating-badge ${rc}">${i.myRating}</span></td>
+      <td><span class="imdb-badge">${i.imdbRating}</span></td>
+      <td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary)">${votesN(i).toLocaleString()}</td>
+      <td class="rt-cell">${silverScoreRt.cellHtml(i)}</td>
+      <td style="font-size:0.75rem;color:var(--text-secondary)">${i.genres.map((g) => `<a href="${imdbGenreUrl(g)}" target="_blank" rel="noopener noreferrer" style="color:var(--text-secondary)">${g}</a>`).join(', ')}</td>
+    </tr>`;
+      })
+      .join('');
+  }
+
+  S.bindSortableTable(listTable, { state: listSort, spec: listSpec, onChange: renderListTable });
+  renderListTable();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse &amp; Archive — Silver Score</title>
+  <script>
+  (function(){
+    var k = 'silver-score-theme';
+    var t = localStorage.getItem(k) || localStorage.getItem('movies-site-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="container">
+    <a class="logo-link" href="../index.html" aria-label="Silver Score home">
+      <img src="../assets/favicon.svg" alt="" class="logo-icon" width="30" height="30" />
+      <span class="logo-wordmark">Silver Score</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="read.html#curated-lists">Lists</a>
+      <a href="read.html#essays">Essays</a>
+      <a href="hidden-gems.html">Under the Radar</a>
+      <a href="upcoming.html">Upcoming</a>
+      <a href="browse.html" class="active">Browse</a>
+      <a href="about.html">About</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="true" aria-label="Switch theme" title="Theme">Light</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="container">
+  <header class="hero">
+    <span class="eyebrow">Archive</span>
+    <h1>Browse everything we’ve rated</h1>
+    <p class="hero-sub">Search the full library, or switch to <strong>Genre DNA</strong> for how our taste stacks up against IMDb by category.</p>
+  </header>
+
+  <div class="browse-panels section">
+    <div class="tab-panels-toolbar" role="tablist" aria-label="Browse mode">
+      <button type="button" class="panel-tab active" role="tab" aria-selected="true" id="tab-archive" data-panel="archive">All titles</button>
+      <button type="button" class="panel-tab" role="tab" aria-selected="false" id="tab-genre" data-panel="genre-dna">Genre DNA</button>
+    </div>
+
+    <div id="panel-archive" class="tab-panel active" role="tabpanel" aria-labelledby="tab-archive">
+      <h2 class="visually-hidden">All titles</h2>
+      <div class="filter-bar">
+        <input type="search" id="search" placeholder="Search titles..." aria-label="Search titles">
+        <select id="type-filter" aria-label="Filter by type">
+          <option value="">All Types</option>
+          <option value="Movie">Movies</option>
+          <option value="TV Series">TV Series</option>
+          <option value="TV Mini Series">Mini Series</option>
+        </select>
+        <select id="rating-filter" aria-label="Filter by our rating">
+          <option value="">All Ratings</option>
+          <option value="10">10 only</option>
+          <option value="9">9+</option>
+          <option value="8">8+</option>
+          <option value="7">7+</option>
+          <option value="6">6 and below</option>
+        </select>
+        <select id="genre-filter" aria-label="Filter by genre">
+          <option value="">All Genres</option>
+        </select>
+        <select id="sort-by" aria-label="Sort by">
+          <option value="myRating" selected>Our rating (high)</option>
+          <option value="dateRated">Recently rated</option>
+          <option value="myRatingLow">Our rating (low)</option>
+          <option value="imdbRating">IMDb rating</option>
+          <option value="year">Year (new)</option>
+          <option value="yearOld">Year (old)</option>
+          <option value="titleAsc">Title (A–Z)</option>
+          <option value="titleDesc">Title (Z–A)</option>
+          <option value="votesDesc">IMDb votes (high)</option>
+          <option value="votesAsc">IMDb votes (low)</option>
+          <option value="genresAsc">Genres (A–Z)</option>
+          <option value="genresDesc">Genres (Z–A)</option>
+          <option value="__custom">Custom (table headers)</option>
+        </select>
+      </div>
+      <div class="browse-meta" id="result-count"></div>
+      <div class="table-scroll">
+        <table class="data-table" id="browse-table">
+          <thead>
+            <tr>
+              <th data-sort-key="title" data-sort-default="asc">Title</th>
+              <th data-sort-key="language" data-sort-default="asc">Original language</th>
+              <th data-sort-key="year" data-sort-default="desc">Year</th>
+              <th data-sort-key="type" data-sort-default="asc">Format</th>
+              <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
+              <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
+              <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
+              <th>RT</th>
+              <th data-sort-key="genres" data-sort-default="asc">Genres</th>
+              <th data-sort-key="dateRated" data-sort-default="desc">Rated on</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="panel-genre-dna" class="tab-panel" role="tabpanel" aria-labelledby="tab-genre">
+      <section class="section fade-in" aria-labelledby="genre-break-heading">
+        <h2 class="section-title" id="genre-break-heading">Genre breakdown <span class="badge" id="genre-count"></span></h2>
+        <div class="bar-chart" id="genre-bars"></div>
+      </section>
+      <section class="section fade-in" aria-labelledby="verdict-heading">
+        <h2 class="section-title" id="verdict-heading">Love vs. avoid <span class="badge">Verdict</span></h2>
+        <p class="section-lede">
+          Genres ranked by our average rating. Love = avg 7.8+, Like = 7.3–7.7, Meh = 7.0–7.2, Not our thing = &lt;7.0
+        </p>
+        <div class="genre-grid" id="genre-cards"></div>
+      </section>
+      <section class="section fade-in" aria-labelledby="compare-heading">
+        <h2 class="section-title" id="compare-heading">Our rating vs IMDb average <span class="badge">By genre</span></h2>
+        <p class="section-lede">Do we rate genres higher or lower than the crowd?</p>
+        <div class="table-scroll">
+          <table class="data-table" id="genre-compare">
+            <thead>
+              <tr>
+                <th data-sort-key="genre" data-sort-default="asc">Genre</th>
+                <th data-sort-key="count" data-sort-default="desc">Count</th>
+                <th data-sort-key="avgMyRating" data-sort-default="desc">Our avg</th>
+                <th data-sort-key="avgImdbRating" data-sort-default="desc">IMDb avg</th>
+                <th data-sort-key="gap" data-sort-default="desc">Gap</th>
+                <th>Verdict</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="section fade-in" aria-labelledby="top-genre-heading">
+        <h2 class="section-title" id="top-genre-heading">Top picks per genre <span class="badge">Best of each</span></h2>
+        <div class="filter-bar">
+          <select id="genre-select" aria-label="Choose genre"><option value="">Select a genre…</option></select>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table" id="genre-top">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th data-sort-key="title" data-sort-default="asc">Title</th>
+                <th data-sort-key="year" data-sort-default="desc">Year</th>
+                <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
+                <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
+                <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
+                <th>RT</th>
+                <th data-sort-key="type" data-sort-default="asc">Type</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="container">Silver Score &middot; 933 IMDb ratings &middot; April 2026</div>
+</footer>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/infinite-scroll.js"></script>
+<script src="../assets/js/table-sort.js"></script>
+<script src="../assets/js/rt-link.js"></script>
+<script src="../assets/js/genres-panel.js"></script>
+<script>
+(function () {
+  const data = DATA;
+  const S = silverScoreTableSort;
+
+  function formatBadge(type) {
+    if (type === 'Movie') return '<span class="format-badge film">Film</span>';
+    if (type === 'TV Series') return '<span class="format-badge series">Series</span>';
+    if (type === 'TV Mini Series') return '<span class="format-badge mini">Miniseries</span>';
+    if (type && type.includes('Documentary')) return '<span class="format-badge doc">Doc</span>';
+    return '<span class="format-badge">' + (type || '—') + '</span>';
+  }
+
+  const allItems = data.allItems;
+  let filtered = [];
+  const PAGE_SIZE = 15;
+  let genreInited = false;
+  let archiveScroll = null;
+  const tieTitle = (a, b) =>
+    String(a.title || '').localeCompare(String(b.title || ''), undefined, { sensitivity: 'base', numeric: true });
+  const browseSortState = { key: 'myRating', dir: 'desc' };
+  function votesN(i) {
+    const v = i.votes;
+    if (v == null || v === '') return 0;
+    return Number(v);
+  }
+  const browseSpec = {
+    title: { type: 'string', val: (i) => i.title },
+    language: { type: 'string', val: (i) => i.languageLabel || i.languageHint || '', tiebreak: tieTitle },
+    year: { type: 'number', val: (i) => i.year, tiebreak: tieTitle },
+    type: { type: 'string', val: (i) => i.type },
+    myRating: { type: 'number', val: (i) => i.myRating, tiebreak: tieTitle },
+    imdbRating: { type: 'number', val: (i) => i.imdbRating, tiebreak: tieTitle },
+    votes: { type: 'number', val: votesN, tiebreak: tieTitle },
+    genres: { type: 'string', val: (i) => (i.genres || []).join(', '), tiebreak: tieTitle },
+    dateRated: { type: 'string', val: (i) => i.dateRated || '', tiebreak: tieTitle },
+  };
+  const sortSelectMap = {
+    myRating: { key: 'myRating', dir: 'desc' },
+    dateRated: { key: 'dateRated', dir: 'desc' },
+    myRatingLow: { key: 'myRating', dir: 'asc' },
+    imdbRating: { key: 'imdbRating', dir: 'desc' },
+    year: { key: 'year', dir: 'desc' },
+    yearOld: { key: 'year', dir: 'asc' },
+    titleAsc: { key: 'title', dir: 'asc' },
+    titleDesc: { key: 'title', dir: 'desc' },
+    votesDesc: { key: 'votes', dir: 'desc' },
+    votesAsc: { key: 'votes', dir: 'asc' },
+    genresAsc: { key: 'genres', dir: 'asc' },
+    genresDesc: { key: 'genres', dir: 'desc' },
+  };
+
+  function browseStateToSelectValue(st) {
+    for (const val of Object.keys(sortSelectMap)) {
+      const m = sortSelectMap[val];
+      if (m.key === st.key && m.dir === st.dir) return val;
+    }
+    return '__custom';
+  }
+
+  function applySortSelectToState() {
+    const sortBy = document.getElementById('sort-by').value;
+    if (sortBy === '__custom') return;
+    const m = sortSelectMap[sortBy];
+    if (m) {
+      browseSortState.key = m.key;
+      browseSortState.dir = m.dir;
+    }
+  }
+
+  function imdbGenreUrl(g) {
+    return `https://www.imdb.com/search/title/?genres=${encodeURIComponent(g.toLowerCase().replace(/ /g, '-'))}`;
+  }
+
+  const genreSet = new Set();
+  allItems.forEach((i) => i.genres.forEach((g) => genreSet.add(g)));
+  const gf = document.getElementById('genre-filter');
+  [...genreSet].sort().forEach((g) => {
+    const opt = document.createElement('option');
+    opt.value = g;
+    opt.textContent = g;
+    gf.appendChild(opt);
+  });
+
+  function buildFiltered() {
+    const search = document.getElementById('search').value.toLowerCase();
+    const typeF = document.getElementById('type-filter').value;
+    const ratingF = document.getElementById('rating-filter').value;
+    const genreF = document.getElementById('genre-filter').value;
+
+    filtered = allItems.filter((i) => {
+      if (search && !i.title.toLowerCase().includes(search)) return false;
+      if (typeF && i.type !== typeF) return false;
+      if (genreF && !i.genres.includes(genreF)) return false;
+      if (ratingF) {
+        const r = parseInt(ratingF, 10);
+        if (r === 6) {
+          if (i.myRating > 6) return false;
+        } else if (r === 10) {
+          if (i.myRating !== 10) return false;
+        } else if (i.myRating < r) return false;
+      }
+      return true;
+    });
+  }
+
+  function refreshArchiveTable() {
+    const browseTable = document.getElementById('browse-table');
+    const tbody = document.querySelector('#browse-table tbody');
+    if (archiveScroll) archiveScroll.teardown();
+    archiveScroll = createSilverScoreInfiniteScroll({
+      getItems: () => S.sortRows(filtered, browseSortState, browseSpec),
+      pageSize: PAGE_SIZE,
+      anchorAfter: browseTable,
+      root: browseTable.closest('.table-scroll'),
+      render: (items, { append }) => {
+        const rcFor = (i) =>
+          i.myRating >= 10
+            ? 'rating-10'
+            : i.myRating >= 9
+              ? 'rating-9'
+              : i.myRating >= 8
+                ? 'rating-8'
+                : i.myRating >= 7
+                  ? 'rating-7'
+                  : 'rating-low';
+        const html = items
+          .map((i) => {
+            const rc = rcFor(i);
+            const langRaw = i.languageLabel || i.languageHint;
+            const lang = langRaw
+              ? `<span class="lang-pill" title="Wikidata / export when available">${langRaw}</span>`
+              : '—';
+            return `<tr>
+        <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
+        <td style="font-size:0.75rem;max-width:7rem">${lang}</td>
+        <td>${i.year}</td>
+        <td>${formatBadge(i.type)}</td>
+        <td><span class="rating-badge ${rc}">${i.myRating}</span></td>
+        <td><span class="imdb-badge">${i.imdbRating}</span></td>
+        <td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary)">${votesN(i).toLocaleString()}</td>
+        <td class="rt-cell">${silverScoreRt.cellHtml(i)}</td>
+        <td style="font-size:0.75rem;color:var(--text-secondary);max-width:200px">${i.genres.map((g) => `<a href="${imdbGenreUrl(g)}" target="_blank" rel="noopener noreferrer" style="color:var(--text-secondary)">${g}</a>`).join(', ')}</td>
+        <td style="font-size:0.8rem;color:var(--text-secondary)">${i.dateRated}</td>
+      </tr>`;
+          })
+          .join('');
+        if (append) tbody.insertAdjacentHTML('beforeend', html);
+        else tbody.innerHTML = html;
+        const n = tbody.querySelectorAll('tr').length;
+        const total = filtered.length;
+        document.getElementById('result-count').textContent =
+          total === 0
+            ? 'No titles match your filters'
+            : n >= total
+              ? `Showing all ${total} title${total === 1 ? '' : 's'}`
+              : `Loaded ${n} of ${total} titles — scroll the table for more`;
+      },
+    });
+    archiveScroll.reset();
+  }
+
+  function applyFilters() {
+    buildFiltered();
+    applySortSelectToState();
+    if (browseBinder) browseBinder.updateHeaderClasses();
+    document.getElementById('sort-by').value = browseStateToSelectValue(browseSortState);
+    refreshArchiveTable();
+  }
+
+  const browseTableEl = document.getElementById('browse-table');
+  let browseBinder = null;
+  browseBinder = S.bindSortableTable(browseTableEl, {
+    state: browseSortState,
+    spec: browseSpec,
+    onChange: function () {
+      document.getElementById('sort-by').value = browseStateToSelectValue(browseSortState);
+      refreshArchiveTable();
+    },
+  });
+
+  document.getElementById('search').addEventListener('input', applyFilters);
+  document.getElementById('type-filter').addEventListener('change', applyFilters);
+  document.getElementById('rating-filter').addEventListener('change', applyFilters);
+  document.getElementById('genre-filter').addEventListener('change', applyFilters);
+  document.getElementById('sort-by').addEventListener('change', function () {
+    applySortSelectToState();
+    if (browseBinder) browseBinder.updateHeaderClasses();
+    refreshArchiveTable();
+  });
+
+  applyFilters();
+
+  function setPanel(id) {
+    const archive = document.getElementById('panel-archive');
+    const genre = document.getElementById('panel-genre-dna');
+    const tabs = document.querySelectorAll('.panel-tab');
+    tabs.forEach((t) => {
+      const on = t.dataset.panel === id;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    const showArchive = id === 'archive';
+    archive.classList.toggle('active', showArchive);
+    genre.classList.toggle('active', !showArchive);
+    if (!showArchive && !genreInited) {
+      initGenrePanel(data);
+      genreInited = true;
+    }
+  }
+
+  document.querySelectorAll('.panel-tab').forEach((btn) => {
+    btn.addEventListener('click', () => setPanel(btn.dataset.panel));
+  });
+
+  if (location.hash === '#genre-dna') setPanel('genre-dna');
+
+  window.addEventListener('hashchange', () => {
+    if (location.hash === '#genre-dna') setPanel('genre-dna');
+    else if (location.hash === '' || location.hash === '#archive') setPanel('archive');
+  });
+})();
+</script>
+</body>
+</html>

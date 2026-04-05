@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silver Score — Cinema magazine &amp; watchlist</title>
+  <script>
+  (function(){
+    var k = 'silver-score-theme';
+    var t = localStorage.getItem(k) || localStorage.getItem('movies-site-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="container">
+    <a class="logo-link" href="index.html" aria-label="Silver Score home">
+      <img src="assets/favicon.svg" alt="" class="logo-icon" width="30" height="30" />
+      <span class="logo-wordmark">Silver Score</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="pages/read.html#curated-lists">Lists</a>
+      <a href="pages/read.html#essays">Essays</a>
+      <a href="pages/hidden-gems.html">Under the Radar</a>
+      <a href="pages/upcoming.html">Upcoming</a>
+      <a href="pages/browse.html">Browse</a>
+      <a href="pages/about.html">About</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch theme" title="Theme">Light</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="container">
+  <header class="mag-hero">
+    <span class="eyebrow">Cinema magazine + data</span>
+    <h1>We rate everything. Then we curate what matters.</h1>
+    <p class="hero-sub" id="hero-pitch">Loading catalogue stats…</p>
+  </header>
+
+  <div class="stats-grid stats-grid--band" id="stats-grid"></div>
+
+  <section class="insight-strip" id="insight-strip" aria-label="Key takeaways"></section>
+
+  <section class="section fade-in" aria-labelledby="picks-heading">
+    <div class="section-head">
+      <h2 class="section-title" id="picks-heading">Staff picks <span class="badge">Perfect 10s</span></h2>
+      <div class="seg-group" id="picks-seg" role="group" aria-label="Staff picks time range">
+        <button type="button" class="seg-btn seg-btn--active" data-picks-mode="recent" aria-pressed="true">Recent</button>
+        <button type="button" class="seg-btn" data-picks-mode="alltime" aria-pressed="false">All time</button>
+      </div>
+    </div>
+    <p class="section-lede" id="picks-lede">Highest scores — <strong>Recent</strong> sorts by when we rated them; <strong>All time</strong> by IMDb crowd score.</p>
+    <div class="featured-grid" id="featured-picks"></div>
+    <div class="section-actions">
+      <a class="btn-outline" href="pages/read.html#curated-lists">Browse all lists</a>
+      <a class="btn-outline" href="pages/essay-nordic-noir.html">Latest essay</a>
+    </div>
+  </section>
+
+  <section class="section fade-in" aria-labelledby="radar-heading">
+    <div class="section-head">
+      <h2 class="section-title" id="radar-heading">Under the radar <span class="badge">Low votes, high scores</span></h2>
+      <div class="seg-group" id="radar-seg" role="group" aria-label="Under the radar time range">
+        <button type="button" class="seg-btn seg-btn--active" data-radar-mode="recent" aria-pressed="true">Recent</button>
+        <button type="button" class="seg-btn" data-radar-mode="alltime" aria-pressed="false">All time</button>
+      </div>
+    </div>
+    <p class="section-lede">We rated these 8+ while fewer than 50k people had voted on IMDb. <strong>Recent</strong> favors titles we logged in the last ~18 months, then fills out.</p>
+    <div class="featured-grid" id="radar-teaser"></div>
+    <div class="section-actions">
+      <a class="btn-outline" href="pages/hidden-gems.html">See the full shelf</a>
+    </div>
+  </section>
+
+  <section class="section fade-in" aria-labelledby="world-heading">
+    <h2 class="section-title" id="world-heading">Beyond English <span class="badge">World cinema &amp; TV</span></h2>
+    <p class="section-lede">Titles with a different original title or non-Latin script on IMDb — a rough proxy for non-English-first storytelling.</p>
+    <div class="featured-grid" id="world-picks"></div>
+    <div class="section-actions">
+      <a class="btn-outline" href="pages/browse.html">Search the archive</a>
+    </div>
+  </section>
+
+  <section class="section fade-in" aria-labelledby="recent-heading">
+    <h2 class="section-title" id="recent-heading">Recently seen <span class="badge">Rated on</span></h2>
+    <p class="section-lede">Up to fifteen newest “rated on” rows (scroll inside the frame). Original language when Wikidata lists a non-English filming language for the title.</p>
+    <div class="table-scroll table-scroll--recent">
+      <table class="data-table" id="recent-table">
+        <thead>
+          <tr>
+            <th>Rated on</th>
+            <th>Title</th>
+            <th>Original language</th>
+            <th>Year</th>
+            <th>Format</th>
+            <th>Our rating</th>
+            <th>IMDb</th>
+            <th>IMDb votes</th>
+            <th>RT</th>
+            <th>Genres</th>
+          </tr>
+        </thead>
+        <tbody id="recent-table-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section fade-in" aria-labelledby="season-heading">
+    <h2 class="section-title" id="season-heading">This month <span class="badge">Editorial</span></h2>
+    <p class="section-lede"><span class="coming-soon">Seasonal digest coming</span> — we’re lining up a short “what we’re watching next” note without turning the home page into an activity feed.</p>
+  </section>
+
+  <div class="charts-row">
+    <section class="section chart-panel fade-in" aria-labelledby="rating-dist-heading">
+      <h2 class="section-title" id="rating-dist-heading">How we distribute stars <span class="badge">Histogram</span></h2>
+      <div class="bar-chart" id="rating-chart"></div>
+    </section>
+    <section class="section chart-panel fade-in" aria-labelledby="decade-heading">
+      <h2 class="section-title" id="decade-heading">By decade <span class="badge">Release year</span></h2>
+      <p class="section-lede chart-panel-lede">Where release years cluster in the catalogue (not when we hit play).</p>
+      <div class="bar-chart" id="decade-chart"></div>
+    </section>
+  </div>
+
+  <section class="section fade-in" aria-labelledby="directors-heading">
+    <h2 class="section-title" id="directors-heading">Directors we keep booking <span class="badge">3+ titles</span></h2>
+    <p class="section-lede">Averages and volume — <strong>Vibe</strong> blends our average, how many titles we’ve seen, and star tier (click headers to sort).</p>
+    <div class="table-scroll">
+      <table class="data-table" id="directors-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th data-sort-key="name" data-sort-default="asc">Director</th>
+            <th data-sort-key="count" data-sort-default="desc">Titles</th>
+            <th data-sort-key="avg" data-sort-default="desc">Our avg</th>
+            <th data-sort-key="vibe" data-sort-default="desc">Vibe</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section fade-in" aria-labelledby="loved-heading">
+    <h2 class="section-title" id="loved-heading">We liked it more than IMDb <span class="badge">Gap ≥ 1.5</span></h2>
+    <p class="section-lede">Where our score sits 1.5+ above the crowd — often smaller films or shows that haven’t broken through yet.</p>
+    <div class="table-scroll">
+      <table class="data-table" id="loved-table">
+        <thead><tr><th data-sort-key="title" data-sort-default="asc">Title</th><th data-sort-key="year" data-sort-default="desc">Year</th><th data-sort-key="myRating" data-sort-default="desc">Our rating</th><th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th><th data-sort-key="votes" data-sort-default="desc">IMDb votes</th><th>RT</th><th data-sort-key="gap" data-sort-default="desc">Gap</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section fade-in" aria-labelledby="favorites-heading">
+    <h2 class="section-title" id="favorites-heading">All-time tens <span class="badge">Table</span></h2>
+    <div class="table-scroll">
+      <table class="data-table" id="top-table">
+        <thead><tr><th data-sort-key="title" data-sort-default="asc">Title</th><th data-sort-key="year" data-sort-default="desc">Year</th><th data-sort-key="type" data-sort-default="asc">Format</th><th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th><th data-sort-key="votes" data-sort-default="desc">IMDb votes</th><th>RT</th><th data-sort-key="genres" data-sort-default="asc">Genres</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer>
+  <div class="container">
+    Silver Score &middot; 933 IMDb ratings &middot; April 2026
+  </div>
+</footer>
+
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/infinite-scroll.js"></script>
+<script src="assets/js/table-sort.js"></script>
+<script src="assets/js/rt-link.js"></script>
+<script src="assets/js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Under the Radar — Silver Score</title>
+  <script>
+  (function(){
+    var k = 'silver-score-theme';
+    var t = localStorage.getItem(k) || localStorage.getItem('movies-site-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="container">
+    <a class="logo-link" href="../index.html" aria-label="Silver Score home">
+      <img src="../assets/favicon.svg" alt="" class="logo-icon" width="30" height="30" />
+      <span class="logo-wordmark">Silver Score</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="read.html#curated-lists">Lists</a>
+      <a href="read.html#essays">Essays</a>
+      <a href="hidden-gems.html" class="active">Under the Radar</a>
+      <a href="upcoming.html">Upcoming</a>
+      <a href="browse.html">Browse</a>
+      <a href="about.html">About</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch theme" title="Theme">Light</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="container">
+  <header class="hero">
+    <span class="eyebrow">Discovery</span>
+    <h1>Under the radar</h1>
+    <p class="hero-sub">Titles we rated <strong>8+</strong> that fewer than <strong>50k</strong> people have voted on at IMDb — high conviction, quiet corners of the catalogue. Bar width shows vote count vs the noisiest title in this list.</p>
+  </header>
+
+  <p class="section-lede" style="max-width:50rem;margin-bottom:1.5rem">
+    Takeaway: if you trust our taste for thrillers and slow-burn TV, this is where we’re most “off-consensus” with the crowd — not because the work is obscure for obscurity’s sake, but because word-of-mouth hasn’t caught up yet.
+  </p>
+
+  <section class="section" aria-labelledby="gems-heading">
+    <h2 class="visually-hidden" id="gems-heading">Ranked picks</h2>
+    <div class="seg-group" id="gems-seg" role="group" aria-label="Under the radar time range" style="margin-bottom:1rem">
+      <button type="button" class="seg-btn seg-btn--active" data-gems-mode="recent" aria-pressed="true">Recent</button>
+      <button type="button" class="seg-btn" data-gems-mode="alltime" aria-pressed="false">All time</button>
+    </div>
+    <div class="table-scroll">
+      <table class="data-table" id="gems-table">
+        <thead>
+          <tr>
+            <th data-sort-key="title" data-sort-default="asc">Title</th>
+            <th data-sort-key="language" data-sort-default="asc">Original language</th>
+            <th data-sort-key="year" data-sort-default="desc">Year</th>
+            <th data-sort-key="type" data-sort-default="asc">Format</th>
+            <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
+            <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
+            <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
+            <th>RT</th>
+            <th data-sort-key="niche" data-sort-default="desc">Niche</th>
+            <th data-sort-key="genres" data-sort-default="asc">Genres</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer>
+  <div class="container">Silver Score &middot; 933 IMDb ratings &middot; April 2026</div>
+</footer>
+
+<script src="../assets/js/theme.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/infinite-scroll.js"></script>
+<script src="../assets/js/table-sort.js"></script>
+<script src="../assets/js/rt-link.js"></script>
+<script>
+(function () {
+  const data = DATA;
+  const S = silverScoreTableSort;
+  function votesN(i) {
+    const v = i.votes;
+    if (v == null || v === '') return 0;
+    return Number(v);
+  }
+  const VOTE_CAP = 50000;
+  const MIN_RATING = 8;
+
+  function imdbGenreUrl(g) {
+    return `https://www.imdb.com/search/title/?genres=${encodeURIComponent(g.toLowerCase().replace(/ /g, '-'))}`;
+  }
+
+  function formatBadge(type) {
+    if (type === 'Movie') return '<span class="format-badge film">Film</span>';
+    if (type === 'TV Series') return '<span class="format-badge series">Series</span>';
+    if (type === 'TV Mini Series') return '<span class="format-badge mini">Miniseries</span>';
+    return '<span class="format-badge">' + (type || '—') + '</span>';
+  }
+
+  const poolFull = data.allItems.filter((i) => i.myRating >= MIN_RATING && (i.votes || 0) < VOTE_CAP);
+
+  function daysSinceRated(iso) {
+    if (!iso) return 99999;
+    const t = new Date(iso + (iso.length <= 10 ? 'T12:00:00' : '')).getTime();
+    if (Number.isNaN(t)) return 99999;
+    return (Date.now() - t) / (1000 * 60 * 60 * 24);
+  }
+
+  let gemsMode = 'recent';
+
+  function getActivePool() {
+    if (gemsMode === 'recent') {
+      const r = poolFull.filter((i) => daysSinceRated(i.dateRated) <= 540);
+      return r.length >= 12 ? r : poolFull.slice();
+    }
+    return poolFull.slice();
+  }
+
+  const tieTitle = (a, b) =>
+    String(a.title || '').localeCompare(String(b.title || ''), undefined, { sensitivity: 'base', numeric: true });
+  const gemsSort = { key: 'dateRated', dir: 'desc' };
+  const gemsSpec = {
+    title: { type: 'string', val: (i) => i.title },
+    language: { type: 'string', val: (i) => i.languageLabel || i.languageHint || '', tiebreak: tieTitle },
+    year: { type: 'number', val: (i) => i.year, tiebreak: tieTitle },
+    type: { type: 'string', val: (i) => i.type },
+    dateRated: { type: 'string', val: (i) => i.dateRated || '', tiebreak: tieTitle },
+    myRating: {
+      type: 'number',
+      val: (i) => i.myRating,
+      tiebreak: (a, b) => votesN(a) - votesN(b) || tieTitle(a, b),
+    },
+    imdbRating: { type: 'number', val: (i) => i.imdbRating, tiebreak: tieTitle },
+    votes: { type: 'number', val: votesN, tiebreak: tieTitle },
+    niche: { type: 'number', val: votesN, tiebreak: tieTitle },
+    genres: { type: 'string', val: (i) => (i.genres || []).join(', '), tiebreak: tieTitle },
+  };
+
+  const PAGE_SIZE = 12;
+  const tbody = document.querySelector('#gems-table tbody');
+  const gemsTable = document.getElementById('gems-table');
+
+  let gemsScroll = null;
+  function mountGems() {
+    const pool = getActivePool();
+    const maxVotes = pool.length ? Math.max(...pool.map((i) => i.votes || 0)) : 1;
+    if (gemsScroll) gemsScroll.teardown();
+    gemsScroll = createSilverScoreInfiniteScroll({
+      getItems: () => S.sortRows(pool, gemsSort, gemsSpec),
+      pageSize: PAGE_SIZE,
+      anchorAfter: gemsTable,
+      root: gemsTable.closest('.table-scroll'),
+      render: (slice, { append }) => {
+        const html = slice
+          .map((i) => {
+            const v = i.votes || 0;
+            const pct = Math.max(4, Math.round((v / (maxVotes || 1)) * 100));
+            const rc =
+              i.myRating >= 10
+                ? 'rating-10'
+                : i.myRating >= 9
+                  ? 'rating-9'
+                  : 'rating-8';
+            const langRaw = i.languageLabel || i.languageHint;
+            const lang = langRaw
+              ? `<span class="lang-pill">${langRaw}</span>`
+              : '—';
+            return `<tr>
+        <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
+        <td style="font-size:0.75rem;max-width:7rem">${lang}</td>
+        <td>${i.year}</td>
+        <td>${formatBadge(i.type)}</td>
+        <td><span class="rating-badge ${rc}">${i.myRating}</span></td>
+        <td><span class="imdb-badge">${i.imdbRating}</span></td>
+        <td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary)">${v.toLocaleString()}</td>
+        <td class="rt-cell">${silverScoreRt.cellHtml(i)}</td>
+        <td class="vote-bar-wrap"><div class="vote-bar-track"><div class="vote-bar-fill" style="width:${pct}%"></div></div></td>
+        <td style="font-size:0.75rem;color:var(--text-secondary);max-width:180px">${i.genres.map((g) => `<a href="${imdbGenreUrl(g)}" target="_blank" rel="noopener noreferrer" style="color:var(--text-secondary)">${g}</a>`).join(', ')}</td>
+      </tr>`;
+          })
+          .join('');
+        if (append) tbody.insertAdjacentHTML('beforeend', html);
+        else tbody.innerHTML = html;
+      },
+    });
+    gemsScroll.reset();
+  }
+
+  S.bindSortableTable(gemsTable, { state: gemsSort, spec: gemsSpec, onChange: mountGems });
+
+  document.querySelectorAll('#gems-seg .seg-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      gemsMode = btn.getAttribute('data-gems-mode') === 'alltime' ? 'alltime' : 'recent';
+      gemsSort.key = gemsMode === 'recent' ? 'dateRated' : 'myRating';
+      gemsSort.dir = 'desc';
+      document.querySelectorAll('#gems-seg .seg-btn').forEach((b) => {
+        const on = b.getAttribute('data-gems-mode') === gemsMode;
+        b.classList.toggle('seg-btn--active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      mountGems();
+    });
+  });
+
+  mountGems();
+})();
+</script>
+</body>
+</html>

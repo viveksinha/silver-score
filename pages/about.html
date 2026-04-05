@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Silver Score</title>
+  <script>
+  (function(){
+    var k = 'silver-score-theme';
+    var t = localStorage.getItem(k) || localStorage.getItem('movies-site-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="container">
+    <a class="logo-link" href="../index.html" aria-label="Silver Score home">
+      <img src="../assets/favicon.svg" alt="" class="logo-icon" width="30" height="30" />
+      <span class="logo-wordmark">Silver Score</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="read.html#curated-lists">Lists</a>
+      <a href="read.html#essays">Essays</a>
+      <a href="hidden-gems.html">Under the Radar</a>
+      <a href="upcoming.html">Upcoming</a>
+      <a href="browse.html">Browse</a>
+      <a href="about.html" class="active">About</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch theme" title="Theme">Light</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<article class="container prose-article">
+  <h1 style="margin-top:1.5rem">About this site</h1>
+  <p class="byline">Editorial voice: we on these pages; a little “I” here for the human behind the byline.</p>
+
+  <p>I’m <strong>Vivek Sinha</strong> — an engineer by heart who’s logged over 900 ratings on IMDb and still can’t resist starting a new series at midnight.</p>
+
+  <p>For the rest of my story—career, how I work, and how to reach me—see <a href="https://viveksinha.github.io/viveksinha/" target="_blank" rel="noopener noreferrer">my About me page</a> (same source as the <a href="https://github.com/viveksinha/viveksinha" target="_blank" rel="noopener noreferrer">viveksinha/viveksinha</a> site on GitHub).</p>
+
+  <p>This site started as a data experiment: export my IMDb history, visualize the patterns, and figure out what I actually like versus what I think I like. Turns out the answer is clear — <strong>thrillers, espionage, Nordic noir, and anything with moral ambiguity and subtitles.</strong></p>
+
+  <h2>What we publish</h2>
+  <ul style="color:var(--text-secondary);line-height:1.75;margin-left:1.25rem">
+    <li><strong>Curated lists</strong> built around mood, region, and era — not just “Top 10” rankings.</li>
+    <li><strong>Under the Radar</strong> picks — titles we rated highly that most people haven’t found yet.</li>
+    <li><strong>Short essays</strong> on double features, overlooked directors, and why some genres age better than others.</li>
+    <li><strong>A full searchable archive</strong> of everything we’ve watched, with honest ratings.</li>
+  </ul>
+
+  <p>The editorial lens leans into tension, slow burns, and stories that trust the audience. If it’s a Scandinavian crime drama or a Cold War spy thriller, it’s probably already on the list. If it’s a superhero franchise, it probably isn’t.</p>
+
+  <p>All recommendations are backed by data — 933 ratings, years of watching, and zero sponsored content.</p>
+</article>
+</main>
+
+<footer>
+  <div class="container">Silver Score &middot; 933 IMDb ratings &middot; April 2026</div>
+</footer>
+
+<script src="../assets/js/theme.js"></script>
+</body>
+</html>
