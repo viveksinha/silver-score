@@ -1,4 +1,8 @@
-"""Fetch original film/TV language labels from Wikidata (P345 = IMDb id, P364 = language)."""
+"""Fetch original film/TV language labels from Wikidata (P345 = IMDb id, P364 = language).
+
+This module exists twice: movies/scripts/ (export builder) and site/scripts/ (GitHub Actions).
+Edits must be applied to both copies so they stay byte-identical.
+"""
 
 from __future__ import annotations
 

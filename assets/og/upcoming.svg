@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Silver Score — upcoming">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0c10"/>
+      <stop offset="1" stop-color="#17171c"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#16a34a"/>
+      <stop offset="1" stop-color="#a7f3d0"/>
+    </linearGradient>
+    <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#f4f5f9"/>
+      <stop offset="0.5" stop-color="#7d8496"/>
+      <stop offset="1" stop-color="#dde1ea"/>
+    </linearGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.04 0"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" filter="url(#grain)" opacity="0.8"/>
+  <!-- top rule -->
+  <rect x="80" y="80" width="1040" height="3" fill="url(#rule)"/>
+  <!-- eyebrow -->
+  <text x="80" y="140" font-family="DM Mono, ui-monospace, monospace" font-size="22" letter-spacing="4" fill="#16a34a">SILVER SCORE · UPCOMING</text>
+  <!-- title -->
+  <text x="80" y="260" font-family="Fraunces, ui-serif, Georgia, serif" font-weight="700" font-size="72" fill="#f4f5f9" letter-spacing="-0.02em">What we&#x27;re watching next.</text>
+  <!-- crest -->
+  <g transform="translate(80, 500)">
+    <circle cx="22" cy="22" r="20" stroke="url(#silver)" stroke-width="1.4" fill="none" opacity="0.9"/>
+    <path fill="url(#silver)" d="M22 10.7l2.54 7.8h8.25l-6.68 4.85 2.54 7.8-6.65-4.83-6.65 4.83 2.54-7.8-6.68-4.85h8.25L22 10.7z"/>
+    <text x="56" y="20" font-family="Cormorant Garamond, Fraunces, serif" font-weight="600" font-size="26" fill="#e8e6f0">Silver Score</text>
+    <text x="56" y="42" font-family="DM Mono, monospace" font-size="14" letter-spacing="3" fill="#9b97a8">release board · apr 2026</text>
+  </g>
+</svg>

@@ -17,11 +17,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="About — Silver Score">
+  <meta property="og:description" content="After-hours film desk. Two people, honest scores, no sponsors.">
+  <meta property="og:image" content="../assets/og/about.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="About — Silver Score">
+  <meta name="twitter:description" content="After-hours film desk. Two people, honest scores, no sponsors.">
+  <meta name="twitter:image" content="../assets/og/about.svg">
+  <meta name="description" content="After-hours film desk. Two people, honest scores, no sponsors.">
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
 <body>
+
+<a class="skip-link" href="#main">Skip to content</a>
 
 <nav aria-label="Main">
   <div class="container">
@@ -29,25 +40,38 @@
       <img src="../assets/favicon.svg" alt="" class="logo-icon" width="30" height="30" />
       <span class="logo-wordmark">Silver Score</span>
     </a>
-    <div class="nav-links">
-      <a href="../index.html">Home</a>
-      <a href="read.html#curated-lists">Lists</a>
-      <a href="read.html#essays">Essays</a>
-      <a href="hidden-gems.html">Under the Radar</a>
-      <a href="upcoming.html">Upcoming</a>
-      <a href="browse.html">Browse</a>
-      <a href="about.html" class="active">About</a>
-      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch theme" title="Theme">Light</button>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-panel" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <line class="nav-toggle__line nav-toggle__line--top" x1="4" y1="6" x2="20" y2="6"/>
+        <line class="nav-toggle__line nav-toggle__line--mid" x1="4" y1="12" x2="20" y2="12"/>
+        <line class="nav-toggle__line nav-toggle__line--bot" x1="4" y1="18" x2="20" y2="18"/>
+      </svg>
+    </button>
+    <div class="nav-panel" id="nav-panel" data-state="closed">
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="stories.html">Stories</a>
+        <a href="upcoming.html">Upcoming</a>
+        <a href="browse.html">Browse</a>
+        <a href="about.html" class="active">About</a>
+      </div>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Switch theme" title="Theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.5" y1="4.5" x2="6.6" y2="6.6"/><line x1="17.4" y1="17.4" x2="19.5" y2="19.5"/><line x1="4.5" y1="19.5" x2="6.6" y2="17.4"/><line x1="17.4" y1="6.6" x2="19.5" y2="4.5"/></svg>
+        <span class="theme-toggle__label">Light</span>
+      </button>
     </div>
   </div>
 </nav>
 
-<main>
+<main id="main">
 <article class="container prose-article">
-  <h1 style="margin-top:1.5rem">About this site</h1>
-  <p class="byline">Two people, first person — us behind every score and note.</p>
+  <h1 class="page-title">About this site</h1>
+  <p class="byline">A two-person cinema desk — us behind every score, list, and essay.</p>
 
-  <p>We’re <strong>Vivek</strong> and <strong>Abhilasha</strong> — we’ve logged <strong>1,000+</strong> titles and on the order of <strong>8,500+</strong> watch hours on IMDb together, and we still can’t resist starting a new series at midnight.</p>
+  <p>We’re <strong>Vivek</strong> and <strong>Abhilasha</strong>. Between us we’ve logged <strong>1,000+</strong> titles and somewhere north of <strong>8,500</strong> watch hours on IMDb — and we still can’t resist starting a new series at midnight.</p>
+
+  <p>Silver Score is our after-hours film &amp; TV desk: honest scores, short essays, and curated lists that move at reading pace. No sponsors, no algorithmic wall, no 10-out-of-10 inflation.</p>
 
   <p>For more about Vivek — career, how he works, and how to reach us — see <a href="https://viveksinha.github.io/viveksinha/" target="_blank" rel="noopener noreferrer">his About me page</a> (same source as the <a href="https://github.com/viveksinha/viveksinha" target="_blank" rel="noopener noreferrer">viveksinha/viveksinha</a> site on GitHub).</p>
 
@@ -55,15 +79,18 @@
 
   <h2>What we publish</h2>
   <ul style="color:var(--text-secondary);line-height:1.75;margin-left:1.25rem">
-    <li><strong>Curated lists</strong> built around mood, region, and era — not just “Top 10” rankings.</li>
-    <li><strong>Under the Radar</strong> picks — titles we rated highly that most people haven’t found yet.</li>
-    <li><strong>Upcoming</strong> — releases we’re tracking, with filters when you want a tighter view.</li>
-    <li><strong>A full searchable list</strong> of everything we’ve rated, with honest scores.</li>
+    <li><strong><a href="stories.html">Stories</a></strong> — our editorial hub: curated lists with a point of view, long-read essays, under-the-radar picks, and release lanes we’re tracking.</li>
+    <li><strong><a href="upcoming.html">Upcoming</a></strong> — releases we’re tracking, with filters when you want a tighter view.</li>
+    <li><strong><a href="browse.html">Browse</a></strong> — the full searchable list of everything we’ve rated, with honest scores.</li>
   </ul>
 
   <p>We lean into tension, slow burns, and stories that trust the audience. If it’s a Scandinavian crime drama or a Cold War spy thriller, it’s probably already on the list. If it’s a superhero franchise, it probably isn’t.</p>
 
   <p>All recommendations are backed by data — roughly <strong>8,500+</strong> hours across <strong>1,000+</strong> titles, years of watching, and zero sponsored content.</p>
+
+  <h2>How the site looks</h2>
+  <p>The visual direction is <strong>Silver Score Noir</strong> — a quiet cinema-editorial look. Near-black dark mode for after-hours reading, warm cream light mode for daylight; a silvered Cormorant wordmark over Fraunces headlines, DM Sans body, DM Mono labels.</p>
+  <p>Five editorial pillars each carry their own accent so you always know which room you’re in: <strong>Noir &amp; Thrillers</strong> (indigo) is the lead; <strong>Beyond English</strong> (teal) covers world cinema and TV; <strong>Under the Radar</strong> (purple) surfaces high scores with low vote counts; <strong>Essays &amp; Stories</strong> (amber) is the reading desk; <strong>Upcoming</strong> (green) is the release board. Browse, the full archive, stays neutral on purpose.</p>
 </article>
 </main>
 
@@ -72,5 +99,6 @@
 </footer>
 
 <script src="../assets/js/theme.js"></script>
+<script src="../assets/js/nav.js"></script>
 </body>
 </html>

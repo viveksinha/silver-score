@@ -132,6 +132,8 @@
   /**
    * First option must be `<option value="">All languages</option>`.
    * Adds "Not listed" (__none__) when any row has an empty key.
+   * Language names are always appended in **alphabetical** order (see
+   * `.cursor/rules/sorted-lists.mdc` — dropdowns are never score-sorted).
    */
   function fillLanguageFilterOptions(selectEl, items) {
     if (!selectEl || !items || !items.length) return;

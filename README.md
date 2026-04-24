@@ -10,12 +10,13 @@ Open it on your phone or desktop, switch **light** or **dark** in the nav, and w
 
 ## What you’ll find inside
 
-- **Home** — A living dashboard: staff picks, “under the radar” high scores with quiet IMDb vote counts, world-cinema highlights, recently rated rows, star distribution, decade spread, directors we keep coming back to, and the titles we liked more than the crowd.
-- **Lists** — Curated rows with a thesis—one hub for point-of-view programming, not just titles in a row.
-- **Under the Radar** — Things we rated highly that still feel like secrets: worth your attention before word-of-mouth catches up.
+- **Home** — A living dashboard: staff picks, “under the radar” teaser rail, world-cinema highlights, essay teasers, recently rated rows, star distribution, decade spread, directors we keep coming back to, and the titles we liked more than the crowd.
+- **Stories** — The editorial hub: curated lists with a thesis, long-read essays, under-the-radar entry points into the full shelf, and calendar lanes into what we’re tracking next (not a generic leaderboard).
 - **Upcoming** — A timeline of what we’re watching for next—filter by mood, region, or streamer-style tags when you want a narrower lens.
 - **Browse** — Search the full archive or dive into **genre DNA**: how our averages line up against IMDb by category.
 - **About** — Who’s behind the voice and why tension, craft, and stories that don’t talk down matter here.
+
+**Under the Radar** (full sortable shelf) lives at `pages/hidden-gems.html`; the home page and **Stories** surface it with teasers and hub cards—there is no separate top-level nav tab for it.
 
 ---
 

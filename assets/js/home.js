@@ -1,5 +1,6 @@
 /**
- * Silver Score home — expects DATA, silverScoreTableSort, createSilverScoreInfiniteScroll (load data.js, table-sort, infinite-scroll before this file).
+ * Silver Score home — expects DATA, silverScoreTableSort, createSilverScoreInfiniteScroll
+ * (load data.js, genre-insights.js, table-sort, infinite-scroll before this file).
  */
 (function (global) {
   'use strict';
@@ -20,6 +21,12 @@
     };
   }
 
+  /** Same number as export `mainItems` when present (hero, stats, insight strip). */
+  var titleCount =
+    typeof data.mainItems === 'number' && !isNaN(data.mainItems)
+      ? data.mainItems
+      : (data.allItems || []).length;
+
   function votesN(i) {
     var v = i.votes;
     if (v == null || v === '') return 0;
@@ -38,6 +45,11 @@
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
+  }
+
+  /** Double-quoted attribute value for aria-label etc. */
+  function attrEscape(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
   }
 
   /** IMDb language when known; otherwise a neutral fallback for clearly international rows. */
@@ -86,12 +98,6 @@
     if (d.avg >= 8.5) return '&#9733;&#9733;';
     if (d.avg >= 8) return '&#9733;';
     return '';
-  }
-
-  var pitchEl = document.getElementById('hero-pitch');
-  if (pitchEl) {
-    pitchEl.innerHTML =
-      '~<strong class="pitch-stat">8,500+</strong> hours across <strong class="pitch-stat">1,000+</strong> titles on IMDb. We keep coming back to <strong class="pitch-stat">tension, craft, and stories that don’t talk down</strong>. Start below — or jump to <a href="pages/read.html#curated-lists">lists</a>, <a href="pages/hidden-gems.html">under-voted gems</a>, or the <a href="pages/browse.html">full list</a>.';
   }
 
   function daysSinceRated(iso) {
@@ -195,64 +201,83 @@
 
   var RAIL_MAX_STANDARD = 12;
 
-  var meaningful = data.genreStats
-    .filter(function (g) {
-      return g.count >= 15;
-    })
-    .sort(function (a, b) {
-      return b.avgMyRating - a.avgMyRating;
-    });
-  var topGenre = meaningful[0];
-  var crime = data.genreStats.find(function (g) {
-    return g.genre === 'Crime';
-  });
-  var thriller = data.genreStats.find(function (g) {
-    return g.genre === 'Thriller';
-  });
-  var tens = data.allItems.filter(function (i) {
-    return i.myRating === 10;
-  }).length;
-
-  var ctv = crime && thriller ? crime.avgMyRating - thriller.avgMyRating : 0;
-  var lean = ctv > 0 ? 'Crime' : ctv < 0 ? 'Thriller' : 'Balanced';
-  var crimeThrillerLabel = '—';
-  if (crime && thriller) {
-    if (ctv === 0) {
-      crimeThrillerLabel =
-        'Crime avg ' +
-        crime.avgMyRating +
-        ' · Thriller avg ' +
-        thriller.avgMyRating +
-        ' — evenly matched';
-    } else {
-      crimeThrillerLabel =
-        'Crime avg ' +
-        crime.avgMyRating +
-        ' · Thriller avg ' +
-        thriller.avgMyRating +
-        ' — a nudge toward <strong>' +
-        lean +
-        '</strong>';
+  var G =
+    typeof silverScoreGenreInsights !== 'undefined'
+      ? silverScoreGenreInsights
+      : {
+          filterGenreStatsForInsights: function (s) {
+            return s || [];
+          },
+        };
+  var insightGenreStats = G.filterGenreStatsForInsights(data.genreStats);
+  var items = data.allItems || [];
+  var gapSum = 0;
+  var gapCount = 0;
+  for (var gi = 0; gi < items.length; gi++) {
+    var itG = items[gi];
+    var mr = Number(itG.myRating);
+    var ir = Number(itG.imdbRating);
+    if (!isNaN(mr) && !isNaN(ir)) {
+      gapSum += mr - ir;
+      gapCount++;
     }
   }
-  document.getElementById('insight-strip').innerHTML =
-    '<div class="insight-card"><div class="insight-stat">' +
-    (topGenre ? topGenre.genre : '—') +
-    '</div><div class="insight-label">Genre we rate highest (only counting types with 15+ titles): ' +
-    (topGenre ? topGenre.avgMyRating : '') +
-    '</div></div>' +
-    '<div class="insight-card"><div class="insight-stat">' +
-    (crime && thriller ? Math.abs(ctv).toFixed(2) : '—') +
-    '</div><div class="insight-label">' +
-    crimeThrillerLabel +
-    '</div></div>' +
-    '<div class="insight-card"><div class="insight-stat">' +
-    tens +
-    '</div><div class="insight-label">Perfect 10s we’d still defend tomorrow</div></div>';
+  var meanGap = gapCount ? gapSum / gapCount : 0;
+  var gapStat;
+  var gapLabel;
+  if (gapCount === 0) {
+    gapStat = '—';
+    gapLabel = 'Mean gap vs IMDb (our rating minus IMDb, only rows with both)';
+  } else if (Math.abs(meanGap) < 0.05) {
+    gapStat = 'Even';
+    gapLabel =
+      'Our average matches the IMDb crowd score within rounding (same titles, paired rows only)';
+  } else {
+    gapStat = (meanGap >= 0 ? '+' : '') + (Math.round(meanGap * 10) / 10).toFixed(1);
+    gapLabel = 'Mean gap vs IMDb (our rating minus IMDb, only rows with both)';
+  }
+  var nonEn = 0;
+  for (var wi = 0; wi < items.length; wi++) {
+    if (!isEnglishPrimary(items[wi])) nonEn++;
+  }
+  var denom = titleCount > 0 ? titleCount : items.length;
+  var worldPct =
+    denom === 0 ? '—' : String(Math.round((100 * nonEn) / denom)) + '%';
+
+  var stripEl = document.getElementById('insight-strip');
+  if (stripEl) {
+    stripEl.innerHTML =
+      '<div class="insight-card"><div class="insight-stat">' +
+      (titleCount ? titleCount.toLocaleString() : '—') +
+      '</div><div class="insight-label">Titles in the archive with our score logged</div></div>' +
+      '<div class="insight-card"><div class="insight-stat">' +
+      gapStat +
+      '</div><div class="insight-label">' +
+      gapLabel +
+      '</div></div>' +
+      '<div class="insight-card"><div class="insight-stat">' +
+      (denom ? worldPct : '—') +
+      '</div><div class="insight-label">Share outside English-first (IMDb language and title cues)</div></div>';
+  }
+
+  var pitchEl = document.getElementById('hero-pitch');
+  if (pitchEl) {
+    var hoursPitch =
+      data.estimatedWatchHours && data.estimatedWatchHours > 0
+        ? '~' + Number(data.estimatedWatchHours).toLocaleString()
+        : '~8,500+';
+    pitchEl.innerHTML =
+      'A two-person film &amp; TV desk keeping honest scores after-hours — <strong class="pitch-stat">15+ years</strong> of curating this list, now <strong class="pitch-stat">' +
+      titleCount.toLocaleString() +
+      '</strong> scored titles and <strong class="pitch-stat">' +
+      hoursPitch +
+      '</strong> watch hours logged. We keep coming back to <strong class="pitch-stat">tension, craft, and stories that don’t talk down</strong>. Use the shortcuts above, or dive into the shelves below.';
+  }
 
   var tensBase = data.topRated.filter(function (i) {
     return i.myRating === 10;
   });
+  var tens = tensBase.length;
   var radarFullPool = data.allItems
     .filter(function (i) {
       return i.myRating >= 8 && (i.votes || 0) < 50000;
@@ -289,7 +314,9 @@
           '<li class="featured-rail-item">' +
           '<a class="featured-card featured-card--lift" href="' +
           i.url +
-          '" target="_blank" rel="noopener noreferrer">' +
+          '" target="_blank" rel="noopener noreferrer" aria-label="' +
+          attrEscape(i.title + ' — open on IMDb') +
+          '">' +
           '<span class="pick-pill pick-pill--radar">Under-voted</span>' +
           '<span class="meta-line">' +
           i.year +
@@ -297,7 +324,7 @@
           (i.votes || 0).toLocaleString() +
           ' votes · Our ' +
           i.myRating +
-          ' · IMDb ' +
+          ' · crowd ' +
           i.imdbRating +
           langBit +
           (i.dateRated
@@ -308,16 +335,158 @@
           '<h3>' +
           i.title +
           '</h3>' +
-          '<p class="why">We gave it ' +
+          '<p class="why">Our ' +
           i.myRating +
-          '/10 while the crowd sits at ' +
+          '/10 vs crowd ' +
           i.imdbRating +
           '.</p>' +
-          '<span class="cta">IMDb</span>' +
           '</a></li>'
         );
       })
       .join('');
+  }
+
+  function renderEssaysTeaser() {
+    var rail = document.getElementById('essays-teaser');
+    if (!rail) return;
+    var MAG = global.MAGAZINE || (typeof MAGAZINE !== 'undefined' ? MAGAZINE : null);
+    var essays = MAG && Array.isArray(MAG.essays) ? MAG.essays : [];
+    if (!essays.length) {
+      rail.innerHTML =
+        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">No essays published yet.</p></li>';
+      return;
+    }
+    rail.innerHTML = essays
+      .slice(0, RAIL_MAX_STANDARD)
+      .map(function (e) {
+        var href = e.href ? 'pages/' + e.href : 'pages/stories.html#essays';
+        return (
+          '<li class="featured-rail-item">' +
+          '<a class="featured-card featured-card--lift" href="' +
+          href +
+          '">' +
+          '<span class="pick-pill">Essay</span>' +
+          '<h3>' +
+          escapeHtmlText(e.title || 'Untitled') +
+          '</h3>' +
+          '<p class="why">' +
+          escapeHtmlText(e.dek || '') +
+          '</p>' +
+          '<span class="cta">Read essay</span>' +
+          '</a></li>'
+        );
+      })
+      .join('');
+  }
+
+  function openFullShelfDialog(kind) {
+    var dialog = document.getElementById('full-shelf-dialog');
+    if (!dialog) return;
+    var titleEl = document.getElementById('full-shelf-title');
+    var ledeEl = document.getElementById('full-shelf-lede');
+    var grid = document.getElementById('full-shelf-grid');
+    var MAG = global.MAGAZINE || (typeof MAGAZINE !== 'undefined' ? MAGAZINE : null);
+    if (!titleEl || !ledeEl || !grid || !MAG) return;
+
+    var items = [];
+    var titleText = '';
+    var ledeText = '';
+
+    if (kind === 'essays') {
+      titleText = 'All essays';
+      ledeText =
+        'Every long read we\'ve published so far &mdash; grouped in one place so you can scan without leaving the home page.';
+      items = (MAG.essays || []).map(function (e) {
+        return {
+          href: e.href ? 'pages/' + e.href : 'pages/stories.html#essays',
+          pill: 'Essay',
+          title: e.title,
+          dek: e.dek,
+          cta: 'Read essay',
+        };
+      });
+    } else if (kind === 'radar') {
+      titleText = 'All under-the-radar stories';
+      ledeText =
+        'Editorial framings &mdash; moods, regions, and decades &mdash; that lead into the full under-voted shelf. Each opens the relevant sortable view.';
+      items = (MAG.radarHighlights || []).map(function (r) {
+        var href = r.href;
+        var cta = 'Open the full shelf';
+        if (href && href.indexOf('essay-') === 0) {
+          href = 'pages/' + href;
+          cta = 'Read essay';
+        } else if (href) {
+          href = 'pages/' + href;
+        }
+        return {
+          href: href,
+          pill: 'Radar story',
+          title: r.title,
+          dek: r.dek,
+          cta: cta,
+        };
+      });
+    } else {
+      return;
+    }
+
+    titleEl.textContent = titleText;
+    ledeEl.innerHTML = ledeText;
+    grid.innerHTML = items
+      .map(function (i) {
+        return (
+          '<a class="featured-card featured-card--lift full-shelf-card" href="' +
+          i.href +
+          '">' +
+          '<span class="pick-pill">' +
+          escapeHtmlText(i.pill) +
+          '</span>' +
+          '<h3>' +
+          escapeHtmlText(i.title || 'Untitled') +
+          '</h3>' +
+          '<p class="why">' +
+          escapeHtmlText(i.dek || '') +
+          '</p>' +
+          '<span class="cta">' +
+          escapeHtmlText(i.cta) +
+          ' &rarr;</span>' +
+          '</a>'
+        );
+      })
+      .join('');
+
+    if (typeof dialog.showModal === 'function') {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute('open', '');
+    }
+  }
+
+  function wireFullShelfDialog() {
+    var dialog = document.getElementById('full-shelf-dialog');
+    if (!dialog) return;
+
+    document.querySelectorAll('[data-open-full-shelf]').forEach(function (btn) {
+      btn.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        openFullShelfDialog(btn.getAttribute('data-open-full-shelf'));
+      });
+    });
+
+    dialog.addEventListener('click', function (ev) {
+      if (ev.target === dialog) {
+        if (typeof dialog.close === 'function') dialog.close();
+        else dialog.removeAttribute('open');
+      }
+    });
+
+    var closeBtn = dialog.querySelector('[data-close-full-shelf]');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        if (typeof dialog.close === 'function') dialog.close();
+        else dialog.removeAttribute('open');
+      });
+    }
   }
 
   function renderWorldPicksRail() {
@@ -352,13 +521,15 @@
           '<li class="featured-rail-item">' +
           '<a class="featured-card featured-card--lift" href="' +
           i.url +
-          '" target="_blank" rel="noopener noreferrer">' +
+          '" target="_blank" rel="noopener noreferrer" aria-label="' +
+          attrEscape(i.title + ' — open on IMDb') +
+          '">' +
           worldPickBadge(i) +
           '<span class="meta-line">' +
           i.year +
           ' · Our ' +
           i.myRating +
-          ' · IMDb ' +
+          ' · crowd ' +
           i.imdbRating +
           (i.dateRated
             ? ' · <time datetime="' + i.dateRated + '">' + formatRatedOn(i.dateRated) + '</time>'
@@ -369,10 +540,9 @@
           i.title +
           '</h3>' +
           orig +
-          '<p class="why" style="margin-top:0.35rem">' +
-          (g || '') +
-          '</p>' +
-          '<span class="cta">IMDb</span>' +
+          (g
+            ? '<p class="why" style="margin-top:0.35rem">' + escapeHtmlText(g) + '</p>'
+            : '') +
           '</a></li>'
         );
       })
@@ -427,11 +597,13 @@
           '<li class="featured-rail-item">' +
           '<a class="featured-card featured-card--lift" href="' +
           i.url +
-          '" target="_blank" rel="noopener noreferrer">' +
+          '" target="_blank" rel="noopener noreferrer" aria-label="' +
+          attrEscape(i.title + ' — open on IMDb') +
+          '">' +
           pickRailBadge(i) +
           '<span class="meta-line">' +
           i.year +
-          ' · IMDb ' +
+          ' · crowd ' +
           i.imdbRating +
           (i.dateRated ? ' · <time datetime="' + i.dateRated + '">' + formatRatedOn(i.dateRated) + '</time>' : '') +
           (rel ? ' · ' + rel : '') +
@@ -440,9 +612,8 @@
           i.title +
           '</h3>' +
           '<p class="why">' +
-          (g || 'Genre mix on IMDb') +
+          (g ? escapeHtmlText(g) : 'Genre mix from listing') +
           '</p>' +
-          '<span class="cta">IMDb</span>' +
           '</a></li>'
         );
       })
@@ -469,6 +640,8 @@
   renderRadarTeaser();
   wireSegmented('radar-seg', 'radar-mode', renderRadarTeaser);
   renderWorldPicksRail();
+  renderEssaysTeaser();
+  wireFullShelfDialog();
 
   var recentSeen = data.allItems
     .filter(function (i) {
@@ -575,32 +748,39 @@
     : '~8,500+';
   var statCards = [
     { value: hoursLabel, label: 'Est. watch hours', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
-    { value: '1,000+', label: 'Titles rated', icon: '◆', mod: 'stat-card--b' },
+    { value: titleCount.toLocaleString(), label: 'Titles rated', icon: '◆', mod: 'stat-card--b' },
     { value: movieCount, label: 'Films', icon: '▣', mod: 'stat-card--c' },
     { value: tvCount, label: 'Series & minis', icon: '▤', mod: 'stat-card--d' },
     { value: data.avgRating.toFixed(1), label: 'Our average', icon: '★', mod: 'stat-card--e' },
     { value: tens, label: 'Perfect 10s', icon: '✦', mod: 'stat-card--f' },
     { value: nonEnCount, label: 'Non-English lean', icon: '⌁', mod: 'stat-card--g' },
-    { value: data.genreStats.length, label: 'Genre tags', icon: '※', mod: 'stat-card--h' },
+    {
+      value: insightGenreStats.length,
+      label: 'Genre tags',
+      icon: '※',
+      mod: 'stat-card--h',
+    },
   ];
-  grid.innerHTML = statCards
-    .map(function (s) {
-      var tip = s.tip ? ' title="' + s.tip.replace(/"/g, '&quot;') + '"' : '';
-      return (
-        '<div class="stat-card ' +
-        s.mod +
-        '"' +
-        tip +
-        '><span class="stat-icon" aria-hidden="true">' +
-        s.icon +
-        '</span><div class="stat-value">' +
-        s.value +
-        '</div><div class="stat-label">' +
-        s.label +
-        '</div></div>'
-      );
-    })
-    .join('');
+  if (grid) {
+    grid.innerHTML = statCards
+      .map(function (s) {
+        var tip = s.tip ? ' title="' + s.tip.replace(/"/g, '&quot;') + '"' : '';
+        return (
+          '<div class="stat-card ' +
+          s.mod +
+          '"' +
+          tip +
+          '><span class="stat-icon" aria-hidden="true">' +
+          s.icon +
+          '</span><div class="stat-value">' +
+          s.value +
+          '</div><div class="stat-label">' +
+          s.label +
+          '</div></div>'
+        );
+      })
+      .join('');
+  }
 
   var maxCount = Math.max.apply(
     null,
@@ -1009,15 +1189,16 @@
   if (topLangEl) topLangEl.addEventListener('change', mountTop);
   mountTop();
 
-  var observer = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) e.target.classList.add('visible');
-      });
-    },
-    { threshold: 0.1 }
-  );
+  var footCount = document.getElementById('footer-title-count');
+  if (footCount) {
+    footCount.textContent = titleCount.toLocaleString() + ' titles';
+  }
+
+  // `.fade-in` used to be an IntersectionObserver-driven reveal. The CSS now
+  // makes the class a near-no-op (opacity:1 by default, with an optional
+  // @starting-style entry where supported). We still mark all sections
+  // `visible` on DOMContentLoaded so any legacy selector keeps working.
   document.querySelectorAll('.fade-in').forEach(function (el) {
-    observer.observe(el);
+    el.classList.add('visible');
   });
 })(typeof window !== 'undefined' ? window : globalThis);

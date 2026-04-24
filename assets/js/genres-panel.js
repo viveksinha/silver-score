@@ -1,11 +1,45 @@
 /**
  * Genres tab on Browse — call initGenrePanel(DATA) after DOM is ready.
  * Expects elements: #genre-bars, #genre-cards, #genre-compare tbody, #genre-select, #genre-top tbody
- * Load table-sort.js before this file when sortable genre tables are used.
+ * Load genre-insights.js, table-sort.js before this file when sortable genre tables are used.
+ *
+ * Compare table (vs IMDb): rows are conditional on our watchlist per tag (selection bias).
+ * Min 15 titles; gap SE from per-title gaps on DATA.allItems; shrunk gap = n/(n+k)*meanGap, k=15.
  */
 function initGenrePanel(data) {
   const PAGE_SIZE = 10;
+  /** Min titles with a tag to appear in the IMDb compare table (sparse tags skew averages). */
+  const COMPARE_MIN_COUNT = 15;
+  /** Shrinkage strength for gap: pulls small-n gaps toward 0. */
+  const GAP_SHRINK_K = 15;
+  /** Below this count, show a low-sample hint (still shown if >= COMPARE_MIN_COUNT). */
+  const LOW_SAMPLE_HINT_BELOW = 20;
   const S = typeof silverScoreTableSort !== 'undefined' ? silverScoreTableSort : null;
+  const G =
+    typeof silverScoreGenreInsights !== 'undefined'
+      ? silverScoreGenreInsights
+      : {
+          filterGenreStatsForInsights: function (s) {
+            return s || [];
+          },
+        };
+
+  /** Engagement score: log10(count) × our average — weights volume + quality. */
+  function genreEngagementScore(g) {
+    const c = Math.max(Number(g.count) || 0, 1);
+    return Math.log10(c) * (Number(g.avgMyRating) || 0);
+  }
+
+  function sortGenresByEngagement(arr) {
+    return [...arr].sort((a, b) => {
+      const sb = genreEngagementScore(b);
+      const sa = genreEngagementScore(a);
+      if (sb !== sa) return sb - sa;
+      if (b.count !== a.count) return b.count - a.count;
+      return b.avgMyRating - a.avgMyRating;
+    });
+  }
+
   function votesN(i) {
     const v = i.votes;
     if (v == null || v === '') return 0;
@@ -20,13 +54,50 @@ function initGenrePanel(data) {
     return `https://www.imdb.com/search/title/?genres=${encodeURIComponent(g.toLowerCase().replace(/ /g, '-'))}`;
   }
 
+  const insightGenreStats = G.filterGenreStatsForInsights(data.genreStats);
   const countEl = document.getElementById('genre-count');
-  if (countEl) countEl.textContent = data.genreStats.length + ' genres';
+  if (countEl) countEl.textContent = insightGenreStats.length + ' genres';
 
-  const sorted = [...data.genreStats]
-    .filter((g) => g.count >= 5)
-    .sort((a, b) => b.avgMyRating - a.avgMyRating);
+  const sorted = sortGenresByEngagement(
+    insightGenreStats.filter((g) => g.count >= 5)
+  );
   const maxG = Math.max(...sorted.map((g) => g.count), 1);
+
+  /** Per-genre compare stats from title-level rows (gap mean, SE, shrunk gap). Same tags as insight filter. */
+  function buildComparePool() {
+    const all = data.allItems || [];
+    const pool = [];
+    for (const row of insightGenreStats) {
+      if (row.count < COMPARE_MIN_COUNT) continue;
+      const titles = all.filter((i) => (i.genres || []).includes(row.genre));
+      const n = titles.length;
+      if (n < COMPARE_MIN_COUNT) continue;
+      const myR = titles.map((i) => Number(i.myRating));
+      const imR = titles.map((i) => Number(i.imdbRating));
+      const avgMy = myR.reduce((a, b) => a + b, 0) / n;
+      const avgImdb = imR.reduce((a, b) => a + b, 0) / n;
+      const gaps = titles.map((_, ix) => myR[ix] - imR[ix]);
+      const meanGap = gaps.reduce((a, b) => a + b, 0) / n;
+      let gapSe = 0;
+      if (n > 1) {
+        const variance = gaps.reduce((sum, g) => sum + (g - meanGap) ** 2, 0) / (n - 1);
+        gapSe = Math.sqrt(variance / n);
+      }
+      const shrunkGap = (n / (n + GAP_SHRINK_K)) * meanGap;
+      pool.push({
+        genre: row.genre,
+        count: n,
+        avgMyRating: Math.round(avgMy * 100) / 100,
+        avgImdbRating: Math.round(avgImdb * 100) / 100,
+        gap: Math.round(meanGap * 100) / 100,
+        meanGap,
+        gapSe: Math.round(gapSe * 1000) / 1000,
+        shrunkGap: Math.round(shrunkGap * 100) / 100,
+      });
+    }
+    return pool;
+  }
+  const comparePool = buildComparePool();
 
   function makeBarRow(g) {
     const pct = ((g.count / maxG) * 100).toFixed(1);
@@ -71,21 +142,38 @@ function initGenrePanel(data) {
     </div>`;
   }
 
+  function compareVsImdbVerdict(meanGap) {
+    if (meanGap > 0.25) {
+      return '<span class="genre-verdict verdict-love">Warmer vs IMDb (these titles)</span>';
+    }
+    if (meanGap < -0.25) {
+      return '<span class="genre-verdict verdict-avoid">Cooler vs IMDb (these titles)</span>';
+    }
+    return '<span class="genre-verdict verdict-meh">In line vs IMDb (these titles)</span>';
+  }
+
   function makeCompareRow(g) {
-    const gap = (g.avgMyRating - g.avgImdbRating).toFixed(2);
-    const gapColor = gap > 0 ? 'var(--green)' : gap < -0.3 ? 'var(--red)' : 'var(--text-secondary)';
-    let verdict;
-    if (g.avgMyRating >= 7.8) verdict = '<span class="genre-verdict verdict-love">Love it</span>';
-    else if (g.avgMyRating >= 7.3) verdict = '<span class="genre-verdict verdict-like">Like</span>';
-    else if (g.avgMyRating >= 7.0) verdict = '<span class="genre-verdict verdict-meh">Mixed</span>';
-    else verdict = '<span class="genre-verdict verdict-avoid">Not for us</span>';
+    const gapNum = g.gap;
+    const gapStr = gapNum.toFixed(2);
+    const gapColor =
+      gapNum > 0 ? 'var(--green)' : gapNum < -0.3 ? 'var(--red)' : 'var(--text-secondary)';
+    const shrunkStr = g.shrunkGap.toFixed(2);
+    const shrunkColor =
+      g.shrunkGap > 0 ? 'var(--green)' : g.shrunkGap < -0.3 ? 'var(--red)' : 'var(--text-secondary)';
+    const seStr = g.gapSe.toFixed(3);
+    const countCell =
+      g.count < LOW_SAMPLE_HINT_BELOW
+        ? `${g.count} <span class="genre-low-n" title="Fewer than ${LOW_SAMPLE_HINT_BELOW} titles with this tag in our log">Low sample</span>`
+        : String(g.count);
     return `<tr>
       <td><a href="${imdbGenreUrl(g.genre)}" target="_blank" rel="noopener noreferrer"><strong>${g.genre}</strong></a></td>
-      <td>${g.count}</td>
+      <td>${countCell}</td>
       <td><span class="rating-badge ${g.avgMyRating >= 8 ? 'rating-9' : g.avgMyRating >= 7.5 ? 'rating-8' : 'rating-7'}">${g.avgMyRating}</span></td>
       <td><span class="imdb-badge">${g.avgImdbRating}</span></td>
-      <td style="color:${gapColor};font-weight:600">${gap > 0 ? '+' : ''}${gap}</td>
-      <td>${verdict}</td>
+      <td style="color:${gapColor};font-weight:600">${gapNum > 0 ? '+' : ''}${gapStr}</td>
+      <td style="color:${shrunkColor};font-weight:600">${g.shrunkGap > 0 ? '+' : ''}${shrunkStr}</td>
+      <td style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-secondary)">±${seStr}</td>
+      <td>${compareVsImdbVerdict(g.meanGap)}</td>
     </tr>`;
   }
 
@@ -128,17 +216,20 @@ function initGenrePanel(data) {
   const ctb = document.querySelector('#genre-compare tbody');
   const tieGenre = (a, b) =>
     String(a.genre || '').localeCompare(String(b.genre || ''), undefined, { sensitivity: 'base', numeric: true });
-  const genreCompareSort = { key: 'avgMyRating', dir: 'desc' };
+  const tieGenreCount = (a, b) => {
+    const c = (b.count || 0) - (a.count || 0);
+    if (c !== 0) return c;
+    return tieGenre(a, b);
+  };
+  const genreCompareSort = { key: 'shrunkGap', dir: 'desc' };
   const genreCompareSpec = {
     genre: { type: 'string', val: (g) => g.genre },
     count: { type: 'number', val: (g) => g.count, tiebreak: tieGenre },
     avgMyRating: { type: 'number', val: (g) => g.avgMyRating, tiebreak: tieGenre },
     avgImdbRating: { type: 'number', val: (g) => g.avgImdbRating, tiebreak: tieGenre },
-    gap: {
-      type: 'number',
-      val: (g) => g.avgMyRating - g.avgImdbRating,
-      tiebreak: tieGenre,
-    },
+    gap: { type: 'number', val: (g) => g.gap, tiebreak: tieGenreCount },
+    shrunkGap: { type: 'number', val: (g) => g.shrunkGap, tiebreak: tieGenreCount },
+    gapSe: { type: 'number', val: (g) => g.gapSe, tiebreak: tieGenre },
   };
 
   let compareScroll = null;
@@ -146,7 +237,7 @@ function initGenrePanel(data) {
     if (!ctb || !genreCompareTable) return;
     if (compareScroll) compareScroll.teardown();
     compareScroll = createSilverScoreInfiniteScroll({
-      getItems: () => (S ? S.sortRows(sorted, genreCompareSort, genreCompareSpec) : sorted),
+      getItems: () => (S ? S.sortRows(comparePool, genreCompareSort, genreCompareSpec) : comparePool),
       pageSize: PAGE_SIZE,
       anchorAfter: genreCompareTable,
       root: genreCompareTable.closest('.table-scroll'),
@@ -242,7 +333,13 @@ function initGenrePanel(data) {
   }
 
   if (select) {
-    sorted.forEach((g) => {
+    const selectOrder = [...sorted].sort((a, b) =>
+      String(a.genre || '').localeCompare(String(b.genre || ''), undefined, {
+        sensitivity: 'base',
+        numeric: true,
+      }),
+    );
+    selectOrder.forEach((g) => {
       const opt = document.createElement('option');
       opt.value = g.genre;
       opt.textContent = `${g.genre} (${g.count})`;
@@ -265,6 +362,10 @@ function initGenrePanel(data) {
     }
     select.addEventListener('change', syncGenreTopPool);
     if (langTopSelect) langTopSelect.addEventListener('change', syncGenreTopPool);
+    if (sorted.length) {
+      select.value = sorted[0].genre;
+      syncGenreTopPool();
+    }
   }
 
   const observer = new IntersectionObserver(

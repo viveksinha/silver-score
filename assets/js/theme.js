@@ -22,9 +22,17 @@
     if (!btn) return;
     var isDark = current() === 'dark';
     btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-    btn.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+    btn.setAttribute(
+      'aria-label',
+      isDark ? 'Switch to light theme' : 'Switch to dark theme'
+    );
     btn.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
-    btn.textContent = isDark ? 'Light' : 'Dark';
+    var label = btn.querySelector('.theme-toggle__label');
+    if (label) {
+      label.textContent = isDark ? 'Light' : 'Dark';
+    } else if (!btn.querySelector('svg')) {
+      btn.textContent = isDark ? 'Light' : 'Dark';
+    }
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -35,6 +43,11 @@
     } catch (e) {}
     syncButton();
     var btn = document.getElementById('theme-toggle');
-    if (btn) btn.addEventListener('click', function () { toggle(); syncButton(); });
+    if (btn) {
+      btn.addEventListener('click', function () {
+        toggle();
+        syncButton();
+      });
+    }
   });
 })();

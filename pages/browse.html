@@ -17,11 +17,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Browse — Silver Score">
+  <meta property="og:description" content="The full archive — search 1,000+ titles and genres.">
+  <meta property="og:image" content="../assets/og/browse.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Browse — Silver Score">
+  <meta name="twitter:description" content="The full archive — search 1,000+ titles and genres.">
+  <meta name="twitter:image" content="../assets/og/browse.svg">
+  <meta name="description" content="The full archive — search 1,000+ titles and genres.">
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
-<body>
+<body class="browse-page">
+
+<a class="skip-link" href="#main">Skip to content</a>
 
 <nav aria-label="Main">
   <div class="container">
@@ -29,20 +40,31 @@
       <img src="../assets/favicon.svg" alt="" class="logo-icon" width="30" height="30" />
       <span class="logo-wordmark">Silver Score</span>
     </a>
-    <div class="nav-links">
-      <a href="../index.html">Home</a>
-      <a href="read.html#curated-lists">Lists</a>
-      <a href="read.html#essays">Essays</a>
-      <a href="hidden-gems.html">Under the Radar</a>
-      <a href="upcoming.html">Upcoming</a>
-      <a href="browse.html" class="active">Browse</a>
-      <a href="about.html">About</a>
-      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="true" aria-label="Switch theme" title="Theme">Light</button>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-panel" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <line class="nav-toggle__line nav-toggle__line--top" x1="4" y1="6" x2="20" y2="6"/>
+        <line class="nav-toggle__line nav-toggle__line--mid" x1="4" y1="12" x2="20" y2="12"/>
+        <line class="nav-toggle__line nav-toggle__line--bot" x1="4" y1="18" x2="20" y2="18"/>
+      </svg>
+    </button>
+    <div class="nav-panel" id="nav-panel" data-state="closed">
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="stories.html">Stories</a>
+        <a href="upcoming.html">Upcoming</a>
+        <a href="browse.html" class="active">Browse</a>
+        <a href="about.html">About</a>
+      </div>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Switch theme" title="Theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.5" y1="4.5" x2="6.6" y2="6.6"/><line x1="17.4" y1="17.4" x2="19.5" y2="19.5"/><line x1="4.5" y1="19.5" x2="6.6" y2="17.4"/><line x1="17.4" y1="6.6" x2="19.5" y2="4.5"/></svg>
+        <span class="theme-toggle__label">Light</span>
+      </button>
     </div>
   </div>
 </nav>
 
-<main>
+<main id="main">
 <div class="container">
   <header class="hero">
     <span class="eyebrow">Archive</span>
@@ -126,23 +148,27 @@
       <section class="section fade-in" aria-labelledby="verdict-heading">
         <h2 class="section-title" id="verdict-heading">What we love and what we skip <span class="badge">By genre</span></h2>
         <p class="section-lede">
-          Sorted by our average: Love it (7.8+), Like (7.3–7.7), Mixed (7.0–7.2), Not for us (&lt;7.0)
+          Genres ordered by engagement: log10(title count) × our average (ties: more titles, then higher average). Verdict bands: Love it (7.8+), Like (7.3–7.7), Mixed (7.0–7.2), Not for us (&lt;7.0)
         </p>
         <div class="genre-grid" id="genre-cards"></div>
       </section>
       <section class="section fade-in" aria-labelledby="compare-heading">
         <h2 class="section-title" id="compare-heading">Our rating vs IMDb average <span class="badge">By genre</span></h2>
-        <p class="section-lede">Our average next to IMDb’s — where do we run hotter or cooler?</p>
+        <p class="section-lede">
+          These averages are <strong>only over titles we rated</strong> that carry each IMDb tag — not a random sample of the genre, so selective picks (e.g. music) can look skewed. Only genres with <strong>15+</strong> such titles appear here. <strong>Shrunk gap</strong> pulls small-sample gaps toward zero (k=15). <strong>SE</strong> is the standard error of per-title gaps on those same titles.
+        </p>
         <div class="table-scroll">
           <table class="data-table" id="genre-compare">
             <thead>
               <tr>
                 <th data-sort-key="genre" data-sort-default="asc">Genre</th>
-                <th data-sort-key="count" data-sort-default="desc">Count</th>
-                <th data-sort-key="avgMyRating" data-sort-default="desc">Our avg</th>
-                <th data-sort-key="avgImdbRating" data-sort-default="desc">IMDb avg</th>
-                <th data-sort-key="gap" data-sort-default="desc">Gap</th>
-                <th>How we feel</th>
+                <th data-sort-key="count">Count</th>
+                <th data-sort-key="avgMyRating">Our avg</th>
+                <th data-sort-key="avgImdbRating">IMDb avg</th>
+                <th data-sort-key="gap">Gap</th>
+                <th data-sort-key="shrunkGap" data-sort-default="desc">Shrunk gap</th>
+                <th data-sort-key="gapSe" data-sort-default="asc">SE (gap)</th>
+                <th data-sort-key="vsImdb" data-sort-default="desc">vs IMDb</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -152,7 +178,7 @@
       <section class="section fade-in" aria-labelledby="top-genre-heading">
         <h2 class="section-title" id="top-genre-heading">Top picks per genre <span class="badge">Best of each</span></h2>
         <div class="filter-bar">
-          <select id="genre-select" aria-label="Choose genre"><option value="">Select a genre…</option></select>
+          <select id="genre-select" aria-label="Choose genre"></select>
           <select id="genre-top-lang-filter" aria-label="Filter by original language">
             <option value="">All languages</option>
           </select>
@@ -186,7 +212,9 @@
 </footer>
 
 <script src="../assets/js/theme.js"></script>
+<script src="../assets/js/nav.js"></script>
 <script src="../assets/js/data.js"></script>
+<script src="../assets/js/genre-insights.js"></script>
 <script src="../assets/js/infinite-scroll.js"></script>
 <script src="../assets/js/table-sort.js"></script>
 <script src="../assets/js/rt-link.js"></script>
@@ -268,12 +296,16 @@
   const genreSet = new Set();
   allItems.forEach((i) => i.genres.forEach((g) => genreSet.add(g)));
   const gf = document.getElementById('genre-filter');
-  [...genreSet].sort().forEach((g) => {
-    const opt = document.createElement('option');
-    opt.value = g;
-    opt.textContent = g;
-    gf.appendChild(opt);
-  });
+  [...genreSet]
+    .sort((a, b) =>
+      String(a).localeCompare(String(b), undefined, { sensitivity: 'base', numeric: true }),
+    )
+    .forEach((g) => {
+      const opt = document.createElement('option');
+      opt.value = g;
+      opt.textContent = g;
+      gf.appendChild(opt);
+    });
   S.fillLanguageFilterOptions(document.getElementById('language-filter'), allItems);
 
   function buildFiltered() {
