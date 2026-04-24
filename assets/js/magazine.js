@@ -187,39 +187,39 @@ const MAGAZINE = {
   calendarHighlights: [
     {
       title: 'Spy TV on the calendar',
-      dek: 'The espionage lane we\'re watching for — new seasons of long-running covers, new ensembles, new agencies. On Upcoming, pick the Spy chip.',
+      dek: 'The espionage lane we\'re watching for — new seasons of long-running covers, new ensembles, new agencies. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'Nordic noir — returning',
-      dek: 'Scandinavian crime sequels and continuations we\'ve flagged for this year. On Upcoming, pick Scandinavia or the Noir chip.',
+      dek: 'Scandinavian crime sequels and continuations we\'ve flagged for this year. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'British crime — dates to save',
-      dek: 'UK procedurals, Sunday-night detectives, and BBC/ITV prestige we expect to rate high. On Upcoming, pick UK.',
+      dek: 'UK procedurals, Sunday-night detectives, and BBC/ITV prestige we expect to rate high. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'Korea on the calendar',
-      dek: 'Film and series we\'re watching for — on Upcoming, pick Korea.',
+      dek: 'Film and series we\'re watching for. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'French lane — releases we\'re eyeing',
-      dek: 'On Upcoming, pick French for what\'s landing next.',
+      dek: 'French releases we\'re eyeing. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'Japan — screens big and small',
-      dek: 'Animated, live-action, and hybrids landing soon — on Upcoming, pick Japan.',
+      dek: 'Animated, live-action, and hybrids landing soon. More on Upcoming.',
       href: 'upcoming.html',
     },
   ],
   radarHighlights: [
     {
       title: 'Recent gems — last 18 months',
-      dek: 'Fresh 8+ picks with fewer than 50k IMDb votes. The quiet end of our recent log — open the full shelf for sortable columns.',
+      dek: 'Fresh 8+ picks with fewer than 50k IMDb votes. The quiet end of our recent log — the full ranked list is on the shelf.',
       href: 'hidden-gems.html',
     },
     {
@@ -229,22 +229,22 @@ const MAGAZINE = {
     },
     {
       title: 'Beyond English — under-voted',
-      dek: 'World cinema and TV that hasn\'t gone loud yet. Filter by original language on the full shelf to narrow a region.',
+      dek: 'World cinema and TV that hasn\'t gone loud yet. The shelf is where we keep the full list.',
       href: 'hidden-gems.html',
     },
     {
       title: 'Under-voted crime drama',
-      dek: 'Sharp procedurals and moral-grey thrillers the crowd hasn\'t piled onto yet. Filter Crime on the full shelf to dig in.',
+      dek: 'Sharp procedurals and moral-grey thrillers the crowd hasn\'t piled onto yet.',
       href: 'hidden-gems.html',
     },
     {
       title: 'Hidden Asian cinema',
-      dek: 'Korean, Japanese, Thai, and Taiwanese titles we rated 8+ with under-50k vote counts. Open the shelf and filter the language.',
+      dek: 'Korean, Japanese, Thai, and Taiwanese titles we rated 8+ with under-50k vote counts.',
       href: 'hidden-gems.html',
     },
     {
       title: 'Forgotten 2010s',
-      dek: 'The middle decade had more craft than the canon remembers. Sort the shelf by year to surface our 2010s under-voted favourites.',
+      dek: 'The middle decade had more craft than the canon remembers. Our 2010s under-voted favourites live on the shelf.',
       href: 'hidden-gems.html',
     },
     {

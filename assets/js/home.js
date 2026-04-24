@@ -27,6 +27,21 @@
       ? data.mainItems
       : (data.allItems || []).length;
 
+  /** Summed IMDb runtimes often undercount TV; keep hero / strip / grid aligned with ~8.5k+ editorial line. */
+  var WATCH_HOURS_DISPLAY_FLOOR = 8500;
+  function displayWatchHoursPitch() {
+    var raw = Number(data.estimatedWatchHours);
+    if (!isFinite(raw) || raw < 0) raw = 0;
+    if (raw >= WATCH_HOURS_DISPLAY_FLOOR) return '~' + raw.toLocaleString();
+    return '~8,500+';
+  }
+  function watchHoursInsightStat() {
+    var raw = Number(data.estimatedWatchHours);
+    if (!isFinite(raw) || raw < 0) raw = 0;
+    var h = Math.max(raw, WATCH_HOURS_DISPLAY_FLOOR);
+    return '~' + h.toLocaleString() + ' hrs';
+  }
+
   function votesN(i) {
     var v = i.votes;
     if (v == null || v === '') return 0;
@@ -215,67 +230,45 @@
         };
   var insightGenreStats = G.filterGenreStatsForInsights(data.genreStats);
   var items = data.allItems || [];
-  var gapSum = 0;
-  var gapCount = 0;
-  for (var gi = 0; gi < items.length; gi++) {
-    var itG = items[gi];
-    var mr = Number(itG.myRating);
-    var ir = Number(itG.imdbRating);
-    if (!isNaN(mr) && !isNaN(ir)) {
-      gapSum += mr - ir;
-      gapCount++;
-    }
-  }
-  var meanGap = gapCount ? gapSum / gapCount : 0;
-  var gapStat;
-  var gapLabel;
-  if (gapCount === 0) {
-    gapStat = '—';
-    gapLabel = 'Mean gap vs IMDb (our rating minus IMDb, only rows with both)';
-  } else if (Math.abs(meanGap) < 0.05) {
-    gapStat = 'Even';
-    gapLabel =
-      'Our average matches the IMDb crowd score within rounding (same titles, paired rows only)';
-  } else {
-    gapStat = (meanGap >= 0 ? '+' : '') + (Math.round(meanGap * 10) / 10).toFixed(1);
-    gapLabel = 'Mean gap vs IMDb (our rating minus IMDb, only rows with both)';
+  var radarInsightN = 0;
+  for (var ri = 0; ri < items.length; ri++) {
+    var rx = items[ri];
+    if (Number(rx.myRating) >= 8 && votesN(rx) < 50000) radarInsightN++;
   }
   var nonEn = 0;
   for (var wi = 0; wi < items.length; wi++) {
     if (!isEnglishPrimary(items[wi])) nonEn++;
   }
   var denom = titleCount > 0 ? titleCount : items.length;
-  var worldPct =
-    denom === 0 ? '—' : String(Math.round((100 * nonEn) / denom)) + '%';
+  var worldStat =
+    denom === 0
+      ? '—'
+      : Math.round((100 * nonEn) / denom) + '%';
 
   var stripEl = document.getElementById('insight-strip');
   if (stripEl) {
     stripEl.innerHTML =
       '<div class="insight-card"><div class="insight-stat">' +
       (titleCount ? titleCount.toLocaleString() : '—') +
-      '</div><div class="insight-label">Titles in the archive with our score logged</div></div>' +
+      '</div><div class="insight-label">Scored titles</div></div>' +
       '<div class="insight-card"><div class="insight-stat">' +
-      gapStat +
-      '</div><div class="insight-label">' +
-      gapLabel +
-      '</div></div>' +
+      (items.length ? radarInsightN.toLocaleString() : '—') +
+      '</div><div class="insight-label">8+ while under 50k IMDb votes</div></div>' +
       '<div class="insight-card"><div class="insight-stat">' +
-      (denom ? worldPct : '—') +
-      '</div><div class="insight-label">Share outside English-first (IMDb language and title cues)</div></div>';
+      worldStat +
+      '</div><div class="insight-label">Non-English content</div></div>' +
+      '<div class="insight-card"><div class="insight-stat">' +
+      watchHoursInsightStat() +
+      '</div><div class="insight-label">Approx. watch time</div></div>' +
+      '<div class="insight-card"><div class="insight-stat">' +
+      '15+ yrs' +
+      '</div><div class="insight-label">Curating this list</div></div>';
   }
 
   var pitchEl = document.getElementById('hero-pitch');
   if (pitchEl) {
-    var hoursPitch =
-      data.estimatedWatchHours && data.estimatedWatchHours > 0
-        ? '~' + Number(data.estimatedWatchHours).toLocaleString()
-        : '~8,500+';
     pitchEl.innerHTML =
-      'A two-person film &amp; TV desk keeping honest scores after-hours — <strong class="pitch-stat">15+ years</strong> of curating this list, now <strong class="pitch-stat">' +
-      titleCount.toLocaleString() +
-      '</strong> scored titles and <strong class="pitch-stat">' +
-      hoursPitch +
-      '</strong> watch hours logged. We keep coming back to <strong class="pitch-stat">tension, craft, and stories that don’t talk down</strong>. Use the shortcuts above, or dive into the shelves below.';
+      'Two people. Honest scores. After-hours. We keep returning to <strong class="pitch-stat">tension, craft, stories that don’t talk down</strong>—the shelves below are the receipts.';
   }
 
   var tensBase = data.topRated.filter(function (i) {
@@ -313,7 +306,6 @@
       .slice(0, RAIL_MAX_STANDARD)
       .map(function (i) {
         var langBit = S.languageKey(i) ? ' · ' + S.languagePillHtml(S.languageKey(i)) : '';
-        var rel = relativeRated(i.dateRated);
         return (
           '<li class="featured-rail-item">' +
           '<a class="featured-card featured-card--lift" href="' +
@@ -331,10 +323,6 @@
           ' · crowd ' +
           i.imdbRating +
           langBit +
-          (i.dateRated
-            ? ' · <time datetime="' + i.dateRated + '">' + formatRatedOn(i.dateRated) + '</time>'
-            : '') +
-          (rel ? ' · ' + rel : '') +
           '</span>' +
           '<h3>' +
           i.title +
@@ -399,7 +387,7 @@
     if (kind === 'essays') {
       titleText = 'All essays';
       ledeText =
-        'Every long read we\'ve published so far &mdash; grouped in one place so you can scan without leaving the home page.';
+        'Every long read so far.<br />Skim the backlog here before you dive in.';
       items = (MAG.essays || []).map(function (e) {
         return {
           href: e.href ? 'pages/' + e.href : 'pages/stories.html#essays',
@@ -412,7 +400,7 @@
     } else if (kind === 'radar') {
       titleText = 'All under-the-radar stories';
       ledeText =
-        'Editorial framings &mdash; moods, regions, and decades &mdash; that lead into the full under-voted shelf. Each opens the relevant sortable view.';
+        'Editorial framings — moods, regions, decades.<br />They lead into the full under-voted shelf.<br />Each link opens the list the way we had it in mind.';
       items = (MAG.radarHighlights || []).map(function (r) {
         var href = r.href;
         var cta = 'Open the full shelf';
@@ -520,7 +508,6 @@
               '</p>'
             : '';
         var g = (i.genres || []).slice(0, 2).join(' · ');
-        var rel = relativeRated(i.dateRated);
         return (
           '<li class="featured-rail-item">' +
           '<a class="featured-card featured-card--lift" href="' +
@@ -535,10 +522,6 @@
           i.myRating +
           ' · crowd ' +
           i.imdbRating +
-          (i.dateRated
-            ? ' · <time datetime="' + i.dateRated + '">' + formatRatedOn(i.dateRated) + '</time>'
-            : '') +
-          (rel ? ' · ' + rel : '') +
           '</span>' +
           '<h3>' +
           i.title +
@@ -589,14 +572,13 @@
 
     if (!out.length) {
       rail.innerHTML =
-        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">Nothing in this rail yet — titles need a rated date plus a recent release year (English) or an international TV row.</p></li>';
+        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">Nothing here yet — titles need a rated date plus a recent release year (English) or an international TV row.</p></li>';
       return;
     }
 
     rail.innerHTML = out
       .map(function (i) {
         var g = (i.genres || []).slice(0, 2).join(' · ');
-        var rel = relativeRated(i.dateRated);
         return (
           '<li class="featured-rail-item">' +
           '<a class="featured-card featured-card--lift" href="' +
@@ -609,8 +591,6 @@
           i.year +
           ' · crowd ' +
           i.imdbRating +
-          (i.dateRated ? ' · <time datetime="' + i.dateRated + '">' + formatRatedOn(i.dateRated) + '</time>' : '') +
-          (rel ? ' · ' + rel : '') +
           '</span>' +
           '<h3>' +
           i.title +
@@ -746,10 +726,7 @@
     return displayLang(i) || isLikelyNonEnglish(i);
   }).length;
 
-  var estHours = data.estimatedWatchHours;
-  var hoursLabel = estHours && estHours > 0
-    ? '~' + Number(estHours).toLocaleString()
-    : '~8,500+';
+  var hoursLabel = displayWatchHoursPitch();
   var statCards = [
     { value: hoursLabel, label: 'Est. watch hours', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
     { value: titleCount.toLocaleString(), label: 'Titles rated', icon: '◆', mod: 'stat-card--b' },

@@ -69,11 +69,14 @@
   <header class="hero">
     <span class="eyebrow">Discovery</span>
     <h1>Under the radar</h1>
-    <p class="hero-sub">We rated these <strong>8+</strong> when fewer than <strong>50k</strong> people had voted on IMDb — strong picks that haven’t gone loud yet. Bar width is vote count next to the biggest title here.</p>
+    <p class="hero-sub">We rated these <strong>8+</strong> when fewer than <strong>50k</strong> people had voted on IMDb.</p>
+    <p class="hero-sub">Strong picks that haven’t gone loud yet.<br />Wider bars mean more IMDb votes on the biggest title in this view.</p>
   </header>
 
-  <p class="section-lede" style="max-width:50rem;margin-bottom:1.5rem">
-    If you like our taste for thrillers and slow-burn TV, start here — these are the titles where we’re furthest above the IMDb average, usually before word of mouth catches up.
+  <p class="section-lede" style="margin-bottom:1.5rem">
+    If you like thrillers and slow-burn TV, start here.<br />
+    These are where we’re furthest above the IMDb average.<br />
+    Usually before word of mouth catches up.
   </p>
 
   <section class="section" aria-labelledby="gems-heading">
@@ -212,7 +215,7 @@
                   ? 'rating-9'
                   : 'rating-8';
             const langRaw = i.languageLabel || i.languageHint;
-            const lang = S.languagePillHtml(langRaw, 'Original language when we have it');
+            const lang = S.languagePillHtml(langRaw, 'Original language from IMDb when listed');
             return `<tr>
         <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
         <td style="font-size:0.75rem;max-width:7rem">${lang}</td>

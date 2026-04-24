@@ -245,7 +245,7 @@
                 ? 'rating-8'
                 : 'rating-7';
         const langRaw = i.languageLabel || i.languageHint;
-        const lang = S.languagePillHtml(langRaw, 'Original language when we have it');
+        const lang = S.languagePillHtml(langRaw, 'Original language from IMDb when listed');
         return `<tr>
       <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
       <td style="font-size:0.75rem;max-width:7rem">${lang}</td>

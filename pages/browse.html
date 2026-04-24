@@ -69,7 +69,8 @@
   <header class="hero">
     <span class="eyebrow">Archive</span>
     <h1>Browse everything we’ve rated</h1>
-    <p class="hero-sub">Search the full list, or open <strong>Genres</strong> to see how our scores line up with IMDb by category.</p>
+    <p class="hero-sub">Search the full list.</p>
+    <p class="hero-sub">Or open <strong>Genres</strong> — our scores vs IMDb, by category.</p>
   </header>
 
   <div class="browse-panels section">
@@ -148,14 +149,20 @@
       <section class="section fade-in" aria-labelledby="verdict-heading">
         <h2 class="section-title" id="verdict-heading">What we love and what we skip <span class="badge">By genre</span></h2>
         <p class="section-lede">
-          Genres ordered by engagement: log10(title count) × our average (ties: more titles, then higher average). Verdict bands: Love it (7.8+), Like (7.3–7.7), Mixed (7.0–7.2), Not for us (&lt;7.0)
+          Genres rank by how much we’ve watched in each tag and how warmly we score there.<br />
+          Deeper engagement floats higher. Ties favor more titles, then the higher average.<br />
+          Mood bands: <strong>Love it</strong> (7.8+), <strong>Like</strong> (7.3–7.7), <strong>Mixed</strong> (7.0–7.2), <strong>Not for us</strong> (under 7.0).
         </p>
         <div class="genre-grid" id="genre-cards"></div>
       </section>
       <section class="section fade-in" aria-labelledby="compare-heading">
         <h2 class="section-title" id="compare-heading">Our rating vs IMDb average <span class="badge">By genre</span></h2>
         <p class="section-lede">
-          These averages are <strong>only over titles we rated</strong> that carry each IMDb tag — not a random sample of the genre, so selective picks (e.g. music) can look skewed. Only genres with <strong>15+</strong> such titles appear here. <strong>Shrunk gap</strong> pulls small-sample gaps toward zero (k=15). <strong>SE</strong> is the standard error of per-title gaps on those same titles.
+          These averages use <strong>only what we’ve rated</strong> under each IMDb genre tag.<br />
+          Not the whole genre worldwide. A niche passion can read hotter than the mainstream.<br />
+          We hide a tag until at least <strong>fifteen</strong> titles.<br />
+          <strong>Shrunk gap</strong> calms noisy differences when we’ve seen only a few films there.<br />
+          <strong>SE (gap)</strong> is a rough “how uncertain is this gap?” read.
         </p>
         <div class="table-scroll">
           <table class="data-table" id="genre-compare">
@@ -359,7 +366,7 @@
           .map((i) => {
             const rc = rcFor(i);
             const langRaw = i.languageLabel || i.languageHint;
-            const lang = S.languagePillHtml(langRaw, 'Original language when we have it');
+            const lang = S.languagePillHtml(langRaw, 'Original language from IMDb when listed');
             return `<tr>
         <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
         <td style="font-size:0.75rem;max-width:7rem">${lang}</td>
@@ -383,7 +390,7 @@
             ? 'No titles match your filters'
             : n >= total
               ? `Showing all ${total} title${total === 1 ? '' : 's'}`
-              : `Loaded ${n} of ${total} titles — scroll the table for more`;
+              : `Showing ${n} of ${total} titles`;
       },
     });
     archiveScroll.reset();
