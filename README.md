@@ -1,6 +1,6 @@
 # Silver Score
 
-**[Visit the site →](https://viveksinha.github.io/silver-score-site/)**
+**[Visit the site →](https://viveksinha.github.io/silver-score/)**
 
 Silver Score is a **cinema magazine and watchlist** in one calm, readable site: hundreds of rated films and series, editorial lists with a point of view, and charts that show how our taste actually behaves—not a generic leaderboard, but a shelf we live on.
 
@@ -23,8 +23,8 @@ Open it on your phone or desktop, switch **light** or **dark** in the nav, and w
 
 If you like **slow burns, thrillers, prestige TV, and stories that trust the audience**, this site is a filter bubble we built on purpose—honest scores, IMDb links everywhere you need them, and magazine-style framing so the catalogue feels like a conversation, not a spreadsheet.
 
-**[Go to Silver Score](https://viveksinha.github.io/silver-score-site/)**
+**[Go to Silver Score](https://viveksinha.github.io/silver-score/)**
 
 ---
 
-*Source for this site: [github.com/viveksinha/silver-score-site](https://github.com/viveksinha/silver-score-site)*
+*Source for this site: [github.com/viveksinha/silver-score](https://github.com/viveksinha/silver-score)*

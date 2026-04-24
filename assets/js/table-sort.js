@@ -102,6 +102,33 @@
     return String(item.languageLabel || item.languageHint || '').trim();
   }
 
+  function escapeHtmlText(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function escapeHtmlAttr(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  }
+
+  /**
+   * Renders a language cell: em dash if empty; muted pill for English; accent pill for other languages.
+   * @param {string} [raw]
+   * @param {string} [title]
+   */
+  function languagePillHtml(raw, title) {
+    var t = raw != null ? String(raw).trim() : '';
+    if (!t) return '—';
+    var english = t.toLowerCase() === 'english';
+    var cls = english ? 'lang-pill lang-pill--en-label' : 'lang-pill lang-pill--intl';
+    var titleAttr = '';
+    if (title) titleAttr = ' title="' + escapeHtmlAttr(title) + '"';
+    else if (!english) titleAttr = ' title="Original filming language when known"';
+    return '<span class="' + cls + '"' + titleAttr + '>' + escapeHtmlText(t) + '</span>';
+  }
+
   /**
    * First option must be `<option value="">All languages</option>`.
    * Adds "Not listed" (__none__) when any row has an empty key.
@@ -148,5 +175,6 @@
     bindSortableTable: bindSortableTable,
     languageKey: languageKey,
     fillLanguageFilterOptions: fillLanguageFilterOptions,
+    languagePillHtml: languagePillHtml,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

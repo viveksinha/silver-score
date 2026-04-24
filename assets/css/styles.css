@@ -511,9 +511,28 @@ nav .nav-links a.active {
   letter-spacing: 0.05em;
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
-  background: var(--accent-light);
-  color: var(--accent);
   margin-right: 0.35rem;
+  box-sizing: border-box;
+}
+.lang-pill--intl {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  font-weight: 600;
+}
+.lang-pill--en-label {
+  background: var(--surface-elevated, color-mix(in srgb, var(--border) 40%, transparent));
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+.lang-pill--meta {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.62rem;
+  background: var(--surface-elevated, color-mix(in srgb, var(--border) 35%, transparent));
+  color: var(--text-dim);
+  border: 1px dashed var(--border);
 }
 
 .recent-time {
@@ -1460,6 +1479,47 @@ footer {
   gap: 1.25rem;
   margin-top: 1rem;
 }
+
+/* Home: horizontal strip for mixed “new English” + non-English TV cards */
+.featured-rail-wrap {
+  margin-top: 1rem;
+  margin-inline: calc(-1 * var(--container-pad, 1.5rem));
+  padding-inline: var(--container-pad, 1.5rem);
+}
+@media (min-width: 900px) {
+  .featured-rail-wrap {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+.featured-rail {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 0 0.35rem;
+  margin: 0;
+  list-style: none;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+}
+.featured-rail-item {
+  flex: 0 0 min(280px, 82vw);
+  max-width: 320px;
+  scroll-snap-align: start;
+}
+.featured-rail-item--empty {
+  flex: 1 1 auto;
+  max-width: none;
+  scroll-snap-align: none;
+}
+.featured-rail-item .featured-card {
+  height: 100%;
+  box-sizing: border-box;
+}
+
 .featured-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -1499,6 +1559,37 @@ footer {
   font-size: 0.72rem;
   color: var(--accent);
   margin-top: 0.25rem;
+}
+
+.pick-pill {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  margin-bottom: 0.15rem;
+}
+.pick-pill--en {
+  color: var(--text-secondary);
+  background: var(--surface-elevated, var(--surface));
+  border-color: var(--border);
+}
+.pick-pill--lang {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.pick-pill--radar {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 .hub-grid {

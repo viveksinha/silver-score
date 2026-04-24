@@ -19,6 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
 <body>
 
@@ -31,6 +32,7 @@
     <div class="nav-links">
       <a href="../index.html">Home</a>
       <a href="read.html#curated-lists">Lists</a>
+      <a href="read.html#essays">Essays</a>
       <a href="hidden-gems.html" class="active">Under the Radar</a>
       <a href="upcoming.html">Upcoming</a>
       <a href="browse.html">Browse</a>
@@ -187,9 +189,7 @@
                   ? 'rating-9'
                   : 'rating-8';
             const langRaw = i.languageLabel || i.languageHint;
-            const lang = langRaw
-              ? `<span class="lang-pill">${langRaw}</span>`
-              : '—';
+            const lang = S.languagePillHtml(langRaw, 'Original language when we have it');
             return `<tr>
         <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
         <td style="font-size:0.75rem;max-width:7rem">${lang}</td>

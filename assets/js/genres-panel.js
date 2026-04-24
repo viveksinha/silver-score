@@ -210,9 +210,7 @@ function initGenrePanel(data) {
           .map((i, idx) => {
             const rank = startIndex + idx + 1;
             const langRaw = lk(i);
-            const langCell = langRaw
-              ? `<span class="lang-pill">${langRaw}</span>`
-              : '—';
+            const langCell = S && S.languagePillHtml ? S.languagePillHtml(langRaw) : langRaw ? `<span class="lang-pill lang-pill--intl">${langRaw}</span>` : '—';
             return `<tr>
       <td>${rank}</td>
       <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>

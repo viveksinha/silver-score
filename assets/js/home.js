@@ -33,6 +33,20 @@
     return String(L);
   }
 
+  function escapeHtmlText(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  /** IMDb language when known; otherwise a neutral fallback for clearly international rows. */
+  function languageLabelOrInternational(i) {
+    var k = S.languageKey(i);
+    if (k && String(k).toLowerCase() !== 'english') return k;
+    return 'International';
+  }
+
   function itemDirectors(i) {
     var d = i.directors;
     if (d == null || d === '') return [];
@@ -123,6 +137,64 @@
     return false;
   }
 
+  function isEnglishPrimary(i) {
+    var k = S.languageKey(i);
+    if (k && String(k).toLowerCase() === 'english') return true;
+    if (!k && !isLikelyNonEnglish(i)) return true;
+    return false;
+  }
+
+  function releaseYearNum(i) {
+    var y = i.year;
+    if (y == null || y === '') return NaN;
+    return Number(y);
+  }
+
+  var CURRENT_YEAR = new Date().getFullYear();
+  var NEW_RELEASE_MIN_YEAR = CURRENT_YEAR - 3;
+
+  function isRecentEnglishRelease(i) {
+    if (!i.dateRated) return false;
+    if (!isEnglishPrimary(i)) return false;
+    var y = releaseYearNum(i);
+    if (isNaN(y) || y < NEW_RELEASE_MIN_YEAR) return false;
+    return true;
+  }
+
+  function isNonEnglishTv(i) {
+    if (!i.dateRated) return false;
+    var t = i.type || '';
+    if (t.indexOf('TV') < 0) return false;
+    return !isEnglishPrimary(i);
+  }
+
+  function byDateRatedDesc(a, b) {
+    return (b.dateRated || '').localeCompare(a.dateRated || '');
+  }
+
+  function pickRailBadge(i) {
+    if (isNonEnglishTv(i)) {
+      var label = languageLabelOrInternational(i);
+      return (
+        '<span class="pick-pill pick-pill--lang">' + escapeHtmlText(label) + ' · series</span>'
+      );
+    }
+    return '<span class="pick-pill pick-pill--en">English · new release</span>';
+  }
+
+  function worldPickBadge(i) {
+    if (isEnglishPrimary(i)) {
+      return '<span class="pick-pill pick-pill--en">English · world</span>';
+    }
+    return (
+      '<span class="pick-pill pick-pill--lang">' +
+      escapeHtmlText(languageLabelOrInternational(i)) +
+      ' · world</span>'
+    );
+  }
+
+  var RAIL_MAX_STANDARD = 12;
+
   var meaningful = data.genreStats
     .filter(function (g) {
       return g.count >= 15;
@@ -189,77 +261,49 @@
       return b.myRating - a.myRating || (a.votes || 0) - (b.votes || 0);
     });
 
-  var picksMode = 'recent';
   var radarMode = 'recent';
 
-  function renderStaffPicks() {
-    var list;
-    if (picksMode === 'recent') {
-      list = tensBase
-        .slice()
-        .sort(function (a, b) {
-          return (b.dateRated || '').localeCompare(a.dateRated || '') || b.imdbRating - a.imdbRating;
-        })
-        .slice(0, 4);
-    } else {
-      list = tensBase
-        .slice()
-        .sort(function (a, b) {
-          return b.imdbRating - a.imdbRating || b.year - a.year;
-        })
-        .slice(0, 4);
-    }
-    document.getElementById('featured-picks').innerHTML = list
-      .map(function (i) {
-        var g = i.genres.slice(0, 2).join(' · ');
-        return (
-          '<a class="featured-card featured-card--lift" href="' +
-          i.url +
-          '" target="_blank" rel="noopener noreferrer">' +
-          '<span class="meta-line">' +
-          i.year +
-          ' · IMDb ' +
-          i.imdbRating +
-          (i.dateRated ? ' · <time datetime="' + i.dateRated + '">' + formatRatedOn(i.dateRated) + '</time>' : '') +
-          '</span>' +
-          '<h3>' +
-          i.title +
-          '</h3>' +
-          '<p class="why">' +
-          (g || 'Genre mix on IMDb') +
-          '</p>' +
-          '<span class="cta">Open on IMDb →</span>' +
-          '</a>'
-        );
-      })
-      .join('');
-  }
-
   function renderRadarTeaser() {
+    var rail = document.getElementById('radar-teaser');
+    if (!rail) return;
     var pool;
     if (radarMode === 'recent') {
       pool = radarFullPool.filter(function (i) {
         return daysSinceRated(i.dateRated) <= 540;
       });
-      if (pool.length < 4) pool = radarFullPool.slice();
+      if (pool.length < RAIL_MAX_STANDARD) pool = radarFullPool.slice();
     } else {
       pool = radarFullPool;
     }
-    document.getElementById('radar-teaser').innerHTML = pool
-      .slice(0, 4)
+    if (!pool.length) {
+      rail.innerHTML =
+        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">No titles match the under-the-radar filters right now.</p></li>';
+      return;
+    }
+    rail.innerHTML = pool
+      .slice(0, RAIL_MAX_STANDARD)
       .map(function (i) {
+        var langBit = S.languageKey(i) ? ' · ' + S.languagePillHtml(S.languageKey(i)) : '';
+        var rel = relativeRated(i.dateRated);
         return (
+          '<li class="featured-rail-item">' +
           '<a class="featured-card featured-card--lift" href="' +
           i.url +
           '" target="_blank" rel="noopener noreferrer">' +
+          '<span class="pick-pill pick-pill--radar">Under-voted</span>' +
           '<span class="meta-line">' +
           i.year +
           ' · ' +
           (i.votes || 0).toLocaleString() +
-          ' votes' +
+          ' votes · Our ' +
+          i.myRating +
+          ' · IMDb ' +
+          i.imdbRating +
+          langBit +
           (i.dateRated
             ? ' · <time datetime="' + i.dateRated + '">' + formatRatedOn(i.dateRated) + '</time>'
             : '') +
+          (rel ? ' · ' + rel : '') +
           '</span>' +
           '<h3>' +
           i.title +
@@ -269,8 +313,137 @@
           '/10 while the crowd sits at ' +
           i.imdbRating +
           '.</p>' +
-          '<span class="cta">IMDb →</span>' +
-          '</a>'
+          '<span class="cta">IMDb</span>' +
+          '</a></li>'
+        );
+      })
+      .join('');
+  }
+
+  function renderWorldPicksRail() {
+    var rail = document.getElementById('world-picks');
+    if (!rail) return;
+    var pool = data.allItems
+      .filter(isLikelyNonEnglish)
+      .sort(function (a, b) {
+        return (
+          b.myRating - a.myRating ||
+          b.imdbRating - a.imdbRating ||
+          (b.dateRated || '').localeCompare(a.dateRated || '')
+        );
+      });
+    if (!pool.length) {
+      rail.innerHTML =
+        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">No international-style listings in the dataset yet.</p></li>';
+      return;
+    }
+    rail.innerHTML = pool
+      .slice(0, RAIL_MAX_STANDARD)
+      .map(function (i) {
+        var orig =
+          i.originalTitle && i.originalTitle.toLowerCase() !== (i.title || '').toLowerCase()
+            ? '<p class="why"><span class="lang-pill lang-pill--meta">Original title</span> ' +
+              escapeHtmlText(i.originalTitle) +
+              '</p>'
+            : '';
+        var g = (i.genres || []).slice(0, 2).join(' · ');
+        var rel = relativeRated(i.dateRated);
+        return (
+          '<li class="featured-rail-item">' +
+          '<a class="featured-card featured-card--lift" href="' +
+          i.url +
+          '" target="_blank" rel="noopener noreferrer">' +
+          worldPickBadge(i) +
+          '<span class="meta-line">' +
+          i.year +
+          ' · Our ' +
+          i.myRating +
+          ' · IMDb ' +
+          i.imdbRating +
+          (i.dateRated
+            ? ' · <time datetime="' + i.dateRated + '">' + formatRatedOn(i.dateRated) + '</time>'
+            : '') +
+          (rel ? ' · ' + rel : '') +
+          '</span>' +
+          '<h3>' +
+          i.title +
+          '</h3>' +
+          orig +
+          '<p class="why" style="margin-top:0.35rem">' +
+          (g || '') +
+          '</p>' +
+          '<span class="cta">IMDb</span>' +
+          '</a></li>'
+        );
+      })
+      .join('');
+  }
+
+  function renderFreshShelfRail() {
+    var MAX_TOTAL = 12;
+    var SLOT_EN = 6;
+    var SLOT_NE_TV = 6;
+    var rail = document.getElementById('featured-picks');
+    if (!rail) return;
+
+    var enPool = data.allItems.filter(isRecentEnglishRelease).sort(byDateRatedDesc);
+    var nePool = data.allItems.filter(isNonEnglishTv).sort(byDateRatedDesc);
+    var seen = {};
+    function dedupeKey(i) {
+      return i.url || String(i.title || '') + '|' + String(i.year || '');
+    }
+    var out = [];
+    function pushFrom(pool, maxAdd) {
+      var added = 0;
+      for (var j = 0; j < pool.length && out.length < MAX_TOTAL && added < maxAdd; j++) {
+        var k = dedupeKey(pool[j]);
+        if (seen[k]) continue;
+        seen[k] = true;
+        out.push(pool[j]);
+        added++;
+      }
+    }
+    pushFrom(enPool, SLOT_EN);
+    pushFrom(nePool, SLOT_NE_TV);
+    while (out.length < 10 && out.length < MAX_TOTAL) {
+      var n = out.length;
+      pushFrom(enPool, MAX_TOTAL - out.length);
+      if (out.length === n) pushFrom(nePool, MAX_TOTAL - out.length);
+      if (out.length === n) break;
+    }
+    out.sort(byDateRatedDesc);
+
+    if (!out.length) {
+      rail.innerHTML =
+        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">Nothing in this rail yet — titles need a rated date plus a recent release year (English) or an international TV row.</p></li>';
+      return;
+    }
+
+    rail.innerHTML = out
+      .map(function (i) {
+        var g = (i.genres || []).slice(0, 2).join(' · ');
+        var rel = relativeRated(i.dateRated);
+        return (
+          '<li class="featured-rail-item">' +
+          '<a class="featured-card featured-card--lift" href="' +
+          i.url +
+          '" target="_blank" rel="noopener noreferrer">' +
+          pickRailBadge(i) +
+          '<span class="meta-line">' +
+          i.year +
+          ' · IMDb ' +
+          i.imdbRating +
+          (i.dateRated ? ' · <time datetime="' + i.dateRated + '">' + formatRatedOn(i.dateRated) + '</time>' : '') +
+          (rel ? ' · ' + rel : '') +
+          '</span>' +
+          '<h3>' +
+          i.title +
+          '</h3>' +
+          '<p class="why">' +
+          (g || 'Genre mix on IMDb') +
+          '</p>' +
+          '<span class="cta">IMDb</span>' +
+          '</a></li>'
         );
       })
       .join('');
@@ -286,56 +459,16 @@
           b.classList.toggle('seg-btn--active', b === btn);
           b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
         });
-        if (attrName === 'picks-mode') picksMode = v;
         if (attrName === 'radar-mode') radarMode = v;
         callback();
       });
     });
   }
 
-  renderStaffPicks();
+  renderFreshShelfRail();
   renderRadarTeaser();
-  wireSegmented('picks-seg', 'picks-mode', renderStaffPicks);
   wireSegmented('radar-seg', 'radar-mode', renderRadarTeaser);
-
-  var nonEnPool = data.allItems.filter(isLikelyNonEnglish).sort(function (a, b) {
-    return b.myRating - a.myRating || b.imdbRating - a.imdbRating;
-  });
-  document.getElementById('world-picks').innerHTML = nonEnPool
-    .slice(0, 4)
-    .map(function (i) {
-      var lang = displayLang(i);
-      var orig =
-        i.originalTitle && i.originalTitle.toLowerCase() !== (i.title || '').toLowerCase()
-          ? '<p class="why"><span class="lang-pill">Original title</span> ' +
-            i.originalTitle +
-            '</p>'
-          : '<p class="why"><span class="lang-pill">International</span> Listed with a non-English primary title on IMDb.</p>';
-      var g = (i.genres || []).slice(0, 2).join(' · ');
-      return (
-        '<a class="featured-card featured-card--lift" href="' +
-        i.url +
-        '" target="_blank" rel="noopener noreferrer">' +
-        '<span class="meta-line">' +
-        i.year +
-        ' · Our ' +
-        i.myRating +
-        ' · IMDb ' +
-        i.imdbRating +
-        (lang ? ' · <span class="lang-pill">' + lang + '</span>' : '') +
-        '</span>' +
-        '<h3>' +
-        i.title +
-        '</h3>' +
-        orig +
-        '<p class="why" style="margin-top:0.35rem">' +
-        (g || '') +
-        '</p>' +
-        '<span class="cta">IMDb →</span>' +
-        '</a>'
-      );
-    })
-    .join('');
+  renderWorldPicksRail();
 
   var recentSeen = data.allItems
     .filter(function (i) {
@@ -391,9 +524,7 @@
           '</strong></a></td>' +
           '<td class="recent-lang">' +
           (rowLang
-            ? '<span class="lang-pill" title="Original filming language when known">' +
-              rowLang +
-              '</span>'
+            ? S.languagePillHtml(rowLang, 'Original filming language when known')
             : '<span class="recent-muted">—</span>') +
           '</td>' +
           '<td>' +
@@ -438,8 +569,12 @@
     return displayLang(i) || isLikelyNonEnglish(i);
   }).length;
 
+  var estHours = data.estimatedWatchHours;
+  var hoursLabel = estHours && estHours > 0
+    ? '~' + Number(estHours).toLocaleString()
+    : '~8,500+';
   var statCards = [
-    { value: '~8,500+', label: 'Rough watch hours', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
+    { value: hoursLabel, label: 'Est. watch hours', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
     { value: '1,000+', label: 'Titles rated', icon: '◆', mod: 'stat-card--b' },
     { value: movieCount, label: 'Films', icon: '▣', mod: 'stat-card--c' },
     { value: tvCount, label: 'Series & minis', icon: '▤', mod: 'stat-card--d' },

@@ -19,6 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
 <body>
 
@@ -31,6 +32,7 @@
     <div class="nav-links">
       <a href="../index.html">Home</a>
       <a href="read.html#curated-lists" class="active">Lists</a>
+      <a href="read.html#essays">Essays</a>
       <a href="hidden-gems.html">Under the Radar</a>
       <a href="upcoming.html">Upcoming</a>
       <a href="browse.html">Browse</a>
@@ -52,16 +54,23 @@
     <h2 class="section-title" id="lists-hub-heading">Curated lists <span class="badge">Point of view</span></h2>
     <p class="section-lede">Each list is an angle — open one for links to IMDb, original language when we have it, and our score next to the crowd’s.</p>
     <div class="hub-grid" id="list-hub"></div>
-    <p style="margin-top:2rem;color:var(--text-secondary);font-size:0.9rem">
-      <span class="coming-soon">RSS and more</span> — later. For now, bookmark the site or say hello via
-      <a href="about.html">About</a>.
-    </p>
+  </section>
+
+  <section class="section fade-in" id="essays" aria-labelledby="essays-hub-heading">
+    <h2 class="section-title" id="essays-hub-heading">Essays <span class="badge">Long reads</span></h2>
+    <p class="section-lede">Longer takes on the genres and patterns we keep coming back to. No spoilers unless marked.</p>
+    <div class="hub-grid" id="essay-hub"></div>
   </section>
 
   <section class="section fade-in" id="calendar-lanes" aria-labelledby="calendar-heading">
     <h2 class="section-title" id="calendar-heading">On the calendar <span class="badge">Upcoming</span></h2>
     <p class="section-lede">What we’re tracking, by region — <a href="upcoming.html">Upcoming</a> has the full timeline and filters.</p>
     <div class="hub-grid" id="highlight-hub"></div>
+  </section>
+
+  <section class="section fade-in" id="subscribe" aria-labelledby="subscribe-heading">
+    <h2 class="section-title" id="subscribe-heading">Stay in the loop</h2>
+    <p class="section-lede">We don’t have a newsletter yet, but we do have an RSS feed for new lists and essays. Bookmark the site, grab the <a href="../feed.xml">RSS feed</a>, or say hello via <a href="about.html">About</a>.</p>
   </section>
 </div>
 </main>
@@ -86,6 +95,20 @@
         '</p><a class="hub-link" href="list.html#' +
         l.slug +
         '">Open list →</a></article>'
+      );
+    })
+    .join('');
+
+  document.getElementById('essay-hub').innerHTML = (MAGAZINE.essays || [])
+    .map(function (e) {
+      return (
+        '<article class="hub-card"><h2>' +
+        e.title +
+        '</h2><p>' +
+        e.dek +
+        '</p><a class="hub-link" href="' +
+        e.href +
+        '">Read essay →</a></article>'
       );
     })
     .join('');

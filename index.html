@@ -19,6 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="feed.xml">
 </head>
 <body>
 
@@ -31,6 +32,7 @@
     <div class="nav-links">
       <a href="index.html" class="active">Home</a>
       <a href="pages/read.html#curated-lists">Lists</a>
+      <a href="pages/read.html#essays">Essays</a>
       <a href="pages/hidden-gems.html">Under the Radar</a>
       <a href="pages/upcoming.html">Upcoming</a>
       <a href="pages/browse.html">Browse</a>
@@ -54,14 +56,12 @@
 
   <section class="section fade-in" aria-labelledby="picks-heading">
     <div class="section-head">
-      <h2 class="section-title" id="picks-heading">Top picks <span class="badge">Perfect 10s</span></h2>
-      <div class="seg-group" id="picks-seg" role="group" aria-label="Sort top picks">
-        <button type="button" class="seg-btn seg-btn--active" data-picks-mode="recent" aria-pressed="true">Recent</button>
-        <button type="button" class="seg-btn" data-picks-mode="alltime" aria-pressed="false">All time</button>
-      </div>
+      <h2 class="section-title" id="picks-heading">Fresh on the shelf <span class="badge">New &amp; recent</span></h2>
     </div>
-    <p class="section-lede" id="picks-lede">Our straight 10s — <strong>Recent</strong> is newest first; <strong>All time</strong> is strongest IMDb score.</p>
-    <div class="featured-grid" id="featured-picks"></div>
+    <p class="section-lede" id="picks-lede">Recent English-language releases we’ve logged, plus the latest <strong>international series</strong> (language on each card) — scroll sideways for up to twelve titles.</p>
+    <div class="featured-rail-wrap">
+      <ul class="featured-rail" id="featured-picks" aria-label="New English releases and recent international TV by language"></ul>
+    </div>
     <div class="section-actions">
       <a class="btn-outline" href="pages/read.html#curated-lists">Browse all lists</a>
       <a class="btn-outline" href="pages/upcoming.html">What’s next</a>
@@ -76,8 +76,10 @@
         <button type="button" class="seg-btn" data-radar-mode="alltime" aria-pressed="false">All time</button>
       </div>
     </div>
-    <p class="section-lede">We rated these 8+ when fewer than 50k people had voted on IMDb. <strong>Recent</strong> starts with what we rated in the last ~18 months.</p>
-    <div class="featured-grid" id="radar-teaser"></div>
+    <p class="section-lede">We rated these 8+ when fewer than 50k people had voted on IMDb. <strong>Recent</strong> starts with what we rated in the last ~18 months — scroll sideways for up to twelve titles.</p>
+    <div class="featured-rail-wrap">
+      <ul class="featured-rail" id="radar-teaser" aria-label="Under the radar picks"></ul>
+    </div>
     <div class="section-actions">
       <a class="btn-outline" href="pages/hidden-gems.html">See the full shelf</a>
     </div>
@@ -85,8 +87,10 @@
 
   <section class="section fade-in" aria-labelledby="world-heading">
     <h2 class="section-title" id="world-heading">Beyond English <span class="badge">World cinema &amp; TV</span></h2>
-    <p class="section-lede">Different original title or non-Latin script on IMDb — mostly film and TV that wasn’t English-first.</p>
-    <div class="featured-grid" id="world-picks"></div>
+    <p class="section-lede">Different original title or non-Latin script on IMDb — mostly film and TV that wasn’t English-first. Each card names the <strong>listed language</strong> on the chip (accent when it isn’t English) — scroll sideways for up to twelve titles.</p>
+    <div class="featured-rail-wrap">
+      <ul class="featured-rail" id="world-picks" aria-label="Beyond English highlights by language"></ul>
+    </div>
     <div class="section-actions">
       <a class="btn-outline" href="pages/browse.html">Search the full list</a>
     </div>
@@ -122,8 +126,8 @@
   </section>
 
   <section class="section fade-in" aria-labelledby="season-heading">
-    <h2 class="section-title" id="season-heading">This month <span class="badge">Editorial</span></h2>
-    <p class="section-lede"><span class="coming-soon">Coming soon</span> — a short monthly note on what we’re watching next.</p>
+    <h2 class="section-title" id="season-heading">This month <span class="badge">April 2026</span></h2>
+    <p class="section-lede">We’ve been deep in spy TV and Nordic sequels this month. <a href="pages/upcoming.html">Widow’s Bay</a> just landed on Apple TV+ and <a href="pages/upcoming.html">The Chestnut Man: Hide and Seek</a> drops on Netflix in early May. Meanwhile, we wrote three new essays: <a href="pages/essay-nordic-noir.html">Why Nordic Noir Works</a>, <a href="pages/essay-spy-craft.html">The Craft of Spy TV</a>, and <a href="pages/essay-slow-burns.html">In Defence of Slow Burns</a>. Five new curated lists are live &mdash; Italian crime, war cinema, Korean sharp edges, slow burns, and international thrillers beyond English. Browse them all on <a href="pages/read.html#curated-lists">Lists</a>.</p>
   </section>
 
   <div class="charts-row">
