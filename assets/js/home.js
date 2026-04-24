@@ -49,7 +49,11 @@
 
   /** Double-quoted attribute value for aria-label etc. */
   function attrEscape(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/\r|\n/g, ' ');
   }
 
   /** IMDb language when known; otherwise a neutral fallback for clearly international rows. */
