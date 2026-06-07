@@ -304,12 +304,6 @@
       '</div><div class="insight-label">We’ve been at this a while</div></div>';
   }
 
-  var pitchEl = document.getElementById('hero-pitch');
-  if (pitchEl) {
-    pitchEl.innerHTML =
-      'Two of us, honest scores, mostly after dark — <strong class="pitch-stat">suspense, sharp writing, and films worth staying up for</strong>.';
-  }
-
   var tensBase = data.topRated.filter(function (i) {
     return i.myRating === 10;
   });

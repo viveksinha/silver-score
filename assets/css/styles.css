@@ -2034,32 +2034,10 @@ footer {
   );
 }
 .mag-hero h1 {
-  max-width: 18ch;
+  max-width: 30ch;
   margin-left: auto;
   margin-right: auto;
 }
-.mag-hero .hero-sub {
-  color: var(--text-secondary);
-  font-size: 1.05rem;
-  max-width: 42ch;
-  margin: 0.75rem auto 0;
-  line-height: 1.55;
-}
-.mag-hero .hero-sub .pitch-stat {
-  color: var(--accent);
-  font-weight: 700;
-  font-family: var(--font-display);
-  font-size: 1.14em;
-}
-.mag-hero .hero-sub a {
-  color: var(--accent);
-  font-weight: 600;
-  text-decoration: none;
-}
-.mag-hero .hero-sub a:hover {
-  text-decoration: underline;
-}
-
 .insight-strip {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -2162,23 +2140,47 @@ body.home-page .chapter--cover .mag-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
-  padding: clamp(1.5rem, 4vw, 2.5rem) 1.25rem;
+  padding: clamp(1.8rem, 9vw, 3.6rem) 1.25rem clamp(1.25rem, 3vw, 2rem);
   border: none;
   border-radius: 0;
   box-shadow: none;
   background: transparent;
   --hero-royal-gradient: linear-gradient(
-    90deg,
-    #1e3a8a 0%,
-    #1d4ed8 26%,
-    #2563eb 48%,
-    #60a5fa 72%,
-    #bfdbfe 88%,
-    #eff6ff 100%
+    108deg,
+    #0a1428 0%,
+    #0f2248 8%,
+    #0c2838 16%,
+    #0d3324 26%,
+    #14532d 38%,
+    #166534 48%,
+    #1a5c4a 56%,
+    #3d2870 64%,
+    #c9b48a 67%,
+    #6d28d9 74%,
+    #a78bfa 86%,
+    #e8e6f2 100%
   );
-  --hero-caption-bg: color-mix(in srgb, #f0f4fa 55%, transparent);
+  --hero-caption-bg: color-mix(in srgb, #e8eef5 48%, #e8f0ec 52%);
+  --hero-eyebrow-color: #4b5d8f;
+}
+:root[data-theme="light"] body.home-page .chapter--cover .mag-hero {
+  --hero-royal-gradient: linear-gradient(
+    108deg,
+    #0c1222 0%,
+    #1a1f4a 14%,
+    #1e3a5f 24%,
+    #064e3b 36%,
+    #065f46 48%,
+    #047857 58%,
+    #2d4a6b 68%,
+    #4c1d95 78%,
+    #5b21b6 88%,
+    #312e81 100%
+  );
+  --hero-caption-bg: color-mix(in srgb, #f5f3f8 55%, #e8f5ef 45%);
+  --hero-eyebrow-color: #3d4f7a;
 }
 body.home-page .chapter--cover .mag-hero::before,
 body.home-page .chapter--cover .mag-hero::after {
@@ -2198,19 +2200,12 @@ body.home-page .chapter--cover .mag-hero .eyebrow {
   padding: 0.4rem 0.85rem;
   border-radius: var(--radius-sm);
   background: var(--hero-caption-bg);
-  color: #9b2c2c;
-  -webkit-text-fill-color: #9b2c2c;
+  color: var(--hero-eyebrow-color);
+  -webkit-text-fill-color: var(--hero-eyebrow-color);
   font-weight: 600;
 }
-body.home-page .chapter--cover .mag-hero .hero-sub {
-  display: inline-block;
-  padding: 0.45rem 0.85rem;
-  border-radius: var(--radius-sm);
-  background: var(--hero-caption-bg);
-  color: #9b2c2c;
-  -webkit-text-fill-color: #9b2c2c;
-}
 body.home-page .chapter--cover .mag-hero h1 {
+  max-width: 30ch;
   font-weight: 800;
   text-align: center;
   margin-left: auto;
@@ -2219,12 +2214,6 @@ body.home-page .chapter--cover .mag-hero h1 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-body.home-page .chapter--cover .mag-hero .hero-sub .pitch-stat {
-  font-weight: 800;
-  color: #9b2c2c;
-  -webkit-text-fill-color: #9b2c2c;
-  background: none;
 }
 @media (min-width: 860px) {
   body.home-page .chapter--cover .mag-hero {
