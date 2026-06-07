@@ -70,8 +70,17 @@
     <span class="eyebrow">Stories</span>
     <h1>Our lists, essays, and what’s on our calendar</h1>
     <p class="hero-sub">Everything we publish about what we actually watch.</p>
-    <p class="hero-sub"><a href="#under-the-radar">Under the radar</a> · <a href="#curated-lists">Lists</a> · <a href="#essays">Essays</a> · <a href="#calendar-lanes">On the calendar</a> · <a href="#watchlist">Watchlist</a></p>
+    <p class="hero-sub"><a href="#watchlist">Watchlist</a> · <a href="#under-the-radar">Under the radar</a> · <a href="#curated-lists">Lists</a> · <a href="#essays">Essays</a> · <a href="#calendar-lanes">On the calendar</a></p>
   </header>
+
+  <section class="section fade-in" id="watchlist" aria-labelledby="watchlist-heading">
+    <h2 class="section-title" id="watchlist-heading">IMDb watchlist <span class="badge">Queue</span></h2>
+    <p class="section-lede">Saved on IMDb, not logged here yet — highest crowd scores first.</p>
+    <p class="section-lede"><a href="watchlist.html">See all</a> on the full watchlist shelf.</p>
+    <div class="featured-rail-wrap stories-hub-rail-wrap">
+      <ul class="featured-rail stories-hub-rail" id="watchlist-hub" aria-label="IMDb watchlist highlights"></ul>
+    </div>
+  </section>
 
   <section class="section fade-in" id="under-the-radar" aria-labelledby="radar-hub-heading">
     <h2 class="section-title" id="radar-hub-heading">Under the radar <span class="badge">Low votes, high scores</span></h2>
@@ -108,15 +117,6 @@
     </div>
   </section>
 
-  <section class="section fade-in" id="watchlist" aria-labelledby="watchlist-heading">
-    <h2 class="section-title" id="watchlist-heading">IMDb watchlist <span class="badge">Queue</span></h2>
-    <p class="section-lede">Saved on IMDb, not logged here yet — highest crowd scores first.</p>
-    <p class="section-lede"><a href="watchlist.html">See all</a> on the full watchlist shelf.</p>
-    <div class="featured-rail-wrap stories-hub-rail-wrap">
-      <ul class="featured-rail stories-hub-rail" id="watchlist-hub" aria-label="IMDb watchlist highlights"></ul>
-    </div>
-  </section>
-
   <section class="section fade-in" id="subscribe" aria-labelledby="subscribe-heading">
     <h2 class="section-title" id="subscribe-heading">Stay in the loop</h2>
     <p class="section-lede">No newsletter yet — but <a href="../feed.xml">RSS</a> covers new lists and essays.</p>
@@ -126,11 +126,12 @@
 </main>
 
 <footer>
-  <div class="container">Silver Score &middot; ~8,500+ hours &middot; 1,000+ titles &middot; June 2026</div>
+  <div class="container">Silver Score &middot; ~8,500+ hours &middot; 1,000+ titles <span id="footer-visit-count"></span> &middot; June 2026</div>
 </footer>
 
 <script src="../assets/js/theme.js"></script>
 <script src="../assets/js/nav.js"></script>
+<script src="../assets/js/pageviews.js"></script>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/magazine.js"></script>
 <script src="../assets/js/watchlist-data.js"></script>
