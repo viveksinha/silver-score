@@ -164,6 +164,9 @@ def _format_title_count(main_items: int) -> str:
     return f"{main_items:,} titles"
 
 
+FOOTER_VISIT_SPAN = ' <span id="footer-visit-count"></span>'
+
+
 def _patch_footer(text: str, *, main_items: int, stamp: str, index_page: bool) -> str:
     """Update footer month (and title count on non-index pages); preserve hours verbatim."""
     title_count = _format_title_count(main_items)
@@ -175,23 +178,50 @@ def _patch_footer(text: str, *, main_items: int, stamp: str, index_page: bool) -
         prefix, hours, sep1, title_part, sep2, _month = m.groups()
         if index_page:
             return f"{prefix}{hours}{sep1}{title_part}{sep2}{stamp}"
-        return f"{prefix}{hours}{sep1}{title_count}{sep2}{stamp}"
+        return f"{prefix}{hours}{sep1}{title_count}{FOOTER_VISIT_SPAN}{sep2}{stamp}"
 
     return foot_re.sub(repl, text)
 
 
+def _patch_about_body(text: str, *, main_items: int) -> str:
+    """About page intro line — title count only; watch hours stay editorial."""
+    count = f"{main_items:,}"
+    about_re = re.compile(
+        r"(Between us: <strong>)[\d,+]+\+?(</strong> titles\. North of <strong>8,500</strong> watch hours)"
+    )
+    return about_re.sub(rf"\g<1>{count}\g<2>", text)
+
+
+def _patch_browse_meta(text: str, *, main_items: int) -> str:
+    count = f"{main_items:,}"
+    meta_re = re.compile(r"(search )[\d,+]+\+?( titles and genres)")
+    return meta_re.sub(rf"\g<1>{count}\g<2>", text)
+
+
+def _patch_index_season_badge(text: str, *, stamp: str) -> str:
+    """Home 'This month' badge — month/year only."""
+    season_re = re.compile(
+        r'(<h2 class="section-title" id="season-heading">This month <span class="badge">)[A-Za-z]+ \d{4}(</span></h2>)'
+    )
+    return season_re.sub(rf"\g<1>{stamp}\g<2>", text)
+
+
 def sync_html_stamps(site: Path, total_ratings: int, main_items: int, stamp: str) -> list[Path]:
+    """Refresh title counts and month stamps across HTML; never rewrite watch-hour copy."""
     updated: list[Path] = []
     hero_re = re.compile(r"<h1>\d+ ratings\. One taste profile\.</h1>")
     hero_sub = f"<h1>{total_ratings} ratings. One taste profile.</h1>"
-    upcoming_html = (site / "pages" / "upcoming.html").resolve()
 
     for html in [site / "index.html", *(site / "pages").glob("*.html")]:
-        if html.resolve() == upcoming_html:
-            continue
         text = html.read_text(encoding="utf-8")
         new = hero_re.sub(hero_sub, text)
         new = _patch_footer(new, main_items=main_items, stamp=stamp, index_page=html.name == "index.html")
+        if html.name == "about.html":
+            new = _patch_about_body(new, main_items=main_items)
+        if html.name == "browse.html":
+            new = _patch_browse_meta(new, main_items=main_items)
+        if html.name == "index.html":
+            new = _patch_index_season_badge(new, stamp=stamp)
         if new != text:
             html.write_text(new, encoding="utf-8")
             updated.append(html)
