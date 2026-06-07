@@ -165,6 +165,21 @@
 
   const tieTitle = (a, b) =>
     String(a.title || '').localeCompare(String(b.title || ''), undefined, { sensitivity: 'base', numeric: true });
+  function radarGap(i) {
+    return (i.myRating || 0) - (i.imdbRating || 0);
+  }
+  function sortRadarRecent(list) {
+    function byDate(a, b) {
+      return (
+        (b.dateRated || '').localeCompare(a.dateRated || '') ||
+        b.myRating - a.myRating ||
+        (a.votes || 0) - (b.votes || 0)
+      );
+    }
+    const hi = list.filter((i) => radarGap(i) >= 1).sort(byDate);
+    const lo = list.filter((i) => radarGap(i) < 1).sort(byDate);
+    return hi.concat(lo);
+  }
   const gemsSort = { key: 'dateRated', dir: 'desc' };
   const gemsSpec = {
     title: { type: 'string', val: (i) => i.title },
@@ -179,6 +194,11 @@
     },
     imdbRating: { type: 'number', val: (i) => i.imdbRating, tiebreak: tieTitle },
     votes: { type: 'number', val: votesN, tiebreak: tieTitle },
+    gap: {
+      type: 'number',
+      val: (i) => (i.myRating || 0) - (i.imdbRating || 0),
+      tiebreak: tieTitle,
+    },
     niche: { type: 'number', val: votesN, tiebreak: tieTitle },
     genres: { type: 'string', val: (i) => (i.genres || []).join(', '), tiebreak: tieTitle },
   };
@@ -197,7 +217,10 @@
     const maxVotes = pool.length ? Math.max(...pool.map((i) => i.votes || 0)) : 1;
     if (gemsScroll) gemsScroll.teardown();
     gemsScroll = createSilverScoreInfiniteScroll({
-      getItems: () => S.sortRows(pool, gemsSort, gemsSpec),
+      getItems: () =>
+        gemsMode === 'recent' && gemsSort.key === 'dateRated'
+          ? sortRadarRecent(pool)
+          : S.sortRows(pool, gemsSort, gemsSpec),
       pageSize: PAGE_SIZE,
       anchorAfter: gemsTable,
       root: gemsTable.closest('.table-scroll'),

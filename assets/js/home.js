@@ -279,14 +279,24 @@
 
   var radarMode = 'recent';
 
-  function sortRadarByDateRated(list) {
-    return list.slice().sort(function (a, b) {
+  function radarGap(i) {
+    return (i.myRating || 0) - (i.imdbRating || 0);
+  }
+  function sortRadarRecent(list) {
+    function byDate(a, b) {
       return (
         (b.dateRated || '').localeCompare(a.dateRated || '') ||
         b.myRating - a.myRating ||
         (a.votes || 0) - (b.votes || 0)
       );
-    });
+    }
+    var hi = list.filter(function (i) {
+      return radarGap(i) >= 1;
+    }).sort(byDate);
+    var lo = list.filter(function (i) {
+      return radarGap(i) < 1;
+    }).sort(byDate);
+    return hi.concat(lo);
   }
 
   function renderRadarTeaser() {
@@ -298,7 +308,7 @@
         return daysSinceRated(i.dateRated) <= 540;
       });
       if (pool.length < RAIL_MAX_STANDARD) pool = radarFullPool.slice();
-      pool = sortRadarByDateRated(pool);
+      pool = sortRadarRecent(pool);
     } else {
       pool = radarFullPool;
     }
