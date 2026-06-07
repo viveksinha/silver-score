@@ -26,19 +26,6 @@ jobs:
       - name: Build data.js
         run: python scripts/build_data.py --input scripts/scraped-ratings.json --output assets/js/data.js
 
-      - name: Restore TMDB cache
-        uses: actions/cache@v4
-        with:
-          path: scripts/tmdb-cache
-          key: tmdb-cache-${{ runner.os }}-${{ hashFiles('scripts/scraped-ratings.json') }}
-          restore-keys: |
-            tmdb-cache-${{ runner.os }}-
-
-      - name: Build upcoming data
-        env:
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-        run: python scripts/build_upcoming.py --input scripts/scraped-ratings.json
-
       - name: Scrape IMDB watchlist
         env:
           IMDB_PROFILE_ID: ${{ vars.IMDB_PROFILE_ID }}
@@ -51,7 +38,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/js/data.js assets/js/upcoming-data.js assets/js/watchlist-data.js index.html "pages/*.html" scripts/wikidata-language-cache.json
+          git add assets/js/data.js assets/js/watchlist-data.js index.html "pages/*.html" scripts/wikidata-language-cache.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
