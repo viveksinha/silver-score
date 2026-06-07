@@ -1992,7 +1992,6 @@ footer {
   background-image: url("../images/title-image.jpg");
   background-size: cover;
   background-position: center 42%;
-  opacity: 0.3;
 }
 /* Filmic grain — tiny SVG noise tile blended on top of hero gradient. */
 .mag-hero::before {
@@ -2155,6 +2154,62 @@ body.home-page .mag-hero {
 }
 body.home-page .chapter--cover .mag-hero {
   margin-bottom: 1rem;
+}
+/* Cover photo — tint + blend so alpine greens read as site emerald, not a pasted JPEG */
+body.home-page .mag-hero__photo {
+  opacity: 0.26;
+  filter: saturate(0.58) contrast(0.93) brightness(0.96);
+  mix-blend-mode: soft-light;
+  mask-image: radial-gradient(
+    ellipse 96% 88% at 50% 40%,
+    #000 22%,
+    color-mix(in srgb, #000 70%, transparent) 58%,
+    transparent 86%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 96% 88% at 50% 40%,
+    #000 22%,
+    color-mix(in srgb, #000 70%, transparent) 58%,
+    transparent 86%
+  );
+}
+body.home-page .mag-hero__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    152deg,
+    color-mix(in srgb, var(--home-landing-accent) 32%, var(--bg) 68%),
+    color-mix(in srgb, var(--bg) 86%, var(--accent-world) 14%)
+  );
+  opacity: 0.34;
+  mix-blend-mode: color;
+}
+:root[data-theme="light"] body.home-page .mag-hero__photo {
+  opacity: 0.15;
+  filter: saturate(0.46) contrast(0.88) brightness(1.05);
+  mix-blend-mode: multiply;
+  mask-image: radial-gradient(
+    ellipse 94% 86% at 50% 38%,
+    #000 18%,
+    color-mix(in srgb, #000 62%, transparent) 54%,
+    transparent 84%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 94% 86% at 50% 38%,
+    #000 18%,
+    color-mix(in srgb, #000 62%, transparent) 54%,
+    transparent 84%
+  );
+}
+:root[data-theme="light"] body.home-page .mag-hero__photo::after {
+  background: linear-gradient(
+    148deg,
+    color-mix(in srgb, var(--home-landing-accent) 26%, var(--surface) 74%),
+    color-mix(in srgb, var(--bg) 92%, var(--accent-world) 8%)
+  );
+  opacity: 0.4;
+  mix-blend-mode: soft-light;
 }
 body.home-page .insight-strip {
   margin: 1.25rem 0 1.5rem;
