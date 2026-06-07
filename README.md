@@ -33,4 +33,7 @@ If you like **slow burns, thrillers, prestige TV, and stories that trust the aud
 ---
 
 ### Pageview counter
-**Dashboard:** [vivek-silver-score-goatcounter](https://vivek-silver-score.goatcounter.com/)
+
+**Dashboard:** [vivek-silver-score.goatcounter.com](https://vivek-silver-score.goatcounter.com/)
+
+Footer uses `assets/js/pageviews.js` — one **page view** per full page load (not unique visitors). If the counter API fails, the footer slot is removed silently.
