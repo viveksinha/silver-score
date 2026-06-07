@@ -1715,6 +1715,10 @@ footer {
   font-size: 0.8rem;
 }
 
+#footer-visit-count:not(:empty)::before {
+  content: "· ";
+}
+
 /* SCROLL ANIMATION
    Previous behavior: .fade-in started at opacity:0 and was promoted to
    .visible via IntersectionObserver. That could flash blank sections on

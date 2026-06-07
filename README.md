@@ -29,3 +29,13 @@ If you like **slow burns, thrillers, prestige TV, and stories that trust the aud
 ---
 
 *Source for this site: [github.com/viveksinha/silver-score](https://github.com/viveksinha/silver-score)*
+
+---
+
+## Pageview counter (GoatCounter)
+
+The footer shows **site-wide page views** (each page load counts once; five pages in one session = five views). Setup:
+
+1. Create a free site at [goatcounter.com](https://www.goatcounter.com/) with code **`vivek-silver-score`** (or change `GC_CODE` in `assets/js/pageviews.js`).
+2. Under **Settings → Allow adding visitor counts on your website** — turn **on**.
+3. Add your live URL (`https://viveksinha.github.io/silver-score/`) under allowed domains if prompted.
