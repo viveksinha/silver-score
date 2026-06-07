@@ -26,7 +26,8 @@
   <!-- eyebrow -->
   <text x="80" y="140" font-family="DM Mono, ui-monospace, monospace" font-size="22" letter-spacing="4" fill="#7c3aed">SILVER SCORE · RADAR</text>
   <!-- title -->
-  <text x="80" y="260" font-family="Fraunces, ui-serif, Georgia, serif" font-weight="700" font-size="72" fill="#f4f5f9" letter-spacing="-0.02em">Under the radar — low votes, high scores.</text>
+  <text x="80" y="260" font-family="Fraunces, ui-serif, Georgia, serif" font-weight="700" font-size="72" fill="#f4f5f9" letter-spacing="-0.02em">Under the radar.</text>
+  <text x="80" y="344" font-family="Fraunces, ui-serif, Georgia, serif" font-weight="700" font-size="72" fill="#f4f5f9" letter-spacing="-0.02em">Low votes, high scores.</text>
   <!-- crest -->
   <g transform="translate(80, 500)">
     <circle cx="22" cy="22" r="20" stroke="url(#silver)" stroke-width="1.4" fill="none" opacity="0.9"/>

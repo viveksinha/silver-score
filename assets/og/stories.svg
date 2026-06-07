@@ -26,12 +26,13 @@
   <!-- eyebrow -->
   <text x="80" y="140" font-family="DM Mono, ui-monospace, monospace" font-size="22" letter-spacing="4" fill="#d97706">SILVER SCORE · STORIES</text>
   <!-- title -->
-  <text x="80" y="260" font-family="Fraunces, ui-serif, Georgia, serif" font-weight="700" font-size="72" fill="#f4f5f9" letter-spacing="-0.02em">Lists, essays, and what&#x27;s on our calendar.</text>
+  <text x="80" y="260" font-family="Fraunces, ui-serif, Georgia, serif" font-weight="700" font-size="72" fill="#f4f5f9" letter-spacing="-0.02em">Our lists, essays,</text>
+  <text x="80" y="344" font-family="Fraunces, ui-serif, Georgia, serif" font-weight="700" font-size="72" fill="#f4f5f9" letter-spacing="-0.02em">and what&#x27;s on our calendar.</text>
   <!-- crest -->
   <g transform="translate(80, 500)">
     <circle cx="22" cy="22" r="20" stroke="url(#silver)" stroke-width="1.4" fill="none" opacity="0.9"/>
     <path fill="url(#silver)" d="M22 10.7l2.54 7.8h8.25l-6.68 4.85 2.54 7.8-6.65-4.83-6.65 4.83 2.54-7.8-6.68-4.85h8.25L22 10.7z"/>
     <text x="56" y="20" font-family="Cormorant Garamond, Fraunces, serif" font-weight="600" font-size="26" fill="#e8e6f0">Silver Score</text>
-    <text x="56" y="42" font-family="DM Mono, monospace" font-size="14" letter-spacing="3" fill="#9b97a8">curated lists · essays · long reads</text>
+    <text x="56" y="42" font-family="DM Mono, monospace" font-size="14" letter-spacing="3" fill="#9b97a8">lists · essays · what&#x27;s next</text>
   </g>
 </svg>
