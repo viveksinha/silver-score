@@ -10,22 +10,18 @@ Open it on your phone or desktop, switch **light** or **dark** in the nav, and w
 
 ## What you’ll find inside
 
-- **Home** — Our living dashboard: favorites we’d argue for, “under the radar” teaser rail, world-cinema highlights, essay teasers, recently rated rows, star distribution, decade spread, directors we keep coming back to, and titles we liked more than the crowd.
-- **Stories** — Our lists, essays, and what’s on our calendar: curated lists with a thesis, long reads, under-the-radar entry points into the full shelf, and release lanes we’re tracking.
-- **Upcoming** — What we’re tracking next—filter by mood, region, or streamer-style tags when you want a narrower lens.
-- **Browse** — Search everything we’ve rated or dive into **genre DNA**: how our averages line up against IMDb by category.
-- **About** — Vivek and Abhilasha: same couch, honest scores, and why tension, craft, and stories that don’t talk down matter to us.
-
-**Under the Radar** (full sortable shelf) lives at `pages/hidden-gems.html`; the home page and **Stories** surface it with teasers and entry cards—there is no separate top-level nav tab for it.
+- **[Home](https://viveksinha.github.io/silver-score/)** — fresh picks, stats, and teaser rails into the shelves below.
+- **[Stories](https://viveksinha.github.io/silver-score/pages/stories.html)** — lists, essays, and what’s on our calendar.
+- **[Upcoming](https://viveksinha.github.io/silver-score/pages/upcoming.html)** — releases we’re tracking next.
+- **[Browse](https://viveksinha.github.io/silver-score/pages/browse.html)** — search everything we’ve rated; genre DNA vs IMDb.
+- **[About](https://viveksinha.github.io/silver-score/pages/about.html)** — who we are and how we score.
+- **[Watch list](https://viveksinha.github.io/silver-score/pages/watchlist.html)** — IMDb queue not yet rated here.
+- **[Under the Radar](https://viveksinha.github.io/silver-score/pages/hidden-gems.html)** — 8+ titles still under 50k IMDb votes (full sortable table).
 
 ---
 
 ## Why it’s worth a bookmark
 
-If you like **slow burns, thrillers, prestige TV, and stories that trust the audience**, this site is a filter bubble we built on purpose—honest scores, IMDb links everywhere you need them, and lists and essays that feel like a conversation, not a spreadsheet.
+If you like **slow burns, thrillers, prestige TV, and stories that trust the audience**, this site is a filter bubble we built on purpose.
 
 **[Go to Silver Score](https://viveksinha.github.io/silver-score/)**
-
-### Pageview counter
-
-**Dashboard:** [vivek-silver-score.goatcounter.com](https://vivek-silver-score.goatcounter.com/)
