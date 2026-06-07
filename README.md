@@ -26,14 +26,6 @@ If you like **slow burns, thrillers, prestige TV, and stories that trust the aud
 
 **[Go to Silver Score](https://viveksinha.github.io/silver-score/)**
 
----
-
-*Source for this site: [github.com/viveksinha/silver-score](https://github.com/viveksinha/silver-score)*
-
----
-
 ### Pageview counter
 
 **Dashboard:** [vivek-silver-score.goatcounter.com](https://vivek-silver-score.goatcounter.com/)
-
-Footer uses `assets/js/pageviews.js` — one **page view** per full page load (not unique visitors). If the counter API fails, the footer slot is removed silently.
