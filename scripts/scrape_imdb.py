@@ -293,6 +293,7 @@ def compute_stats(all_rated: list[dict]) -> dict:
 
     return {
         "totalRatings": total_ratings,
+        "allRatedIds": sorted({i["id"] for i in all_rated}),
         "mainItems": main_count,
         "avgRating": avg_rating,
         "ratingDistribution": rating_dist,

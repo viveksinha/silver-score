@@ -282,11 +282,11 @@
       return { key: 'a-recent', label: 'Recently released', order: 0, granularity: 'broad' };
     }
     if (d < monthStart) {
-      return { key: 'a-older', label: 'Earlier', order: 1, granularity: 'broad' };
+      return { key: 'a-older', label: 'Earlier', order: 500, granularity: 'broad' };
     }
     if (d < thisMonthEnd) {
       var thisMonthLabel = d.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
-      return { key: 'b-this-month', label: 'This month · ' + thisMonthLabel, order: 10, granularity: 'month' };
+      return { key: 'b-this-month', label: 'This month · ' + thisMonthLabel, order: 1, granularity: 'month' };
     }
     if (d < threeMonthsOut) {
       var monthLabel = d.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });

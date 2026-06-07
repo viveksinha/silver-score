@@ -3,3 +3,7 @@ Icon?
 __pycache__/
 *.pyc
 scripts/scraped-ratings.json
+scripts/scraped-watchlist.json
+scripts/tmdb-cache/
+scripts/favorites-derived.json
+scripts/upcoming-generated.json

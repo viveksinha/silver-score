@@ -114,24 +114,38 @@ def footer_stamp(now: datetime | None = None) -> str:
     return now.strftime("%B %Y")
 
 
-def sync_html_stamps(site: Path, total_ratings: int, stamp: str) -> list[Path]:
+def _format_title_count(main_items: int) -> str:
+    return f"{main_items:,} titles"
+
+
+def _patch_footer(text: str, *, main_items: int, stamp: str, index_page: bool) -> str:
+    """Update footer month (and title count on non-index pages); preserve hours verbatim."""
+    title_count = _format_title_count(main_items)
+    foot_re = re.compile(
+        r"(Silver Score &middot; )(.*?)( &middot; )(.*?)( &middot; )([A-Za-z]+ \d{4})"
+    )
+
+    def repl(m: re.Match[str]) -> str:
+        prefix, hours, sep1, title_part, sep2, _month = m.groups()
+        if index_page:
+            return f"{prefix}{hours}{sep1}{title_part}{sep2}{stamp}"
+        return f"{prefix}{hours}{sep1}{title_count}{sep2}{stamp}"
+
+    return foot_re.sub(repl, text)
+
+
+def sync_html_stamps(site: Path, total_ratings: int, main_items: int, stamp: str) -> list[Path]:
     updated: list[Path] = []
     hero_re = re.compile(r"<h1>\d+ ratings\. One taste profile\.</h1>")
     hero_sub = f"<h1>{total_ratings} ratings. One taste profile.</h1>"
-    foot_re = re.compile(
-        r"(?:Silver Score &middot; )?[Bb]uilt from \d+ IMDb? ratings &middot; [^<\n]+",
-    )
-    foot_sub = f"Silver Score &middot; ~8,500+ hours &middot; 1,000+ titles &middot; {stamp}"
-    foot_modern_re = re.compile(
-        r"Silver Score &middot; (?:~8,500\+ hours &middot; 1,000\+ titles|~10,000 hours &middot; 1,000\+ titles|\d+ IMDb ratings) &middot; [A-Za-z]+ \d{4}"
-    )
-    foot_modern_sub = f"Silver Score &middot; ~8,500+ hours &middot; 1,000+ titles &middot; {stamp}"
+    upcoming_html = (site / "pages" / "upcoming.html").resolve()
 
     for html in [site / "index.html", *(site / "pages").glob("*.html")]:
+        if html.resolve() == upcoming_html:
+            continue
         text = html.read_text(encoding="utf-8")
         new = hero_re.sub(hero_sub, text)
-        new = foot_re.sub(foot_sub, new)
-        new = foot_modern_re.sub(foot_modern_sub, new)
+        new = _patch_footer(new, main_items=main_items, stamp=stamp, index_page=html.name == "index.html")
         if new != text:
             html.write_text(new, encoding="utf-8")
             updated.append(html)
@@ -188,7 +202,7 @@ def main() -> int:
     total = int(data["totalRatings"])
     stamp = footer_stamp()
     if not args.no_html:
-        changed = sync_html_stamps(site, total, stamp)
+        changed = sync_html_stamps(site, total, int(data["mainItems"]), stamp)
         for path in changed:
             print(f"updated stamps: {path.relative_to(site)}")
     else:
