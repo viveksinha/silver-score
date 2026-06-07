@@ -25,3 +25,7 @@ Open it on your phone or desktop, switch **light** or **dark** in the nav, and w
 If you like **slow burns, thrillers, prestige TV, and stories that trust the audience**, this site is a filter bubble we built on purpose.
 
 **[Go to Silver Score](https://viveksinha.github.io/silver-score/)**
+
+### Pageview counter (GoatCounter)
+
+**Dashboard:** [vivek-silver-score-goatcounter](https://vivek-silver-score.goatcounter.com/)
