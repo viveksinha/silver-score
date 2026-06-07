@@ -378,7 +378,7 @@
           i.year +
           ' · ' +
           (i.votes || 0).toLocaleString() +
-          ' votes · us ' +
+          ' votes · Our ' +
           i.myRating +
           ' · crowd ' +
           i.imdbRating +
@@ -649,6 +649,8 @@
           pickRailBadge(i) +
           '<span class="meta-line">' +
           i.year +
+          ' · Our ' +
+          i.myRating +
           ' · crowd ' +
           i.imdbRating +
           '</span>' +
