@@ -293,7 +293,6 @@ def compute_stats(all_rated: list[dict]) -> dict:
 
     return {
         "totalRatings": total_ratings,
-        "allRatedIds": sorted({i["id"] for i in all_rated}),
         "mainItems": main_count,
         "avgRating": avg_rating,
         "ratingDistribution": rating_dist,
@@ -342,6 +341,7 @@ def main() -> int:
 
     print("computing stats...")
     export = compute_stats(all_rated)
+    export["allRatedIds"] = sorted({i["id"] for i in all_rated})
 
     out = args.output.expanduser().resolve()
     out.parent.mkdir(parents=True, exist_ok=True)

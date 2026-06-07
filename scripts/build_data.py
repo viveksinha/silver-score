@@ -196,6 +196,9 @@ def main() -> int:
     cache_path = args.language_cache.expanduser().resolve()
     enrich_languages(data, cache_path, use_wikidata=not args.no_wikidata)
 
+    # Scrape-only fields — keep out of public data.js
+    data.pop("allRatedIds", None)
+
     out_path = args.output.expanduser().resolve()
     write_data_js(out_path, data)
 

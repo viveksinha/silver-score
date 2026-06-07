@@ -70,7 +70,7 @@
     <span class="eyebrow">Stories</span>
     <h1>Our lists, essays, and what’s on our calendar</h1>
     <p class="hero-sub">Everything we publish about what we actually watch.</p>
-    <p class="hero-sub"><a href="#under-the-radar">Under the radar</a> · <a href="#curated-lists">Lists</a> · <a href="#essays">Essays</a> · <a href="#calendar-lanes">On the calendar</a></p>
+    <p class="hero-sub"><a href="#under-the-radar">Under the radar</a> · <a href="#curated-lists">Lists</a> · <a href="#essays">Essays</a> · <a href="#calendar-lanes">On the calendar</a> · <a href="#watchlist">Watchlist</a></p>
   </header>
 
   <section class="section fade-in" id="under-the-radar" aria-labelledby="radar-hub-heading">
@@ -108,6 +108,15 @@
     </div>
   </section>
 
+  <section class="section fade-in" id="watchlist" aria-labelledby="watchlist-heading">
+    <h2 class="section-title" id="watchlist-heading">IMDb watchlist <span class="badge">Queue</span></h2>
+    <p class="section-lede">Saved on IMDb, not logged here yet — highest crowd scores first.</p>
+    <p class="section-lede"><a href="watchlist.html">See all</a> on the full watchlist shelf.</p>
+    <div class="featured-rail-wrap stories-hub-rail-wrap">
+      <ul class="featured-rail stories-hub-rail" id="watchlist-hub" aria-label="IMDb watchlist highlights"></ul>
+    </div>
+  </section>
+
   <section class="section fade-in" id="subscribe" aria-labelledby="subscribe-heading">
     <h2 class="section-title" id="subscribe-heading">Stay in the loop</h2>
     <p class="section-lede">No newsletter yet — but <a href="../feed.xml">RSS</a> covers new lists and essays.</p>
@@ -124,6 +133,7 @@
 <script src="../assets/js/nav.js"></script>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/magazine.js"></script>
+<script src="../assets/js/watchlist-data.js"></script>
 <script>
 (function () {
   var HUB_MAX = 6;
@@ -145,13 +155,18 @@
   }
 
   var railUid = 0;
-  function storiesRailCard(href, title, body, extraHtml) {
+  function storiesRailCard(href, title, body, extraHtml, external) {
     var uid = 'stories-rail-title-' + ++railUid;
+    var ext = external
+      ? ' target="_blank" rel="noopener noreferrer"'
+      : '';
     return (
       '<li class="featured-rail-item">' +
       '<a class="featured-card featured-card--lift stories-hub-card" href="' +
       esc(href) +
-      '" aria-labelledby="' +
+      '"' +
+      ext +
+      ' aria-labelledby="' +
       uid +
       '">' +
       '<h3 class="stories-hub-card__title" id="' +
@@ -195,6 +210,19 @@
     .slice(0, HUB_MAX)
     .map(function (h) {
       return storiesRailCard(h.href, h.title, h.dek, '');
+    })
+    .join('');
+
+  var watchItems = (window.WATCHLIST && window.WATCHLIST.items) || [];
+  var watchSorted = watchItems.slice().sort(function (a, b) {
+    if (b.imdbRating !== a.imdbRating) return b.imdbRating - a.imdbRating;
+    return (b.votes || 0) - (a.votes || 0);
+  });
+  document.getElementById('watchlist-hub').innerHTML = watchSorted
+    .slice(0, HUB_MAX)
+    .map(function (w) {
+      var dek = (w.year || '—') + ' · ' + (w.type || 'Title') + ' · IMDb ' + (w.imdbRating || '—');
+      return storiesRailCard(w.url, w.title, dek, '', true);
     })
     .join('');
 
