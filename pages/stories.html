@@ -215,8 +215,19 @@
     .join('');
 
   var watchItems = (window.WATCHLIST && window.WATCHLIST.items) || [];
+  // Hub rail: recency-weighted score (carousel only; full table stays IMDb sort on watchlist.html).
+  function watchlistHubScore(w) {
+    var y = w.year;
+    var effectiveYear = (!y || y <= 0) ? 1900 : y;
+    return (w.imdbRating || 0) * Math.log(effectiveYear / 1900);
+  }
   var watchSorted = watchItems.slice().sort(function (a, b) {
+    var ds = watchlistHubScore(b) - watchlistHubScore(a);
+    if (ds !== 0) return ds;
     if (b.imdbRating !== a.imdbRating) return b.imdbRating - a.imdbRating;
+    var ya = (a.year && a.year > 0) ? a.year : 0;
+    var yb = (b.year && b.year > 0) ? b.year : 0;
+    if (yb !== ya) return yb - ya;
     return (b.votes || 0) - (a.votes || 0);
   });
   document.getElementById('watchlist-hub').innerHTML = watchSorted

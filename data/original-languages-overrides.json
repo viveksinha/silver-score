@@ -1,0 +1,17 @@
+{
+  "tt0068646": {
+    "excludeWorldRail": true
+  },
+  "tt0361748": {
+    "excludeWorldRail": true
+  },
+  "tt1375666": {
+    "excludeWorldRail": true
+  },
+  "tt2788316": {
+    "worldRail": true
+  },
+  "tt5013056": {
+    "excludeWorldRail": true
+  }
+}

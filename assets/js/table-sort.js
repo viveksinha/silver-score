@@ -96,10 +96,18 @@
     return { updateHeaderClasses: updateHeaderClasses, activate: activate };
   }
 
+  var ENGLISH_LANG_KEYS = {
+    english: true,
+    'american english': true,
+    'british english': true,
+  };
+
   /** Original-language label for filtering (matches table sort column). */
   function languageKey(item) {
     if (!item) return '';
-    return String(item.languageLabel || item.languageHint || '').trim();
+    var k = String(item.languageLabel || item.languageHint || '').trim();
+    if (k && ENGLISH_LANG_KEYS[k.toLowerCase()]) return '';
+    return k;
   }
 
   function escapeHtmlText(s) {

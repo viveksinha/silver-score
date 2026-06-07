@@ -10,8 +10,11 @@ from datetime import datetime
 from pathlib import Path
 
 from wikidata_languages import (
-    fetch_wikidata_language_labels,
-    language_label_from_export_field,
+    fetch_wikidata_language_info,
+    is_english_label,
+    language_info_from_export_field,
+    normalize_language_label,
+    parse_cache_entry,
 )
 
 REQUIRED_TOP_LEVEL = (
@@ -66,14 +69,31 @@ def _load_json_dict(path: Path) -> dict:
         return {}
 
 
-def enrich_languages(data: dict, cache_path: Path, *, use_wikidata: bool = True) -> None:
+def _manual_override(manual: dict, rid: str) -> dict | None:
+    v = manual.get(rid)
+    if v is None:
+        return None
+    if isinstance(v, str):
+        return {"languageLabel": v.strip()}
+    if isinstance(v, dict):
+        return v
+    return None
+
+
+def enrich_languages(
+    data: dict,
+    cache_path: Path,
+    *,
+    use_wikidata: bool = True,
+    overrides: dict | None = None,
+) -> None:
     cache = _load_json_dict(cache_path)
     ids = sorted({item["id"] for item in data["allItems"] if item.get("id")})
     to_fetch = [i for i in ids if i not in cache]
 
     if use_wikidata and to_fetch:
         try:
-            new = fetch_wikidata_language_labels(to_fetch)
+            new = fetch_wikidata_language_info(to_fetch)
             for i in to_fetch:
                 cache[i] = new[i] if i in new else False
             cache_path.write_text(
@@ -87,16 +107,42 @@ def enrich_languages(data: dict, cache_path: Path, *, use_wikidata: bool = True)
     for item in data["allItems"]:
         rid = item.get("id") or ""
         lab = ""
+        iso = ""
+        source = ""
         if rid in cache:
             cv = cache[rid]
-            if isinstance(cv, str):
-                lab = cv
-        if not lab:
-            lab = language_label_from_export_field(item)
-        if lab.lower() == "english":
+            if cv is not False:
+                lab, iso = parse_cache_entry(cv)
+                source = "wikidata"
+        if not source:
+            exp_lab, exp_iso = language_info_from_export_field(item)
+            if exp_lab or exp_iso not in ("", "unknown"):
+                lab, iso = exp_lab, exp_iso
+                source = "export"
+        if is_english_label(lab):
             lab = ""
+        if lab:
+            lab = normalize_language_label(lab)
+        if not iso:
+            iso = "en" if source == "wikidata" and not lab else ("unknown" if not source else "en")
+        if not source:
+            source = "unknown"
         item["languageLabel"] = lab
+        item["primaryLanguage"] = iso
+        item["languageSource"] = source
         item.pop("languageHint", None)
+
+        override = _manual_override(overrides or {}, rid)
+        world_rail = override.get("worldRail") if override else None
+        exclude_world_rail = override.get("excludeWorldRail") if override else None
+        if world_rail is True:
+            item["worldRail"] = True
+        else:
+            item.pop("worldRail", None)
+        if exclude_world_rail is True:
+            item["excludeWorldRail"] = True
+        else:
+            item.pop("excludeWorldRail", None)
 
 
 def write_data_js(out: Path, data: dict) -> None:
@@ -194,7 +240,14 @@ def main() -> int:
         return 1
 
     cache_path = args.language_cache.expanduser().resolve()
-    enrich_languages(data, cache_path, use_wikidata=not args.no_wikidata)
+    overrides_path = site / "data" / "original-languages-overrides.json"
+    overrides = _load_json_dict(overrides_path)
+    enrich_languages(
+        data,
+        cache_path,
+        use_wikidata=not args.no_wikidata,
+        overrides=overrides,
+    )
 
     # Scrape-only fields — keep out of public data.js
     data.pop("allRatedIds", None)

@@ -1980,9 +1980,19 @@ footer {
   overflow: hidden;
   isolation: isolate;
 }
-.mag-hero > * {
+.mag-hero > :not(.mag-hero__photo) {
   position: relative;
   z-index: 1;
+}
+.mag-hero__photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("../images/title-image.jpg");
+  background-size: cover;
+  background-position: center 42%;
+  opacity: 0.3;
 }
 /* Filmic grain — tiny SVG noise tile blended on top of hero gradient. */
 .mag-hero::before {

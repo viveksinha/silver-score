@@ -42,10 +42,21 @@
     return Number(v);
   }
 
+  var ENGLISH_LANG_KEYS = {
+    english: true,
+    'american english': true,
+    'british english': true,
+  };
+
+  function isEnglishLangKey(k) {
+    if (!k) return false;
+    return !!ENGLISH_LANG_KEYS[String(k).toLowerCase()];
+  }
+
   function displayLang(i) {
     var L = i.languageLabel != null ? i.languageLabel : i.languageHint;
     if (L == null || L === '') return '';
-    if (String(L).toLowerCase() === 'english') return '';
+    if (isEnglishLangKey(L)) return '';
     return String(L);
   }
 
@@ -65,11 +76,32 @@
       .replace(/\r|\n/g, ' ');
   }
 
-  /** IMDb language when known; otherwise a neutral fallback for clearly international rows. */
-  function languageLabelOrInternational(i) {
+  function hasNonEnglishLabel(i) {
     var k = S.languageKey(i);
-    if (k && String(k).toLowerCase() !== 'english') return k;
-    return 'International';
+    return !!(k && !isEnglishLangKey(k));
+  }
+
+  function hasForeignScriptTitle(i) {
+    var o = (i.originalTitle || '').trim();
+    return !!(o && !/^[\x00-\x7F]+$/.test(o));
+  }
+
+  /** Language name for badges when not confirmed English. */
+  function worldBadgeLanguageName(i) {
+    var k = S.languageKey(i);
+    if (k && !isEnglishLangKey(k)) return k;
+    if (i.primaryLanguage === 'en') return 'English';
+    if (hasForeignScriptTitle(i)) return 'Subtitled';
+    if (isLikelyNonEnglish(i)) return 'English';
+    return 'Subtitled';
+  }
+
+  /** TV shelf badge text (fresh picks rail). */
+  function languageLabelForTvBadge(i) {
+    var k = S.languageKey(i);
+    if (k && !isEnglishLangKey(k)) return k;
+    if (hasForeignScriptTitle(i)) return 'Subtitled';
+    return 'English';
   }
 
   function itemDirectors(i) {
@@ -157,9 +189,18 @@
   }
 
   function isEnglishPrimary(i) {
+    if (i.primaryLanguage === 'en') return true;
     var k = S.languageKey(i);
-    if (k && String(k).toLowerCase() === 'english') return true;
+    if (k && isEnglishLangKey(k)) return true;
     if (!k && !isLikelyNonEnglish(i)) return true;
+    return false;
+  }
+
+  function isWorldRailCandidate(i) {
+    if (i.excludeWorldRail) return false;
+    if (i.worldRail) return true;
+    if (hasNonEnglishLabel(i)) return true;
+    if (isLikelyNonEnglish(i)) return true;
     return false;
   }
 
@@ -193,7 +234,10 @@
 
   function pickRailBadge(i) {
     if (isNonEnglishTv(i)) {
-      var label = languageLabelOrInternational(i);
+      var label = languageLabelForTvBadge(i);
+      if (label === 'English') {
+        return '<span class="pick-pill pick-pill--en">English · series</span>';
+      }
       return (
         '<span class="pick-pill pick-pill--lang">' + escapeHtmlText(label) + ' · series</span>'
       );
@@ -202,12 +246,13 @@
   }
 
   function worldPickBadge(i) {
-    if (isEnglishPrimary(i)) {
+    var label = worldBadgeLanguageName(i);
+    if (label === 'English') {
       return '<span class="pick-pill pick-pill--en">English · world</span>';
     }
     return (
       '<span class="pick-pill pick-pill--lang">' +
-      escapeHtmlText(languageLabelOrInternational(i)) +
+      escapeHtmlText(label) +
       ' · world</span>'
     );
   }
@@ -500,7 +545,7 @@
     var rail = document.getElementById('world-picks');
     if (!rail) return;
     var pool = data.allItems
-      .filter(isLikelyNonEnglish)
+      .filter(isWorldRailCandidate)
       .sort(function (a, b) {
         return (
           b.myRating - a.myRating ||
@@ -738,7 +783,7 @@
     return i.type === 'Movie';
   }).length;
   var nonEnCount = data.allItems.filter(function (i) {
-    return displayLang(i) || isLikelyNonEnglish(i);
+    return !isEnglishPrimary(i);
   }).length;
 
   var hoursLabel = displayWatchHoursPitch();

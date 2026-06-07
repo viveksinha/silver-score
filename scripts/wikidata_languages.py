@@ -13,6 +13,10 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+ENGLISH_LABELS = frozenset(
+    {"english", "american english", "british english", "en", "eng"}
+)
+
 
 def _urlopen(req: urllib.request.Request, *, timeout: float = 120):
     try:
@@ -193,44 +197,114 @@ ISO_639_1 = {
     "zu": "Zulu",
 }
 
+LABEL_TO_ISO: dict[str, str] = {}
+for _code, _name in ISO_639_1.items():
+    if _name:
+        LABEL_TO_ISO[_name.lower()] = _code
+LABEL_TO_ISO["american english"] = "en"
+LABEL_TO_ISO["british english"] = "en"
+LABEL_TO_ISO["norwegian bokmål"] = "nb"
+LABEL_TO_ISO["norwegian nynorsk"] = "nn"
 
-def language_label_from_export_field(item: dict) -> str:
+
+def is_english_label(label: str) -> bool:
+    return label.strip().lower() in ENGLISH_LABELS
+
+
+def normalize_language_label(label: str) -> str:
+    """Non-English display name only; empty string for English variants."""
+    lab = label.strip()
+    if not lab or is_english_label(lab):
+        return ""
+    return lab
+
+
+def iso_to_label(iso: str) -> str:
+    code = iso.strip().lower()
+    if not code or code in ("unknown", "und"):
+        return ""
+    if code in ("en", "eng"):
+        return ""
+    if len(code) == 2 and code in ISO_639_1:
+        return ISO_639_1[code]
+    return ""
+
+
+def label_to_iso(label: str) -> str:
+    lab = label.strip()
+    if not lab:
+        return "en"
+    low = lab.lower()
+    if is_english_label(lab):
+        return "en"
+    if len(lab) == 2 and lab.isalpha():
+        return low
+    return LABEL_TO_ISO.get(low, "unknown")
+
+
+def parse_cache_entry(cv: object) -> tuple[str, str]:
+    """Parse wikidata cache value (legacy string, dict, or False) -> (label, iso)."""
+    if cv is False or cv is None:
+        return "", "unknown"
+    if isinstance(cv, dict):
+        lab = str(cv.get("label") or "").strip()
+        iso = str(cv.get("iso") or "").strip().lower()
+        if not iso:
+            iso = label_to_iso(lab) if lab else "en"
+        if is_english_label(lab):
+            return "", "en"
+        return normalize_language_label(lab), iso
+    if isinstance(cv, str):
+        if is_english_label(cv):
+            return "", "en"
+        return normalize_language_label(cv), label_to_iso(cv)
+    return "", "unknown"
+
+
+def language_info_from_export_field(item: dict) -> tuple[str, str]:
     """Use optional export fields originalLanguage / primaryLanguage (codes or names)."""
     raw = item.get("originalLanguage") or item.get("primaryLanguage")
     if not raw:
-        return ""
+        return "", "unknown"
     if isinstance(raw, list):
         parts = [str(p).strip() for p in raw if p]
     else:
         parts = [p.strip() for p in str(raw).split(",") if p.strip()]
     for p in parts:
         pl = p.lower()
-        if pl in ("en", "eng", "english"):
+        if pl in ("en", "eng", "english", "american english", "british english"):
             continue
         if len(p) == 2 and p.isalpha():
             name = ISO_639_1.get(pl)
             if name is not None:
-                return name
-            return p.upper()
-        return p[:1].upper() + p[1:] if p else ""
-    return ""
+                return normalize_language_label(name), pl.lower()
+            return "", pl.lower()
+        return normalize_language_label(p), label_to_iso(p)
+    return "", "en"
 
 
-def fetch_wikidata_language_labels(
+def language_label_from_export_field(item: dict) -> str:
+    """Use optional export fields originalLanguage / primaryLanguage (codes or names)."""
+    lab, _ = language_info_from_export_field(item)
+    return lab
+
+
+def fetch_wikidata_language_info(
     imdb_ids: list[str],
     *,
     batch_size: int = 70,
     sleep_s: float = 1.2,
-) -> dict[str, str]:
-    """Return imdb id -> display label; English -> empty string. Missing ids omitted."""
-    out: dict[str, str] = {}
+) -> dict[str, dict[str, str]]:
+    """Return imdb id -> {label, iso}. English -> label \"\" and iso en. Missing ids omitted."""
+    out: dict[str, dict[str, str]] = {}
     for i in range(0, len(imdb_ids), batch_size):
         chunk = imdb_ids[i : i + batch_size]
         vals = " ".join(f'"{x}"' for x in chunk)
-        query = f"""SELECT ?imdb (SAMPLE(?langLabel) AS ?langLabel) WHERE {{
+        query = f"""SELECT ?imdb (SAMPLE(?langLabel) AS ?langLabel) (SAMPLE(?langCode) AS ?langCode) WHERE {{
           VALUES ?imdb {{ {vals} }}
           ?item wdt:P345 ?imdb .
           ?item wdt:P364 ?l .
+          ?l wikibase:languageCode ?langCode .
           ?l rdfs:label ?langLabel .
           FILTER(LANG(?langLabel) = "en")
         }} GROUP BY ?imdb"""
@@ -253,7 +327,23 @@ def fetch_wikidata_language_labels(
         for b in payload.get("results", {}).get("bindings", []):
             imdb = b["imdb"]["value"]
             lab = b["langLabel"]["value"]
-            out[imdb] = "" if lab.lower() == "english" else lab
+            code = b.get("langCode", {}).get("value", "").strip().lower()
+            if is_english_label(lab):
+                out[imdb] = {"label": "", "iso": "en"}
+            else:
+                iso = code or label_to_iso(lab)
+                out[imdb] = {"label": normalize_language_label(lab), "iso": iso}
         if i + batch_size < len(imdb_ids):
             time.sleep(sleep_s)
     return out
+
+
+def fetch_wikidata_language_labels(
+    imdb_ids: list[str],
+    *,
+    batch_size: int = 70,
+    sleep_s: float = 1.2,
+) -> dict[str, str]:
+    """Return imdb id -> display label; English -> empty string. Missing ids omitted."""
+    info = fetch_wikidata_language_info(imdb_ids, batch_size=batch_size, sleep_s=sleep_s)
+    return {imdb: row["label"] for imdb, row in info.items()}
