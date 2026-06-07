@@ -16,8 +16,8 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=4">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
@@ -56,52 +56,57 @@
 </nav>
 
 <main id="main">
-<div class="container prose-article">
+<div class="container">
   <p class="eyebrow"><a href="stories.html#curated-lists" style="color:inherit">← All lists</a></p>
-  <h1 id="list-title">List</h1>
-  <p class="lead" id="list-thesis"></p>
+  <header class="hero">
+    <h1 id="list-title">List</h1>
+    <p class="hero-sub" id="list-thesis"></p>
+  </header>
 
-  <div class="filter-bar" style="margin-top:1.25rem">
-    <select id="language-filter" aria-label="Filter by original language">
-      <option value="">All languages</option>
-    </select>
-    <select id="format-filter" aria-label="Filter by format">
-      <option value="">All formats</option>
-    </select>
-    <select id="genre-filter" aria-label="Filter by genre">
-      <option value="">All genres</option>
-    </select>
-    <select id="decade-filter" aria-label="Filter by decade">
-      <option value="">All decades</option>
-    </select>
-    <select id="min-rating-filter" aria-label="Minimum our rating">
-      <option value="">Any rating</option>
-      <option value="7">7+</option>
-      <option value="8">8+</option>
-      <option value="9">9+</option>
-      <option value="10">10 only</option>
-    </select>
-    <span class="filter-count" id="filter-count" aria-live="polite"></span>
-  </div>
+  <section class="section" aria-labelledby="list-table-heading">
+    <h2 class="visually-hidden" id="list-table-heading">List titles</h2>
+    <div class="filter-bar">
+      <select id="language-filter" aria-label="Filter by original language">
+        <option value="">All languages</option>
+      </select>
+      <select id="format-filter" aria-label="Filter by format">
+        <option value="">All formats</option>
+      </select>
+      <select id="genre-filter" aria-label="Filter by genre">
+        <option value="">All genres</option>
+      </select>
+      <select id="decade-filter" aria-label="Filter by decade">
+        <option value="">All decades</option>
+      </select>
+      <select id="min-rating-filter" aria-label="Minimum our rating">
+        <option value="">Any rating</option>
+        <option value="7">7+</option>
+        <option value="8">8+</option>
+        <option value="9">9+</option>
+        <option value="10">10 only</option>
+      </select>
+      <span class="filter-count" id="filter-count" aria-live="polite"></span>
+    </div>
 
-  <div class="table-scroll table-scroll--page" style="margin-top:1.5rem">
-    <table class="data-table" id="list-table">
-      <thead>
-        <tr>
-          <th data-sort-key="title" data-sort-default="asc">Title</th>
-          <th data-sort-key="language" data-sort-default="asc">Original language</th>
-          <th data-sort-key="year" data-sort-default="desc">Year</th>
-          <th data-sort-key="type" data-sort-default="asc">Format</th>
-          <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
-          <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
-          <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
-          <th>RT</th>
-          <th data-sort-key="genres" data-sort-default="asc">Genres</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+    <div class="table-scroll">
+      <table class="data-table" id="list-table">
+        <thead>
+          <tr>
+            <th data-sort-key="title" data-sort-default="asc">Title</th>
+            <th data-sort-key="language" data-sort-default="asc">Original language</th>
+            <th data-sort-key="year" data-sort-default="desc">Year</th>
+            <th data-sort-key="type" data-sort-default="asc">Format</th>
+            <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
+            <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
+            <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
+            <th>RT</th>
+            <th data-sort-key="genres" data-sort-default="asc">Genres</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
 </div>
 </main>
 

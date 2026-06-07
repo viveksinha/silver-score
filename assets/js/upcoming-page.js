@@ -185,6 +185,7 @@
     statuses: {}, // free-form status strings
     genres: {}, // free-form
     countries: {}, // free-form
+    tags: {}, // editorial tag chips (Korean, Nordic, Returning, …)
   };
 
   function readHash() {
@@ -201,6 +202,7 @@
       else if (k === 'status') v.split(',').filter(Boolean).forEach(function (x) { state.statuses[x] = true; });
       else if (k === 'genre') v.split(',').filter(Boolean).forEach(function (x) { state.genres[x] = true; });
       else if (k === 'country') v.split(',').filter(Boolean).forEach(function (x) { state.countries[x] = true; });
+      else if (k === 'tag') v.split(',').filter(Boolean).forEach(function (x) { state.tags[x] = true; });
     });
   }
 
@@ -219,6 +221,8 @@
     if (g.length) parts.push('genre=' + encodeURIComponent(g.join(',')));
     var c = setToList(state.countries);
     if (c.length) parts.push('country=' + encodeURIComponent(c.join(',')));
+    var tg = setToList(state.tags);
+    if (tg.length) parts.push('tag=' + encodeURIComponent(tg.join(',')));
     var newHash = parts.length ? '#' + parts.join('&') : '';
     if (newHash !== location.hash) {
       history.replaceState(null, '', location.pathname + location.search + newHash);
@@ -250,6 +254,7 @@
   var allStatuses = uniqueSortedValues('status', function (it) { return it.status; });
   var allGenres = uniqueSortedValues('genres', function (it) { return it.genres; });
   var allCountries = uniqueSortedValues('country', function (it) { return it.country; });
+  var allTags = uniqueSortedValues('tags', function (it) { return it.tags; });
 
   // ------------------------------------------------------------------
   // Timeline bucketing
@@ -336,6 +341,8 @@
     if (gKeys.length && !gKeys.some(function (g) { return item.genres.indexOf(g) !== -1; })) return false;
     var cKeys = Object.keys(state.countries).filter(function (k) { return state.countries[k]; });
     if (cKeys.length && cKeys.indexOf(item.country) === -1) return false;
+    var tKeys = Object.keys(state.tags).filter(function (k) { return state.tags[k]; });
+    if (tKeys.length && !tKeys.some(function (t) { return item.tags.indexOf(t) !== -1; })) return false;
     if (state.q) {
       var q = state.q.toLowerCase().trim();
       if (q && item._search.indexOf(q) === -1) return false;
@@ -558,12 +565,26 @@
       segments.push(renderFilterGroup('Country', cChips, sortedCountries.length));
     }
 
+    if (allTags.length > 1) {
+      var sortedTags = allTags.slice().sort(function (a, b) {
+        var aa = state.tags[a] ? 0 : 1;
+        var bb = state.tags[b] ? 0 : 1;
+        if (aa !== bb) return aa - bb;
+        return a.localeCompare(b);
+      });
+      var tChips = sortedTags.map(function (t) {
+        return chipButton(t, { 'data-filter': 'tag', 'data-value': t }, !!state.tags[t]);
+      }).join('');
+      segments.push(renderFilterGroup('Tag', tChips, sortedTags.length));
+    }
+
     var hasAnyActive = (
       state.type !== 'all' ||
       Object.keys(state.sources).length ||
       Object.keys(state.statuses).length ||
       Object.keys(state.genres).length ||
       Object.keys(state.countries).length ||
+      Object.keys(state.tags).length ||
       state.q
     );
     if (hasAnyActive) {
@@ -587,6 +608,7 @@
         state.statuses = {};
         state.genres = {};
         state.countries = {};
+        state.tags = {};
         if (searchInput) searchInput.value = '';
         writeHash();
         renderFilterBar();
@@ -603,6 +625,7 @@
         : filter === 'status' ? state.statuses
         : filter === 'genre' ? state.genres
         : filter === 'country' ? state.countries
+        : filter === 'tag' ? state.tags
         : null;
       if (!map) return;
       if (map[value]) delete map[value];
@@ -626,6 +649,7 @@
       state.statuses = {};
       state.genres = {};
       state.countries = {};
+      state.tags = {};
       if (searchInput) searchInput.value = '';
       writeHash();
       renderFilterBar();

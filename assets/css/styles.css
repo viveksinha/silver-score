@@ -3,7 +3,7 @@
 :root {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces", ui-serif, Georgia, serif;
-  --font-logo: "Cormorant Garamond", "Fraunces", ui-serif, Georgia, serif;
+  --font-logo: "Fraunces", "Cormorant Garamond", ui-serif, Georgia, serif;
   --font-mono: "DM Mono", ui-monospace, monospace;
 
   /* Type scale (fluid-ish; not using clamp() everywhere — just the scale) */
@@ -89,6 +89,11 @@
   --nav-height: 3.5rem;
   --table-sticky-top: 0;
   --transition: 160ms ease;
+
+  /* Nav logo — solid wordmark + visible img (no mask / background-clip) */
+  --logo-icon-size: 2rem;
+  --logo-icon-gap: 0.55rem;
+  --logo-text: #ebe3d4;
 }
 
 :root[data-theme="light"] {
@@ -132,6 +137,8 @@
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
   --hero-gradient: linear-gradient(135deg, #eeeaf8 0%, #faf9f7 50%, #e8eeff 100%);
+
+  --logo-text: #1f1a14;
 }
 
 /* Legacy alias used in inline JS strings */
@@ -329,6 +336,7 @@ nav {
 nav[data-compact="true"] {
   padding: 0.4rem 0;
   background: color-mix(in srgb, var(--surface) 94%, transparent);
+  --logo-icon-size: 1.6rem;
 }
 /* When nav is compacted, propagate a shorter --nav-height globally so sticky
    table headers reposition beneath it. */
@@ -336,11 +344,11 @@ body[data-nav-compact="true"] {
   --nav-height: 3rem;
 }
 nav[data-compact="true"] .logo-wordmark {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 nav[data-compact="true"] .logo-icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.6rem;
+  height: 1.6rem;
 }
 nav .container {
   display: flex;
@@ -352,7 +360,7 @@ nav .container {
 nav .logo-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: var(--logo-icon-gap);
   text-decoration: none;
   color: inherit;
   flex-shrink: 0;
@@ -365,44 +373,29 @@ nav .logo-link:focus-visible {
   outline-offset: 4px;
   border-radius: var(--radius-sm);
 }
+/* Visible favicon.svg; filter flattens internal gradients and tints per data-theme. */
 nav .logo-icon {
-  width: 1.85rem;
-  height: 1.85rem;
+  width: var(--logo-icon-size);
+  height: var(--logo-icon-size);
   flex-shrink: 0;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
-  transition: width 180ms ease, height 180ms ease;
+  display: block;
+  opacity: 1;
+  pointer-events: none;
+  transition: width 180ms ease, height 180ms ease, filter 300ms ease, opacity 300ms ease;
+  filter: brightness(0) invert(0.9) sepia(0.18) saturate(0.45) hue-rotate(5deg);
 }
 :root[data-theme="light"] nav .logo-icon {
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
+  filter: brightness(0) saturate(100%);
+  opacity: 0.9;
 }
 nav .logo-wordmark {
   font-family: var(--font-logo);
-  font-size: 1.45rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 900;
+  font-synthesis: none;
   letter-spacing: 0.03em;
   line-height: 1;
-  background: linear-gradient(
-    165deg,
-    #ffffff 0%,
-    #c5cad6 38%,
-    #8b93a8 52%,
-    #e4e7ef 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-:root[data-theme="light"] nav .logo-wordmark {
-  /* Warmer foil read in light mode — embossed against cream paper,
-     not slate ink. Anthracite → bronze-gray → deep espresso. */
-  background: linear-gradient(
-    165deg,
-    #1f1a14 0%,
-    #6b5a47 46%,
-    #2a221a 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
+  color: var(--logo-text);
 }
 /* Nav panel — hosts links + theme toggle. Desktop: flex row. Mobile: disclosure. */
 nav .nav-panel {
@@ -601,7 +594,7 @@ nav .nav-links a.active {
 .hero p {
   color: var(--text-secondary);
   font-size: 1.05rem;
-  max-width: 48ch;
+  max-width: none;
   margin: 0 auto;
 }
 .hero p + p {
@@ -748,7 +741,10 @@ nav .nav-links a.active {
   color: var(--text-secondary);
   margin-bottom: 1rem;
   font-size: 0.9rem;
-  max-width: 48ch;
+  max-width: none;
+}
+.section-lede--wide {
+  max-width: none;
 }
 .section-lede + .section-lede {
   margin-top: -0.35rem;
@@ -819,7 +815,7 @@ nav .nav-links a.active {
 .chart-panel-lede {
   font-size: 0.8rem;
   margin-bottom: 0.75rem;
-  max-width: 48ch;
+  max-width: none;
 }
 .bar-avg {
   color: var(--text-secondary);
@@ -1002,10 +998,13 @@ nav .nav-links a.active {
 .table-scroll--recent {
   max-height: min(52vh, 28rem);
 }
-/* Page-scroll table: lets the whole page scroll while thead sticks below nav */
+/* Page-scroll table: vertical scroll on the page, horizontal scroll in-wrapper
+   so sticky thead stays column-aligned with tbody on narrow viewports. */
 .table-scroll--page {
   max-height: none;
-  overflow: visible;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   --table-sticky-top: var(--nav-height);
 }
 
@@ -1500,9 +1499,13 @@ nav .nav-links a.active {
 /* SEARCH/FILTER */
 .filter-bar {
   display: flex;
+  align-items: center;
   gap: 0.75rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
+}
+.filter-bar .seg-group {
+  flex-shrink: 0;
 }
 .filter-bar input,
 .filter-bar select {
@@ -1982,16 +1985,17 @@ footer {
 }
 .mag-hero > :not(.mag-hero__photo) {
   position: relative;
-  z-index: 1;
+  z-index: 3;
 }
 .mag-hero__photo {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
-  background-image: url("../images/title-image.jpg");
+  background-image: url("../images/title-image-watercolor.jpg");
   background-size: cover;
   background-position: center 42%;
+  background-repeat: no-repeat;
 }
 /* Filmic grain — tiny SVG noise tile blended on top of hero gradient. */
 .mag-hero::before {
@@ -2011,7 +2015,7 @@ footer {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 2;
   background: radial-gradient(
     ellipse at center,
     transparent 55%,
@@ -2112,7 +2116,7 @@ body.home-page .chapter--cover {
   --accent-2: color-mix(in srgb, var(--accent-world) 50%, var(--text) 50%);
 }
 body.home-page .mag-hero {
-  padding: 2.25rem 1.25rem 1.5rem;
+  padding: 3.5rem 1.25rem 2.5rem;
   margin-bottom: 1.25rem;
   border-bottom: none;
   background:
@@ -2154,62 +2158,78 @@ body.home-page .mag-hero {
 }
 body.home-page .chapter--cover .mag-hero {
   margin-bottom: 1rem;
+  min-height: clamp(17.5rem, 48vw, 26rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(1.5rem, 4vw, 2.5rem) 1.25rem;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  --hero-royal-gradient: linear-gradient(
+    90deg,
+    #1e3a8a 0%,
+    #1d4ed8 26%,
+    #2563eb 48%,
+    #60a5fa 72%,
+    #bfdbfe 88%,
+    #eff6ff 100%
+  );
+  --hero-caption-bg: color-mix(in srgb, #f0f4fa 55%, transparent);
 }
-/* Cover photo — tint + blend so alpine greens read as site emerald, not a pasted JPEG */
-body.home-page .mag-hero__photo {
-  opacity: 0.26;
-  filter: saturate(0.58) contrast(0.93) brightness(0.96);
-  mix-blend-mode: soft-light;
-  mask-image: radial-gradient(
-    ellipse 96% 88% at 50% 40%,
-    #000 22%,
-    color-mix(in srgb, #000 70%, transparent) 58%,
-    transparent 86%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 96% 88% at 50% 40%,
-    #000 22%,
-    color-mix(in srgb, #000 70%, transparent) 58%,
-    transparent 86%
-  );
+body.home-page .chapter--cover .mag-hero::before,
+body.home-page .chapter--cover .mag-hero::after {
+  display: none;
 }
-body.home-page .mag-hero__photo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    152deg,
-    color-mix(in srgb, var(--home-landing-accent) 32%, var(--bg) 68%),
-    color-mix(in srgb, var(--bg) 86%, var(--accent-world) 14%)
-  );
-  opacity: 0.34;
-  mix-blend-mode: color;
+body.home-page .chapter--cover .mag-hero__photo {
+  opacity: 1;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
-:root[data-theme="light"] body.home-page .mag-hero__photo {
-  opacity: 0.15;
-  filter: saturate(0.46) contrast(0.88) brightness(1.05);
-  mix-blend-mode: multiply;
-  mask-image: radial-gradient(
-    ellipse 94% 86% at 50% 38%,
-    #000 18%,
-    color-mix(in srgb, #000 62%, transparent) 54%,
-    transparent 84%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 94% 86% at 50% 38%,
-    #000 18%,
-    color-mix(in srgb, #000 62%, transparent) 54%,
-    transparent 84%
-  );
+body.home-page .chapter--cover .mag-hero__photo::before,
+body.home-page .chapter--cover .mag-hero__photo::after {
+  content: none;
 }
-:root[data-theme="light"] body.home-page .mag-hero__photo::after {
-  background: linear-gradient(
-    148deg,
-    color-mix(in srgb, var(--home-landing-accent) 26%, var(--surface) 74%),
-    color-mix(in srgb, var(--bg) 92%, var(--accent-world) 8%)
-  );
-  opacity: 0.4;
-  mix-blend-mode: soft-light;
+body.home-page .chapter--cover .mag-hero .eyebrow {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: var(--hero-caption-bg);
+  color: #9b2c2c;
+  -webkit-text-fill-color: #9b2c2c;
+  font-weight: 600;
+}
+body.home-page .chapter--cover .mag-hero .hero-sub {
+  display: inline-block;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: var(--hero-caption-bg);
+  color: #9b2c2c;
+  -webkit-text-fill-color: #9b2c2c;
+}
+body.home-page .chapter--cover .mag-hero h1 {
+  font-weight: 800;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--hero-royal-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+body.home-page .chapter--cover .mag-hero .hero-sub .pitch-stat {
+  font-weight: 800;
+  color: #9b2c2c;
+  -webkit-text-fill-color: #9b2c2c;
+  background: none;
+}
+@media (min-width: 860px) {
+  body.home-page .chapter--cover .mag-hero {
+    min-height: clamp(21rem, 54vw, 29rem);
+  }
 }
 body.home-page .insight-strip {
   margin: 1.25rem 0 1.5rem;
@@ -2219,6 +2239,9 @@ body.home-page .insight-strip {
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
+}
+body.home-page .chapter--cover .insight-strip {
+  margin: 0.75rem 0 0.35rem;
 }
 body.home-page .insight-strip .insight-card {
   flex: 1 1 0;
@@ -2244,9 +2267,17 @@ body.home-page .chapter:not(:first-child) {
     margin-top: 2.25rem;
   }
 }
-/* No rule between cover (hero + insight strip) and first shelf — avoids double divider with hero/strip edges. */
+/* Tight gap between cover stats and first shelf */
 body.home-page .chapter--cover + .chapter {
   border-top: none;
+  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+}
+@media (min-width: 860px) {
+  body.home-page .chapter--cover + .chapter {
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+  }
 }
 body.home-page .home-band .chapter-mark {
   margin-bottom: 1rem;
@@ -2487,7 +2518,7 @@ body.home-page .featured-rail .featured-card .why {
 }
 
 .prose-article {
-  max-width: 52rem;
+  max-width: none;
   margin: 0 auto;
   padding-bottom: 3rem;
 }
@@ -2515,11 +2546,7 @@ body.home-page .featured-rail .featured-card .why {
   margin-bottom: 1.5rem;
 }
 
-/* Essay pillar only — widen the reading column and drop-cap the intro.
-   About and other prose pages keep the tighter 52rem measure. */
-[data-pillar="essays"] .prose-article {
-  max-width: 56rem;
-}
+/* Essay pillar — drop-cap the intro; shell width follows .container. */
 [data-pillar="essays"] .prose-article .lead {
   font-size: 1.2rem;
   color: var(--text);
@@ -2620,6 +2647,31 @@ body.home-page .featured-rail .featured-card .why {
 }
 .browse-page #panel-archive > .filter-bar {
   margin-top: 0.25rem;
+}
+
+/* About page — center all main content */
+.about-page .prose-article {
+  text-align: center;
+}
+.about-page .prose-article p {
+  margin-left: auto;
+  margin-right: auto;
+}
+.about-page .prose-article h2 {
+  text-align: center;
+}
+.about-page .prose-article ul {
+  list-style-position: outside;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 58ch;
+  padding-left: 1.25em;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  text-align: left;
+}
+.about-page .prose-article ul li + li {
+  margin-top: 0.45rem;
 }
 
 .coming-soon {
@@ -2822,13 +2874,22 @@ body.home-page .featured-rail .featured-card .why {
   padding: 0;
   background: var(--surface);
   color: inherit;
-  max-width: min(1100px, 96vw);
-  width: 96vw;
+  width: min(1100px, 96vw);
   max-height: 90vh;
+  height: fit-content;
   box-shadow: var(--shadow-md);
   overflow: hidden;
 }
-.full-shelf-dialog[open] {
+/* Explicit centering — custom width/height overrides break UA margin:auto on :modal */
+.full-shelf-dialog[open],
+.full-shelf-dialog:modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin: 0;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
 }

@@ -188,32 +188,32 @@ const MAGAZINE = {
     {
       title: 'Spy TV on the calendar',
       dek: 'The espionage lane we\'re watching — new seasons, new covers, new agencies. More on Upcoming.',
-      href: 'upcoming.html',
+      href: 'upcoming.html#type=tv&genre=Spy',
     },
     {
       title: 'Nordic noir — returning',
       dek: 'Scandinavian crime sequels and returns we\'ve flagged for this year. More on Upcoming.',
-      href: 'upcoming.html',
+      href: 'upcoming.html#genre=Nordic%20Noir',
     },
     {
       title: 'British crime — dates to save',
       dek: 'UK procedurals, Sunday-night detectives, and BBC/ITV prestige we\'re expecting to love. More on Upcoming.',
-      href: 'upcoming.html',
+      href: 'upcoming.html#genre=Crime&country=UK',
     },
     {
       title: 'Korea on the calendar',
       dek: 'Korean film and series we\'re waiting on. More on Upcoming.',
-      href: 'upcoming.html',
+      href: 'upcoming.html#tag=Korean',
     },
     {
       title: 'French lane — releases we\'re eyeing',
       dek: 'French releases on our radar. More on Upcoming.',
-      href: 'upcoming.html',
+      href: 'upcoming.html#tag=French',
     },
     {
       title: 'Japan — screens big and small',
       dek: 'Animated, live-action, and hybrids landing soon — big and small screens. More on Upcoming.',
-      href: 'upcoming.html',
+      href: 'upcoming.html#tag=Japanese',
     },
   ],
   radarHighlights: [

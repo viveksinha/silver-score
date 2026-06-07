@@ -307,7 +307,7 @@
   var pitchEl = document.getElementById('hero-pitch');
   if (pitchEl) {
     pitchEl.innerHTML =
-      'Two of us, honest scores, mostly after dark. We keep circling <strong class="pitch-stat">tension, craft, and stories that trust the audience</strong> — the sections below are the proof.';
+      'Two of us, honest scores, mostly after dark — <strong class="pitch-stat">suspense, sharp writing, and films worth staying up for</strong>.';
   }
 
   var tensBase = data.topRated.filter(function (i) {

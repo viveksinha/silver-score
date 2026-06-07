@@ -16,7 +16,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,600&display=swap" rel="stylesheet">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Under the radar — Silver Score">
   <meta property="og:description" content="We rated these 8+ when fewer than 50k people had voted on IMDb. Low votes, high scores.">
@@ -26,7 +26,7 @@
   <meta name="twitter:description" content="We rated these 8+ when fewer than 50k people had voted on IMDb. Low votes, high scores.">
   <meta name="twitter:image" content="../assets/og/hidden-gems.svg">
   <meta name="description" content="We rated these 8+ when fewer than 50k people had voted on IMDb. Low votes, high scores.">
-  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=4">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
@@ -70,20 +70,20 @@
     <span class="eyebrow">Quiet finds</span>
     <h1>Under the radar</h1>
     <p class="hero-sub">We rated these <strong>8+</strong> when fewer than <strong>50k</strong> people had voted on IMDb.</p>
-    <p class="hero-sub">Strong picks that haven’t gone loud yet.<br />Wider bars mean more IMDb votes on the biggest title in this view.</p>
+    <p class="hero-sub">Strong picks that haven’t gone loud yet.</p>
   </header>
 
-  <p class="section-lede" style="margin-bottom:1.5rem">
+  <p class="section-lede section-lede--wide" style="margin-bottom:1.5rem">
     If thrillers and slow-burn TV are your thing, start here — these are where we’re furthest above the IMDb average, usually before word of mouth catches up.
   </p>
 
   <section class="section" aria-labelledby="gems-heading">
     <h2 class="visually-hidden" id="gems-heading">Ranked picks</h2>
-    <div class="seg-group" id="gems-seg" role="group" aria-label="Sort this list" style="margin-bottom:1rem">
-      <button type="button" class="seg-btn seg-btn--active" data-gems-mode="recent" aria-pressed="true">Recent</button>
-      <button type="button" class="seg-btn" data-gems-mode="alltime" aria-pressed="false">All time</button>
-    </div>
-    <div class="filter-bar" style="margin-bottom:1rem">
+    <div class="filter-bar">
+      <div class="seg-group" id="gems-seg" role="group" aria-label="Sort this list">
+        <button type="button" class="seg-btn seg-btn--active" data-gems-mode="recent" aria-pressed="true">Recent</button>
+        <button type="button" class="seg-btn" data-gems-mode="alltime" aria-pressed="false">All time</button>
+      </div>
       <select id="language-filter" aria-label="Filter by original language">
         <option value="">All languages</option>
       </select>

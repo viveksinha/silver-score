@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Mask-only asset: solid white shapes (no internal CSS) for reliable CSS mask-image. -->
+  <circle cx="16" cy="16" r="13" stroke="#fff" stroke-width="1.2" fill="none" opacity="0.9"/>
+  <path fill="#fff" d="M16 9l1.59 4.82 5.07.02-4.09 3 1.54 5.66-4.11-2.96-4.11 2.96 1.54-5.66-4.09-3 5.07-.02L16 9z"/>
+</svg>

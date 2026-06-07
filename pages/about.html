@@ -16,7 +16,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,600&display=swap" rel="stylesheet">
   <meta property="og:type" content="website">
   <meta property="og:title" content="About — Silver Score">
   <meta property="og:description" content="Vivek and Abhilasha — honest scores, long talks, and the way stories follow you home.">
@@ -26,11 +26,11 @@
   <meta name="twitter:description" content="Vivek and Abhilasha — honest scores, long talks, and the way stories follow you home.">
   <meta name="twitter:image" content="../assets/og/about.svg">
   <meta name="description" content="Vivek and Abhilasha — honest scores, long talks, and the way stories follow you home.">
-  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=4">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
-<body>
+<body class="about-page">
 
 <a class="skip-link" href="#main">Skip to content</a>
 
@@ -65,11 +65,15 @@
 </nav>
 
 <main id="main">
-<article class="container prose-article">
-  <h1 class="page-title">About us</h1>
-  <p class="byline">We’re <strong>Vivek</strong> and <strong>Abhilasha</strong>.</p>
-  <p class="byline">Same couch, same queue.<br />Same stubborn taste for stories that do not talk down.</p>
+<div class="container">
+  <header class="hero">
+    <span class="eyebrow">About</span>
+    <h1>About us</h1>
+    <p class="hero-sub">We’re <strong>Vivek</strong> and <strong>Abhilasha</strong>.</p>
+    <p class="hero-sub">Same couch, same queue.<br />Same stubborn taste for stories that do not talk down.</p>
+  </header>
 
+  <article class="prose-article">
   <p>We talk about what we watch the way we talk about everything else that matters.</p>
   <p>Coffee, walks, the car, long after the credits.</p>
   <p>A scene nags one of us. The other replays it aloud. We argue, laugh, land closer to what the film was asking.</p>
@@ -93,16 +97,16 @@
   <p>Small updates also land on <a href="https://github.com/viveksinha/viveksinha" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
 
   <h2>What we publish</h2>
-  <ul style="color:var(--text-secondary);line-height:1.75;margin-left:1.25rem">
+  <ul>
     <li><strong><a href="stories.html">Stories</a></strong> — lists with a point of view, long essays, under-the-radar picks, and release lanes we’re tracking.</li>
     <li><strong><a href="upcoming.html">Upcoming</a></strong> — releases we’re tracking, with filters when you want a tighter view.</li>
     <li><strong><a href="browse.html">Browse</a></strong> — the full searchable list of everything we’ve rated, with honest scores.</li>
   </ul>
 
   <p>Everything here is backed by years of watching. Zero sponsored content.</p>
-  <p>The point is not performance.</p>
   <p>It is the two of us, still arguing kindly about what earns another hour of the evening.</p>
-</article>
+  </article>
+</div>
 </main>
 
 <footer>
