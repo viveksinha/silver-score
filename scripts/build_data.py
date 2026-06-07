@@ -99,19 +99,6 @@ def enrich_languages(data: dict, cache_path: Path, *, use_wikidata: bool = True)
         item.pop("languageHint", None)
 
 
-def compute_estimated_hours(data: dict) -> int:
-    total_minutes = 0
-    for item in data["allItems"]:
-        tv_min = item.get("tvTotalMinutes")
-        if isinstance(tv_min, (int, float)) and tv_min > 0:
-            total_minutes += int(tv_min)
-        else:
-            rt = item.get("runtime")
-            if isinstance(rt, (int, float)) and rt > 0:
-                total_minutes += int(rt)
-    return round(total_minutes / 60)
-
-
 def write_data_js(out: Path, data: dict) -> None:
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -194,12 +181,6 @@ def main() -> int:
 
     cache_path = args.language_cache.expanduser().resolve()
     enrich_languages(data, cache_path, use_wikidata=not args.no_wikidata)
-
-    est_raw = compute_estimated_hours(data)
-    # Summed runtimes often undercount TV; keep JSON in line with ~8.5k+ site copy until totals catch up.
-    est_hours = max(est_raw, 8500)
-    data["estimatedWatchHours"] = est_hours
-    print(f"estimated watch hours: ~{est_hours:,}")
 
     out_path = args.output.expanduser().resolve()
     write_data_js(out_path, data)

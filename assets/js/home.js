@@ -27,19 +27,13 @@
       ? data.mainItems
       : (data.allItems || []).length;
 
-  /** Summed IMDb runtimes often undercount TV; keep hero / strip / grid aligned with ~8.5k+ editorial line. */
-  var WATCH_HOURS_DISPLAY_FLOOR = 8500;
+  /** Editorial copy only — never derived from build / runtime sums. */
+  var WATCH_HOURS_LABEL = '~8,500+';
   function displayWatchHoursPitch() {
-    var raw = Number(data.estimatedWatchHours);
-    if (!isFinite(raw) || raw < 0) raw = 0;
-    if (raw >= WATCH_HOURS_DISPLAY_FLOOR) return '~' + raw.toLocaleString();
-    return '~8,500+';
+    return WATCH_HOURS_LABEL;
   }
   function watchHoursInsightStat() {
-    var raw = Number(data.estimatedWatchHours);
-    if (!isFinite(raw) || raw < 0) raw = 0;
-    var h = Math.max(raw, WATCH_HOURS_DISPLAY_FLOOR);
-    return '~' + h.toLocaleString() + ' hrs';
+    return WATCH_HOURS_LABEL + ' hrs';
   }
 
   function votesN(i) {
@@ -250,25 +244,25 @@
     stripEl.innerHTML =
       '<div class="insight-card"><div class="insight-stat">' +
       (titleCount ? titleCount.toLocaleString() : '—') +
-      '</div><div class="insight-label">Scored titles</div></div>' +
+      '</div><div class="insight-label">Titles we’ve scored</div></div>' +
       '<div class="insight-card"><div class="insight-stat">' +
       (items.length ? radarInsightN.toLocaleString() : '—') +
-      '</div><div class="insight-label">8+ while under 50k IMDb votes</div></div>' +
+      '</div><div class="insight-label">Loved at 8+ before the crowd showed up</div></div>' +
       '<div class="insight-card"><div class="insight-stat">' +
       worldStat +
-      '</div><div class="insight-label">Non-English content</div></div>' +
+      '</div><div class="insight-label">Subtitles-on nights</div></div>' +
       '<div class="insight-card"><div class="insight-stat">' +
       watchHoursInsightStat() +
-      '</div><div class="insight-label">Approx. watch time</div></div>' +
+      '</div><div class="insight-label">Rough hours on the couch</div></div>' +
       '<div class="insight-card"><div class="insight-stat">' +
       '15+ yrs' +
-      '</div><div class="insight-label">Curating this list</div></div>';
+      '</div><div class="insight-label">We’ve been at this a while</div></div>';
   }
 
   var pitchEl = document.getElementById('hero-pitch');
   if (pitchEl) {
     pitchEl.innerHTML =
-      'Two people. Honest scores. After-hours. We keep returning to <strong class="pitch-stat">tension, craft, stories that don’t talk down</strong>—the shelves below are the receipts.';
+      'Two of us, honest scores, mostly after dark. We keep circling <strong class="pitch-stat">tension, craft, and stories that trust the audience</strong> — the sections below are the proof.';
   }
 
   var tensBase = data.topRated.filter(function (i) {
@@ -299,7 +293,7 @@
     }
     if (!pool.length) {
       rail.innerHTML =
-        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">No titles match the under-the-radar filters right now.</p></li>';
+        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">Nothing matches the under-the-radar filters right now.</p></li>';
       return;
     }
     rail.innerHTML = pool
@@ -313,12 +307,12 @@
           '" target="_blank" rel="noopener noreferrer" aria-label="' +
           attrEscape(i.title + ' — open on IMDb') +
           '">' +
-          '<span class="pick-pill pick-pill--radar">Under-voted</span>' +
+          '<span class="pick-pill pick-pill--radar">Still quiet on IMDb</span>' +
           '<span class="meta-line">' +
           i.year +
           ' · ' +
           (i.votes || 0).toLocaleString() +
-          ' votes · Our ' +
+          ' votes · us ' +
           i.myRating +
           ' · crowd ' +
           i.imdbRating +
@@ -327,9 +321,9 @@
           '<h3>' +
           i.title +
           '</h3>' +
-          '<p class="why">Our ' +
+          '<p class="why">We’re at ' +
           i.myRating +
-          '/10 vs crowd ' +
+          '/10; the crowd sits at ' +
           i.imdbRating +
           '.</p>' +
           '</a></li>'
@@ -345,7 +339,7 @@
     var essays = MAG && Array.isArray(MAG.essays) ? MAG.essays : [];
     if (!essays.length) {
       rail.innerHTML =
-        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">No essays published yet.</p></li>';
+        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">No essays here yet — check back after the next update.</p></li>';
       return;
     }
     rail.innerHTML = essays
@@ -385,28 +379,28 @@
     var ledeText = '';
 
     if (kind === 'essays') {
-      titleText = 'All essays';
+      titleText = 'Every essay so far';
       ledeText =
-        'Every long read so far.<br />Skim the backlog here before you dive in.';
+        'Every long read we’ve published.<br />Skim here before you pick one to sink into.';
       items = (MAG.essays || []).map(function (e) {
         return {
           href: e.href ? 'pages/' + e.href : 'pages/stories.html#essays',
           pill: 'Essay',
           title: e.title,
           dek: e.dek,
-          cta: 'Read essay',
+          cta: 'Read',
         };
       });
     } else if (kind === 'radar') {
-      titleText = 'All under-the-radar stories';
+      titleText = 'Every under-the-radar framing';
       ledeText =
-        'Editorial framings — moods, regions, decades.<br />They lead into the full under-voted shelf.<br />Each link opens the list the way we had it in mind.';
+        'Short editorial angles — mood, region, decade.<br />Each one opens the full under-voted shelf the way we meant it.';
       items = (MAG.radarHighlights || []).map(function (r) {
         var href = r.href;
-        var cta = 'Open the full shelf';
+        var cta = 'Open ranked list';
         if (href && href.indexOf('essay-') === 0) {
           href = 'pages/' + href;
-          cta = 'Read essay';
+          cta = 'Read';
         } else if (href) {
           href = 'pages/' + href;
         }
@@ -495,7 +489,7 @@
       });
     if (!pool.length) {
       rail.innerHTML =
-        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">No international-style listings in the dataset yet.</p></li>';
+        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">Nothing here yet — subtitles-on picks will show up when the data refreshes.</p></li>';
       return;
     }
     rail.innerHTML = pool
@@ -572,7 +566,7 @@
 
     if (!out.length) {
       rail.innerHTML =
-        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">Nothing here yet — titles need a rated date plus a recent release year (English) or an international TV row.</p></li>';
+        '<li class="featured-rail-item featured-rail-item--empty"><p class="section-lede" style="margin:0;color:var(--text-secondary)">Nothing here yet — we need a fresh rating plus a recent English release or an international TV row.</p></li>';
       return;
     }
 
@@ -596,7 +590,7 @@
           i.title +
           '</h3>' +
           '<p class="why">' +
-          (g ? escapeHtmlText(g) : 'Genre mix from listing') +
+          (g ? escapeHtmlText(g) : 'From the listing') +
           '</p>' +
           '</a></li>'
         );
@@ -728,13 +722,13 @@
 
   var hoursLabel = displayWatchHoursPitch();
   var statCards = [
-    { value: hoursLabel, label: 'Est. watch hours', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
-    { value: titleCount.toLocaleString(), label: 'Titles rated', icon: '◆', mod: 'stat-card--b' },
+    { value: hoursLabel, label: 'Hours on the couch', icon: '⏱', mod: 'stat-card--a stat-card--hours' },
+    { value: titleCount.toLocaleString(), label: 'Titles we’ve logged', icon: '◆', mod: 'stat-card--b' },
     { value: movieCount, label: 'Films', icon: '▣', mod: 'stat-card--c' },
     { value: tvCount, label: 'Series & minis', icon: '▤', mod: 'stat-card--d' },
     { value: data.avgRating.toFixed(1), label: 'Our average', icon: '★', mod: 'stat-card--e' },
     { value: tens, label: 'Perfect 10s', icon: '✦', mod: 'stat-card--f' },
-    { value: nonEnCount, label: 'Non-English lean', icon: '⌁', mod: 'stat-card--g' },
+    { value: nonEnCount, label: 'Subtitle nights', icon: '⌁', mod: 'stat-card--g' },
     {
       value: insightGenreStats.length,
       label: 'Genre tags',

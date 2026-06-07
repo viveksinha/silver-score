@@ -32,7 +32,7 @@ const MAGAZINE = {
       slug: 'nordic-noir-and-neighbours',
       title: 'Nordic Noir & Neighbours',
       thesis:
-        'Slow-burn crime from the north — moral grey zones, landscapes as character, and detectives who look tired in the right way.',
+        'Slow-burn crime from the north — moral grey zones, landscapes that feel like characters, and detectives who look tired in the right way.',
       filter: {
         languages: ['Swedish', 'Danish', 'Norwegian', 'Icelandic', 'Finnish'],
         anyGenre: ['Crime', 'Thriller', 'Mystery', 'Drama'],
@@ -43,7 +43,7 @@ const MAGAZINE = {
       slug: 'spy-thriller-escape',
       title: 'Spy & Thriller Escape Room',
       thesis:
-        'Agencies, aliases, and anxiety — the shows we return to when we want people who are scary-good at hard jobs, with real stakes.',
+        'Agencies, aliases, and anxiety — the shows we queue when we want people scary-good at hard jobs, with real stakes.',
       filter: {
         types: ['TV Series', 'TV Mini Series'],
         allGenres: ['Thriller'],
@@ -54,7 +54,7 @@ const MAGAZINE = {
       slug: 'prestige-tv-10s',
       title: 'Prestige TV That Earned the Label',
       thesis:
-        'Series that justified the late nights — high craft, sharp writing, and finales we still argue about.',
+        'Series that earned the late nights — sharp writing, high craft, and finales we still argue about on the couch.',
       filter: {
         types: ['TV Series', 'TV Mini Series'],
         allGenres: ['Drama'],
@@ -65,7 +65,7 @@ const MAGAZINE = {
       slug: 'italian-crime-no-heroes',
       title: 'Italian Crime — No Heroes Allowed',
       thesis:
-        'Naples, Rome, Calabria — Italian crime TV and film where the system is the villain and nobody gets a redemption arc.',
+        'Naples, Rome, Calabria — Italian crime where the system is the villain and nobody gets a clean redemption arc.',
       filter: {
         languages: ['Italian'],
         anyGenre: ['Crime', 'Thriller', 'Drama'],
@@ -76,7 +76,7 @@ const MAGAZINE = {
       slug: 'war-films-that-earned-it',
       title: 'War Films That Earned It',
       thesis:
-        'No glory montages. These are the films and series where war costs something — told with craft, restraint, and respect for the weight of what happened.',
+        'No glory montages — war that costs something, told with craft, restraint, and respect for what happened.',
       filter: {
         allGenres: ['War'],
         minMyRating: 8,
@@ -86,7 +86,7 @@ const MAGAZINE = {
       slug: 'korean-cinema-sharp-edges',
       title: 'Korean Cinema — Sharp Edges',
       thesis:
-        'Revenge, class warfare, and genre-bending that Hollywood still studies. The titles from South Korea we rate highest — and why the hype is earned.',
+        'Revenge, class tension, and genre-bending Hollywood still studies — the Korean titles we rate highest and would put on for each other.',
       filter: {
         languages: ['Korean'],
         minMyRating: 7,
@@ -96,7 +96,7 @@ const MAGAZINE = {
       slug: 'slow-burns-worth-patience',
       title: 'Slow Burns Worth the Patience',
       thesis:
-        'Films and series that trust the audience enough to take their time — tension built from craft, not jump cuts. Worth every quiet minute.',
+        'Stories that trust us enough to take their time — tension from craft, not jump cuts. Worth every quiet minute.',
       // Tightened from "anyGenre Drama/Mystery/Thriller + myR>=9 + imdb>=7.5"
       // (175 rows, too broad) to a Drama-led rule that also requires good
       // IMDb reception and, for films, enough runtime to earn the "slow"
@@ -118,7 +118,7 @@ const MAGAZINE = {
       slug: 'international-thrillers-beyond-english',
       title: 'International Thrillers — Beyond English',
       thesis:
-        'The best tension doesn\'t need a shared language. Thrillers from France, Germany, Israel, India, and beyond — subtitles are a small price for this quality.',
+        'The best tension doesn\'t need a shared language — thrillers from France, Germany, Israel, India, and beyond. Subtitles are a small price for this quality.',
       filter: {
         nonEnglishOnly: true,
         allGenres: ['Thriller'],
@@ -130,56 +130,56 @@ const MAGAZINE = {
     {
       slug: 'nordic-noir-deep-dive',
       title: 'Why Nordic Noir Works',
-      dek: 'Landscape as character, silence as dialogue, and detectives who carry the weight of the case home. What makes Scandinavian crime drama different — and why we keep coming back.',
+      dek: 'Landscape as character, silence as dialogue, and detectives who carry the case home — what makes Scandinavian crime different, and why we keep coming back.',
       href: 'essay-nordic-noir.html',
       tags: ['noir', 'tv', 'world']
     },
     {
       slug: 'spy-craft-on-screen',
       title: 'The Craft of Spy TV',
-      dek: 'From The Bureau to Slow Horses: what separates great espionage television from action shows in trench coats. Tradecraft, paranoia, and the cost of loyalty.',
+      dek: 'From The Bureau to Slow Horses — what separates great spy TV from action shows in trench coats. Tradecraft, paranoia, and the cost of loyalty.',
       href: 'essay-spy-craft.html',
       tags: ['spy', 'tv']
     },
     {
       slug: 'french-polar-tradition',
       title: 'The French Polar — Noir That Never Quit',
-      dek: 'While Hollywood noir had to be rediscovered every generation, France kept its parallel tradition running — from Melville through Spiral and Le Bureau des Légendes.',
+      dek: 'France never stopped its noir tradition — from Melville through Spiral and Le Bureau des Légendes, while Hollywood kept rediscovering the same thing.',
       href: 'essay-french-polar.html',
       tags: ['noir', 'spy', 'world', 'film']
     },
     {
       slug: 'slow-burns-manifesto',
       title: 'In Defence of Slow Burns',
-      dek: 'Why the best thrillers make you wait. A case for patience, quiet tension, and stories that respect the audience enough to take their time.',
+      dek: 'Why the best thrillers make you wait — a case for patience, quiet tension, and stories that trust the audience.',
       href: 'essay-slow-burns.html',
       tags: ['craft']
     },
     {
       slug: 'limited-series-new-prestige',
       title: 'The Limited Series Is the New Prestige Film',
-      dek: 'Six to eight episodes have absorbed the craft energy that used to define mid-budget prestige film. Where directors, writers, and leading actors go to say one big thing well.',
+      dek: 'Six to eight episodes absorbed the craft energy mid-budget prestige film used to own — where directors and actors go to say one big thing well.',
       href: 'essay-limited-series.html',
       tags: ['craft', 'tv']
     },
     {
       slug: 'subtitles-vs-dubbing',
       title: 'Subtitles, Dubbing, and What Gets Lost',
-      dek: 'Dubbing swaps an actor\'s instrument for a session performer. Subtitles ask you to do a little work — and give you back the performance the director actually shot.',
+      dek: 'Dubbing swaps an actor\'s voice for a session performer. Subtitles ask a little work and give you back what the director actually shot.',
       href: 'essay-subtitles.html',
       tags: ['world', 'craft']
     },
     {
       slug: 'radar-hunt-method',
       title: 'How We Find Under-the-Radar Gems',
-      dek: 'Under the radar isn\'t a marketing tag — it\'s a rule. We rate 8+ while fewer than 50k people have voted on IMDb. That gap is where most of our favourites live.',
+      dek: 'Under the radar isn\'t marketing — it\'s our rule. We rate 8+ while fewer than 50k people have voted on IMDb. That\'s where most of our favourites live.',
       href: 'essay-radar-hunt.html',
       tags: ['radar', 'method']
     },
     {
       slug: 'why-we-rewatch-mann',
       title: 'Why We Rewatch Michael Mann',
-      dek: 'Nobody films men who take their work seriously like Michael Mann. Professionalism as drama, cities as pressure systems, and the shelf we keep going back to.',
+      dek: 'Nobody films people who take their work seriously like Michael Mann — professionalism as drama, cities as pressure, and a shelf we keep revisiting together.',
       href: 'essay-rewatch-mann.html',
       tags: ['director', 'film']
     }
@@ -187,49 +187,49 @@ const MAGAZINE = {
   calendarHighlights: [
     {
       title: 'Spy TV on the calendar',
-      dek: 'The espionage lane we\'re watching for — new seasons of long-running covers, new ensembles, new agencies. More on Upcoming.',
+      dek: 'The espionage lane we\'re watching — new seasons, new covers, new agencies. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'Nordic noir — returning',
-      dek: 'Scandinavian crime sequels and continuations we\'ve flagged for this year. More on Upcoming.',
+      dek: 'Scandinavian crime sequels and returns we\'ve flagged for this year. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'British crime — dates to save',
-      dek: 'UK procedurals, Sunday-night detectives, and BBC/ITV prestige we expect to rate high. More on Upcoming.',
+      dek: 'UK procedurals, Sunday-night detectives, and BBC/ITV prestige we\'re expecting to love. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'Korea on the calendar',
-      dek: 'Film and series we\'re watching for. More on Upcoming.',
+      dek: 'Korean film and series we\'re waiting on. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'French lane — releases we\'re eyeing',
-      dek: 'French releases we\'re eyeing. More on Upcoming.',
+      dek: 'French releases on our radar. More on Upcoming.',
       href: 'upcoming.html',
     },
     {
       title: 'Japan — screens big and small',
-      dek: 'Animated, live-action, and hybrids landing soon. More on Upcoming.',
+      dek: 'Animated, live-action, and hybrids landing soon — big and small screens. More on Upcoming.',
       href: 'upcoming.html',
     },
   ],
   radarHighlights: [
     {
       title: 'Recent gems — last 18 months',
-      dek: 'Fresh 8+ picks with fewer than 50k IMDb votes. The quiet end of our recent log — the full ranked list is on the shelf.',
+      dek: 'Fresh 8+ picks with under 50k IMDb votes — the quiet end of our recent log. Full ranked table on hidden-gems.',
       href: 'hidden-gems.html',
     },
     {
       title: 'All-time quiet favourites',
-      dek: 'Rewind mode: the full under-voted shelf, sorted by how far above the crowd we landed. Great for a weekend rabbit hole.',
+      dek: 'Rewind mode: the full under-voted list, sorted by how far above the crowd we landed. Good for a weekend rabbit hole together.',
       href: 'hidden-gems.html',
     },
     {
       title: 'Beyond English — under-voted',
-      dek: 'World cinema and TV that hasn\'t gone loud yet. The shelf is where we keep the full list.',
+      dek: 'World cinema and TV that hasn\'t gone loud yet — the full list lives on hidden-gems.',
       href: 'hidden-gems.html',
     },
     {
@@ -239,22 +239,22 @@ const MAGAZINE = {
     },
     {
       title: 'Hidden Asian cinema',
-      dek: 'Korean, Japanese, Thai, and Taiwanese titles we rated 8+ with under-50k vote counts.',
+      dek: 'Korean, Japanese, Thai, and Taiwanese titles we rated 8+ before the vote counts climbed.',
       href: 'hidden-gems.html',
     },
     {
       title: 'Forgotten 2010s',
-      dek: 'The middle decade had more craft than the canon remembers. Our 2010s under-voted favourites live on the shelf.',
+      dek: 'The middle decade had more craft than the canon remembers — our 2010s under-voted favourites on the table.',
       href: 'hidden-gems.html',
     },
     {
       title: 'Quiet 9s and 10s',
-      dek: 'The upper tail of our ratings inside the under-voted shelf — films and shows we\'d defend tomorrow, that almost nobody has heard of.',
+      dek: 'The upper tail inside our under-voted shelf — films and shows we\'d defend tomorrow that almost nobody has heard of.',
       href: 'hidden-gems.html',
     },
     {
       title: 'How we find them',
-      dek: 'The method behind the shelf — vote thresholds, director signals, and the three patterns we keep hitting. Read the piece.',
+      dek: 'The method behind the list — vote thresholds, director signals, three patterns we keep hitting. Read the piece.',
       href: 'essay-radar-hunt.html',
     },
   ],

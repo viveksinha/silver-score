@@ -244,7 +244,7 @@
   var SOURCE_LABELS = {
     'director': 'Favorite directors',
     'seen-tv': 'Returning shows',
-    'editorial': "Editor's picks",
+    'editorial': 'Our picks',
   };
   var allSources = uniqueSortedValues('source', function (it) { return it.source; });
   var allStatuses = uniqueSortedValues('status', function (it) { return it.status; });
