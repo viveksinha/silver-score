@@ -279,6 +279,16 @@
 
   var radarMode = 'recent';
 
+  function sortRadarByDateRated(list) {
+    return list.slice().sort(function (a, b) {
+      return (
+        (b.dateRated || '').localeCompare(a.dateRated || '') ||
+        b.myRating - a.myRating ||
+        (a.votes || 0) - (b.votes || 0)
+      );
+    });
+  }
+
   function renderRadarTeaser() {
     var rail = document.getElementById('radar-teaser');
     if (!rail) return;
@@ -288,6 +298,7 @@
         return daysSinceRated(i.dateRated) <= 540;
       });
       if (pool.length < RAIL_MAX_STANDARD) pool = radarFullPool.slice();
+      pool = sortRadarByDateRated(pool);
     } else {
       pool = radarFullPool;
     }
