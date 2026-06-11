@@ -88,24 +88,25 @@
       <span class="filter-count" id="filter-count" aria-live="polite"></span>
     </div>
 
-    <div class="table-scroll">
+    <div class="table-scroll table-scroll--page">
       <table class="data-table" id="list-table">
         <thead>
           <tr>
             <th data-sort-key="title" data-sort-default="asc">Title</th>
-            <th data-sort-key="language" data-sort-default="asc">Original language</th>
+            <th data-sort-key="language" data-sort-default="asc" class="col--hide-sm">Original language</th>
             <th data-sort-key="year" data-sort-default="desc">Year</th>
             <th data-sort-key="type" data-sort-default="asc">Format</th>
             <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
             <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
             <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
-            <th>RT</th>
-            <th data-sort-key="genres" data-sort-default="asc">Genres</th>
+            <th class="col--hide-sm">RT</th>
+            <th data-sort-key="genres" data-sort-default="asc" class="col--hide-md">Genres</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
+    <p class="table-scroll-hint" aria-hidden="true">Swipe for more columns</p>
   </section>
 </div>
 </main>
@@ -254,14 +255,14 @@
         const lang = S.languagePillHtml(langRaw, 'Original language from IMDb when listed');
         return `<tr>
       <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
-      <td style="font-size:0.75rem;max-width:7rem">${lang}</td>
+      <td class="col--hide-sm" style="font-size:0.75rem;max-width:7rem">${lang}</td>
       <td>${i.year}</td>
       <td>${formatBadge(i.type)}</td>
       <td><span class="rating-badge ${rc}">${i.myRating}</span></td>
       <td><span class="imdb-badge">${i.imdbRating}</span></td>
       <td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary)">${votesN(i).toLocaleString()}</td>
-      <td class="rt-cell">${silverScoreRt.cellHtml(i)}</td>
-      <td style="font-size:0.75rem;color:var(--text-secondary)">${i.genres.map((g) => `<a href="${imdbGenreUrl(g)}" target="_blank" rel="noopener noreferrer" style="color:var(--text-secondary)">${g}</a>`).join(', ')}</td>
+      <td class="rt-cell col--hide-sm">${silverScoreRt.cellHtml(i)}</td>
+      <td class="col--hide-md" style="font-size:0.75rem;color:var(--text-secondary)">${i.genres.map((g) => `<a href="${imdbGenreUrl(g)}" target="_blank" rel="noopener noreferrer" style="color:var(--text-secondary)">${g}</a>`).join(', ')}</td>
     </tr>`;
       })
       .join('');

@@ -263,6 +263,9 @@
   function startOfMonth(d) {
     return new Date(d.getFullYear(), d.getMonth(), 1);
   }
+  function startOfDay(d) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
   function addMonths(d, n) {
     return new Date(d.getFullYear(), d.getMonth() + n, 1);
   }
@@ -278,12 +281,14 @@
     var d = new Date(iso + 'T00:00:00');
     if (isNaN(d.getTime())) return { key: 'zz-tbd', label: 'Date TBD', order: 999999, granularity: 'tbd' };
     var monthStart = startOfMonth(now);
-    var daysAgo = Math.floor((monthStart - d) / 86400000);
+    var today = startOfDay(now);
+    var daysSinceRelease = Math.floor((today - d) / 86400000);
     var thisMonthEnd = addMonths(monthStart, 1);
     var threeMonthsOut = addMonths(monthStart, 4);
     var endOfThisYear = new Date(now.getFullYear() + 1, 0, 1);
 
-    if (d < monthStart && daysAgo <= 45) {
+    // Past releases within ~6 weeks — including titles that dropped earlier this month.
+    if (daysSinceRelease > 0 && daysSinceRelease <= 45) {
       return { key: 'a-recent', label: 'Recently released', order: 0, granularity: 'broad' };
     }
     if (d < monthStart) {
@@ -367,9 +372,12 @@
   }
 
   function renderCard(item, bucket) {
-    var titleLink = item.imdbUrl
-      ? '<a href="' + esc(item.imdbUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(item.title) + '</a>'
-      : esc(item.title);
+    var titleId = 'tl-title-' + String(item.id).replace(/[^a-zA-Z0-9_-]/g, '-');
+    var titleHtml = '<span id="' + esc(titleId) + '">' + esc(item.title) + '</span>';
+
+    var cardLink = item.imdbUrl
+      ? '<a class="timeline-card__link" href="' + esc(item.imdbUrl) + '" target="_blank" rel="noopener noreferrer" aria-labelledby="' + esc(titleId) + '"></a>'
+      : '';
 
     var typeBadge = '<span class="timeline-card__type" data-type="' +
       (item.type === 'movie' ? 'movie' : 'tv') + '">' +
@@ -415,22 +423,17 @@
       ? '<div class="timeline-card__genres">' + item.genres.slice(0, 4).map(esc).join(' · ') + '</div>'
       : '';
 
-    var imdbLink = item.imdbUrl
-      ? '<a href="' + esc(item.imdbUrl) + '" target="_blank" rel="noopener noreferrer" class="timeline-card__imdb">IMDb</a>'
-      : '';
-
     return (
-      '<article class="timeline-card">' +
+      '<article class="timeline-card' + (item.imdbUrl ? ' timeline-card--linked' : '') + '">' +
+      cardLink +
       dateBadge +
       '<div class="timeline-card__body">' +
-      '<h3 class="timeline-card__title">' + titleLink + typeBadge + '</h3>' +
+      '<h3 class="timeline-card__title">' + titleHtml + typeBadge + '</h3>' +
       reason +
       description +
       inlineMeta +
       tagsHtml +
-      ((genresHtml || imdbLink)
-        ? '<div class="timeline-card__foot">' + genresHtml + '<div class="timeline-card__ratings">' + imdbLink + '</div></div>'
-        : '') +
+      (genresHtml ? '<div class="timeline-card__foot">' + genresHtml + '</div>' : '') +
       '</div>' +
       poster +
       '</article>'
@@ -678,16 +681,4 @@
 
   renderFilterBar();
   render();
-
-  var observer = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) e.target.classList.add('visible');
-      });
-    },
-    { threshold: 0.1 }
-  );
-  document.querySelectorAll('.fade-in').forEach(function (el) {
-    observer.observe(el);
-  });
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -120,25 +120,26 @@
         </select>
       </div>
       <div class="browse-meta" id="result-count"></div>
-      <div class="table-scroll">
+      <div class="table-scroll table-scroll--page">
         <table class="data-table" id="browse-table">
           <thead>
             <tr>
               <th data-sort-key="title" data-sort-default="asc">Title</th>
-              <th data-sort-key="language" data-sort-default="asc">Original language</th>
+              <th data-sort-key="language" data-sort-default="asc" class="col--hide-sm">Original language</th>
               <th data-sort-key="year" data-sort-default="desc">Year</th>
               <th data-sort-key="type" data-sort-default="asc">Format</th>
               <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
               <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
               <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
-              <th>RT</th>
-              <th data-sort-key="genres" data-sort-default="asc">Genres</th>
-              <th data-sort-key="dateRated" data-sort-default="desc">Rated on</th>
+              <th class="col--hide-sm">RT</th>
+              <th data-sort-key="genres" data-sort-default="asc" class="col--hide-md">Genres</th>
+              <th data-sort-key="dateRated" data-sort-default="desc" class="col--hide-md">Rated on</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
       </div>
+      <p class="table-scroll-hint" aria-hidden="true">Swipe for more columns</p>
     </div>
 
     <div id="panel-genre-dna" class="tab-panel" role="tabpanel" aria-labelledby="tab-genre">
@@ -164,7 +165,7 @@
           Smaller samples get a gentler gap estimate so a few outliers don’t shout.<br />
           <strong>SE (gap)</strong> is roughly how uncertain that difference is.
         </p>
-        <div class="table-scroll">
+        <div class="table-scroll table-scroll--page">
           <table class="data-table" id="genre-compare">
             <thead>
               <tr>
@@ -174,13 +175,14 @@
                 <th data-sort-key="avgImdbRating">IMDb avg</th>
                 <th data-sort-key="gap">Gap</th>
                 <th data-sort-key="shrunkGap" data-sort-default="desc">Shrunk gap</th>
-                <th data-sort-key="gapSe" data-sort-default="asc">SE (gap)</th>
-                <th data-sort-key="vsImdb" data-sort-default="desc">vs IMDb</th>
+                <th data-sort-key="gapSe" data-sort-default="asc" class="col--hide-md">SE (gap)</th>
+                <th data-sort-key="vsImdb" data-sort-default="desc" class="col--hide-md">vs IMDb</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
+        <p class="table-scroll-hint" aria-hidden="true">Swipe for more columns</p>
       </section>
       <section class="section fade-in" aria-labelledby="top-genre-heading">
         <h2 class="section-title" id="top-genre-heading">Top picks per genre <span class="badge">Best of each</span></h2>
@@ -190,24 +192,25 @@
             <option value="">All languages</option>
           </select>
         </div>
-        <div class="table-scroll">
+        <div class="table-scroll table-scroll--page">
           <table class="data-table" id="genre-top">
             <thead>
               <tr>
                 <th>#</th>
                 <th data-sort-key="title" data-sort-default="asc">Title</th>
-                <th data-sort-key="language" data-sort-default="asc">Original language</th>
+                <th data-sort-key="language" data-sort-default="asc" class="col--hide-sm">Original language</th>
                 <th data-sort-key="year" data-sort-default="desc">Year</th>
                 <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
                 <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
                 <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
-                <th>RT</th>
+                <th class="col--hide-sm">RT</th>
                 <th data-sort-key="type" data-sort-default="asc">Type</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
+        <p class="table-scroll-hint" aria-hidden="true">Swipe for more columns</p>
       </section>
     </div>
   </div>
@@ -351,7 +354,7 @@
       getItems: () => S.sortRows(filtered, browseSortState, browseSpec),
       pageSize: PAGE_SIZE,
       anchorAfter: browseTable,
-      root: browseTable.closest('.table-scroll'),
+      root: null,
       render: (items, { append }) => {
         const rcFor = (i) =>
           i.myRating >= 10
@@ -370,15 +373,15 @@
             const lang = S.languagePillHtml(langRaw, 'Original language from IMDb when listed');
             return `<tr>
         <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
-        <td style="font-size:0.75rem;max-width:7rem">${lang}</td>
+        <td class="col--hide-sm" style="font-size:0.75rem;max-width:7rem">${lang}</td>
         <td>${i.year}</td>
         <td>${formatBadge(i.type)}</td>
         <td><span class="rating-badge ${rc}">${i.myRating}</span></td>
         <td><span class="imdb-badge">${i.imdbRating}</span></td>
         <td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary)">${votesN(i).toLocaleString()}</td>
-        <td class="rt-cell">${silverScoreRt.cellHtml(i)}</td>
-        <td style="font-size:0.75rem;color:var(--text-secondary);max-width:200px">${i.genres.map((g) => `<a href="${imdbGenreUrl(g)}" target="_blank" rel="noopener noreferrer" style="color:var(--text-secondary)">${g}</a>`).join(', ')}</td>
-        <td style="font-size:0.8rem;color:var(--text-secondary)">${i.dateRated}</td>
+        <td class="rt-cell col--hide-sm">${silverScoreRt.cellHtml(i)}</td>
+        <td class="col--hide-md" style="font-size:0.75rem;color:var(--text-secondary);max-width:200px">${i.genres.map((g) => `<a href="${imdbGenreUrl(g)}" target="_blank" rel="noopener noreferrer" style="color:var(--text-secondary)">${g}</a>`).join(', ')}</td>
+        <td class="col--hide-md" style="font-size:0.8rem;color:var(--text-secondary)">${i.dateRated}</td>
       </tr>`;
           })
           .join('');

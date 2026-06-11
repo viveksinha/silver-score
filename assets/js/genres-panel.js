@@ -172,8 +172,8 @@ function initGenrePanel(data) {
       <td><span class="imdb-badge">${g.avgImdbRating}</span></td>
       <td style="color:${gapColor};font-weight:600">${gapNum > 0 ? '+' : ''}${gapStr}</td>
       <td style="color:${shrunkColor};font-weight:600">${g.shrunkGap > 0 ? '+' : ''}${shrunkStr}</td>
-      <td style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-secondary)">±${seStr}</td>
-      <td>${compareVsImdbVerdict(g.meanGap)}</td>
+      <td class="col--hide-md" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-secondary)">±${seStr}</td>
+      <td class="col--hide-md">${compareVsImdbVerdict(g.meanGap)}</td>
     </tr>`;
   }
 
@@ -240,7 +240,7 @@ function initGenrePanel(data) {
       getItems: () => (S ? S.sortRows(comparePool, genreCompareSort, genreCompareSpec) : comparePool),
       pageSize: PAGE_SIZE,
       anchorAfter: genreCompareTable,
-      root: genreCompareTable.closest('.table-scroll'),
+      root: null,
       render: (items, { append }) => {
         const html = items.map(makeCompareRow).join('');
         if (append) ctb.insertAdjacentHTML('beforeend', html);
@@ -295,7 +295,7 @@ function initGenrePanel(data) {
       getItems: () => (S ? S.sortRows(genreTopPool, genreTopSort, genreTopSpec) : genreTopPool),
       pageSize: GENRE_TOP_PAGE,
       anchorAfter: genreTopTable,
-      root: genreTopTable.closest('.table-scroll'),
+      root: null,
       render: (items, { append, startIndex }) => {
         const html = items
           .map((i, idx) => {
@@ -305,12 +305,12 @@ function initGenrePanel(data) {
             return `<tr>
       <td>${rank}</td>
       <td><a href="${i.url}" target="_blank" rel="noopener noreferrer">${i.title}</a></td>
-      <td style="font-size:0.75rem;max-width:7rem">${langCell}</td>
+      <td class="col--hide-sm" style="font-size:0.75rem;max-width:7rem">${langCell}</td>
       <td>${i.year}</td>
       <td><span class="rating-badge rating-${i.myRating >= 10 ? '10' : i.myRating >= 9 ? '9' : i.myRating >= 8 ? '8' : '7'}">${i.myRating}</span></td>
       <td><span class="imdb-badge">${i.imdbRating}</span></td>
       <td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary)">${votesN(i).toLocaleString()}</td>
-      <td class="rt-cell">${rtCell(i)}</td>
+      <td class="rt-cell col--hide-sm">${rtCell(i)}</td>
       <td style="font-size:0.8rem;color:var(--text-secondary)">${i.type}</td>
     </tr>`;
           })
@@ -368,13 +368,4 @@ function initGenrePanel(data) {
     }
   }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) e.target.classList.add('visible');
-      });
-    },
-    { threshold: 0.1 }
-  );
-  document.querySelectorAll('#panel-genre-dna .fade-in').forEach((el) => observer.observe(el));
 }

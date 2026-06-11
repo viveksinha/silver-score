@@ -70,7 +70,7 @@
     <span class="eyebrow">Stories</span>
     <h1>Our lists, essays, and what’s on our calendar</h1>
     <p class="hero-sub">Everything we publish about what we actually watch.</p>
-    <p class="hero-sub"><a href="#watchlist">Watchlist</a> · <a href="#under-the-radar">Under the radar</a> · <a href="#curated-lists">Lists</a> · <a href="#essays">Essays</a> · <a href="#calendar-lanes">On the calendar</a></p>
+    <p class="hero-sub hero-jump-links"><a href="#watchlist">Watchlist</a> · <a href="#under-the-radar">Under the radar</a> · <a href="#curated-lists">Lists</a> · <a href="#essays">Essays</a> · <a href="#calendar-lanes">On the calendar</a></p>
   </header>
 
   <section class="section fade-in" id="watchlist" aria-labelledby="watchlist-heading">
@@ -238,14 +238,6 @@
     })
     .join('');
 
-  var obs = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) e.target.classList.add('visible');
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.fade-in').forEach(function (el) {
-    obs.observe(el);
-  });
 })();
 </script>
 </body>
