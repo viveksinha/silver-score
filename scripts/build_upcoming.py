@@ -896,9 +896,41 @@ def filter_rated_editorial_movies(editorial: dict, rated_ids: set[str]) -> tuple
 # IMDb premiere date enrichment (GraphQL)
 # ---------------------------------------------------------------------------
 
+_SEASON_IN_TITLE_RE = re.compile(
+    r"(?:—\s*|-\s*)?season\s*(\d+)\s*$",
+    re.IGNORECASE,
+)
+
+
+def parse_season_from_title(title: str) -> int | None:
+    """Parse trailing season number from titles like 'Slow Horses — Season 6'."""
+    if not title:
+        return None
+    m = _SEASON_IN_TITLE_RE.search(title.strip())
+    if not m:
+        return None
+    try:
+        n = int(m.group(1))
+        return n if n > 0 else None
+    except ValueError:
+        return None
+
+
+def is_future_season_tv_row(row: dict) -> bool:
+    """True for returning TV seasons (S2+), not new limited series without a season suffix."""
+    if (row.get("type") or "").strip().lower() != "tv":
+        return False
+    sn = row.get("seasonNumber")
+    if isinstance(sn, int) and sn > 1:
+        return True
+    parsed = parse_season_from_title(row.get("title") or "")
+    return parsed is not None and parsed >= 2
+
 
 def _needs_date_enrichment(row: dict) -> bool:
     """True when a non-editorial row should get IMDb premiere lookup."""
+    if is_future_season_tv_row(row):
+        return False
     rd = (row.get("releaseDate") or "").strip()
     display = (row.get("releaseDateDisplay") or "").strip()
     if is_concrete_iso(rd, unknown_date=UNKNOWN_DATE):
@@ -910,6 +942,8 @@ def _needs_date_enrichment(row: dict) -> bool:
 
 def _should_enrich_editorial(row: dict) -> bool:
     """Only fill TBD placeholders; keep hand-set windows like Fall 2026."""
+    if is_future_season_tv_row(row):
+        return False
     rd = (row.get("releaseDate") or "").strip()
     display = (row.get("releaseDateDisplay") or "").strip()
     if is_concrete_iso(rd, unknown_date=UNKNOWN_DATE):
@@ -945,6 +979,8 @@ def enrich_imdb_release_dates(
             continue
 
         source = row.get("source") or ""
+        if is_future_season_tv_row(row):
+            continue
         if source == "editorial":
             if not _should_enrich_editorial(row):
                 continue
@@ -1519,19 +1555,6 @@ def main() -> int:
         print(f"merged editorial overrides for {len(editorial)} ids")
 
     rows = dedupe_and_sort(rows)
-    before_filter = len(rows)
-    rows = filter_upcoming_rows(
-        rows,
-        today=today,
-        lookback_days=args.lookback_days,
-        cutoff_future_days=args.cutoff_future_days,
-    )
-    if before_filter != len(rows):
-        print(f"filtered {before_filter - len(rows)} already-released titles (>{args.lookback_days}d ago)")
-
-    if not rows:
-        print("error: no upcoming releases after build (check TMDB_API_KEY and editorial)", file=sys.stderr)
-        return 1
 
     watchlist_by_id: dict[str, dict] = {}
     if watchlist_path.is_file():
@@ -1550,6 +1573,20 @@ def main() -> int:
             f"imdb dates: updated {dates_changed} row(s) "
             f"({graphql_enriched} via GraphQL, {imdb_enricher.graphql_fetches} lookups)"
         )
+
+    before_filter = len(rows)
+    rows = filter_upcoming_rows(
+        rows,
+        today=today,
+        lookback_days=args.lookback_days,
+        cutoff_future_days=args.cutoff_future_days,
+    )
+    if before_filter != len(rows):
+        print(f"filtered {before_filter - len(rows)} already-released titles (>{args.lookback_days}d ago)")
+
+    if not rows:
+        print("error: no upcoming releases after build (check TMDB_API_KEY and editorial)", file=sys.stderr)
+        return 1
 
     print("validating IMDb ids…")
     imdb_warnings = validate_imdb_ids(rows)

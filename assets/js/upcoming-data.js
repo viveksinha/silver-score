@@ -145,31 +145,6 @@ window.UPCOMING_RELEASES = [
     "platform": "Theaters (Warner Bros.)"
   },
   {
-    "id": "tt16431404",
-    "tmdbId": null,
-    "title": "Apex",
-    "type": "movie",
-    "releaseDate": "2026-04-24",
-    "releaseDateDisplay": "April 24, 2026",
-    "status": "",
-    "genres": [
-      "Action",
-      "Thriller"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt16431404",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": null,
-    "showTitle": null,
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
     "id": "tt42178219",
     "tmdbId": null,
     "title": "Berlin and the Lady with an Ermine",
@@ -200,8 +175,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Black Doves — Season 2",
     "type": "tv",
-    "releaseDate": "2024-12-05",
-    "releaseDateDisplay": "December 5, 2024",
+    "releaseDate": "9999-12-31",
+    "releaseDateDisplay": "2026",
     "status": "",
     "genres": [
       "Spy",
@@ -223,30 +198,6 @@ window.UPCOMING_RELEASES = [
       "Returning"
     ],
     "platform": "Netflix"
-  },
-  {
-    "id": "tt36841098",
-    "tmdbId": null,
-    "title": "Bone Keeper",
-    "type": "movie",
-    "releaseDate": "2026-04-06",
-    "releaseDateDisplay": "April 6, 2026",
-    "status": "",
-    "genres": [
-      "Horror"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt36841098",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": null,
-    "showTitle": null,
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
   },
   {
     "id": "tt4316680",
@@ -301,33 +252,6 @@ window.UPCOMING_RELEASES = [
     "platform": ""
   },
   {
-    "id": "tt34385331",
-    "tmdbId": null,
-    "title": "DTF St. Louis",
-    "type": "tv",
-    "releaseDate": "2026-03-01",
-    "releaseDateDisplay": "March 1, 2026",
-    "status": "",
-    "genres": [
-      "Comedy",
-      "Drama",
-      "Mystery",
-      "Thriller"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt34385331",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": "tt34385331",
-    "showTitle": "DTF St. Louis",
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
     "id": "tt15047880",
     "tmdbId": null,
     "title": "Disclosure Day",
@@ -358,8 +282,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "From — Season 4",
     "type": "tv",
-    "releaseDate": "2022-02-20",
-    "releaseDateDisplay": "February 20, 2022",
+    "releaseDate": "9999-12-31",
+    "releaseDateDisplay": "2026",
     "status": "",
     "genres": [
       "Horror",
@@ -438,90 +362,12 @@ window.UPCOMING_RELEASES = [
     "platform": "Apple TV+"
   },
   {
-    "id": "tt35707374",
-    "tmdbId": null,
-    "title": "Memory of a Killer",
-    "type": "tv",
-    "releaseDate": "2026-01-25",
-    "releaseDateDisplay": "January 25, 2026",
-    "status": "",
-    "genres": [
-      "Action",
-      "Crime",
-      "Drama",
-      "Thriller"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt35707374",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": "tt35707374",
-    "showTitle": "Memory of a Killer",
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
-    "id": "tt27200708",
-    "tmdbId": null,
-    "title": "Mother Mary",
-    "type": "movie",
-    "releaseDate": "2026-04-24",
-    "releaseDateDisplay": "April 24, 2026",
-    "status": "",
-    "genres": [
-      "Drama",
-      "Music",
-      "Thriller"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt27200708",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": null,
-    "showTitle": null,
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
-    "id": "tt38035835",
-    "tmdbId": null,
-    "title": "Pegasus 3",
-    "type": "movie",
-    "releaseDate": "2026-02-27",
-    "releaseDateDisplay": "February 27, 2026",
-    "status": "",
-    "genres": [
-      "Comedy",
-      "Sport"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt38035835",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": null,
-    "showTitle": null,
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
     "id": "tt22202452",
     "tmdbId": null,
     "title": "Pluribus — Season 2",
     "type": "tv",
-    "releaseDate": "2025-11-07",
-    "releaseDateDisplay": "November 7, 2025",
+    "releaseDate": "9999-12-31",
+    "releaseDateDisplay": "TBD (2026–2027)",
     "status": "",
     "genres": [
       "Sci-Fi",
@@ -543,86 +389,6 @@ window.UPCOMING_RELEASES = [
       "Returning"
     ],
     "platform": "Apple TV+"
-  },
-  {
-    "id": "tt22868010",
-    "tmdbId": null,
-    "title": "Return to Silent Hill",
-    "type": "movie",
-    "releaseDate": "2026-01-23",
-    "releaseDateDisplay": "January 23, 2026",
-    "status": "",
-    "genres": [
-      "Drama",
-      "Horror",
-      "Mystery"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt22868010",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": null,
-    "showTitle": null,
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
-    "id": "tt32477632",
-    "tmdbId": null,
-    "title": "Secret Service",
-    "type": "tv",
-    "releaseDate": "2026-04-27",
-    "releaseDateDisplay": "April 27, 2026",
-    "status": "",
-    "genres": [
-      "Spy",
-      "Political Thriller"
-    ],
-    "country": "UK",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt32477632",
-    "source": "editorial",
-    "sourceReason": "Editor's pick",
-    "relatedTitleId": null,
-    "showTitle": null,
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "MI6's Russia desk chief (Gemma Arterton) suspects a top politician may be a Russian asset. Ripped-from-headlines espionage from Tom Bradby.",
-    "tags": [
-      "Spy",
-      "Political"
-    ],
-    "platform": "ITVX"
-  },
-  {
-    "id": "tt8036976",
-    "tmdbId": null,
-    "title": "Send Help",
-    "type": "movie",
-    "releaseDate": "2026-01-30",
-    "releaseDateDisplay": "January 30, 2026",
-    "status": "",
-    "genres": [
-      "Adventure",
-      "Horror",
-      "Thriller"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt8036976",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": null,
-    "showTitle": null,
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
   },
   {
     "id": "tt11280740",
@@ -658,8 +424,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Shogun — Season 2",
     "type": "tv",
-    "releaseDate": "2024-02-27",
-    "releaseDateDisplay": "February 27, 2024",
+    "releaseDate": "9999-12-31",
+    "releaseDateDisplay": "2026",
     "status": "",
     "genres": [
       "Historical",
@@ -687,8 +453,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Silo — Season 3",
     "type": "tv",
-    "releaseDate": "2023-05-05",
-    "releaseDateDisplay": "May 5, 2023",
+    "releaseDate": "9999-12-31",
+    "releaseDateDisplay": "2026",
     "status": "",
     "genres": [
       "Sci-Fi",
@@ -795,33 +561,6 @@ window.UPCOMING_RELEASES = [
     "platform": ""
   },
   {
-    "id": "tt30851137",
-    "tmdbId": null,
-    "title": "The Bride!",
-    "type": "movie",
-    "releaseDate": "2026-03-06",
-    "releaseDateDisplay": "March 6, 2026",
-    "status": "",
-    "genres": [
-      "Drama",
-      "Horror",
-      "Romance",
-      "Sci-Fi"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt30851137",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": null,
-    "showTitle": null,
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
     "id": "tt38553367",
     "tmdbId": null,
     "title": "The Case",
@@ -879,31 +618,6 @@ window.UPCOMING_RELEASES = [
     "platform": "Disney+ / Hulu"
   },
   {
-    "id": "tt10970762",
-    "tmdbId": null,
-    "title": "The Testaments",
-    "type": "tv",
-    "releaseDate": "2026-04-08",
-    "releaseDateDisplay": "April 8, 2026",
-    "status": "",
-    "genres": [
-      "Drama",
-      "Thriller"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt10970762",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": "tt10970762",
-    "showTitle": "The Testaments",
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
     "id": "editorial-tsunami",
     "tmdbId": null,
     "title": "Tsunami",
@@ -931,113 +645,10 @@ window.UPCOMING_RELEASES = [
       "Disaster"
     ],
     "platform": "Theaters"
-  },
-  {
-    "id": "tt31631142",
-    "tmdbId": null,
-    "title": "Unchosen",
-    "type": "tv",
-    "releaseDate": "2026-04-21",
-    "releaseDateDisplay": "April 21, 2026",
-    "status": "",
-    "genres": [
-      "Drama",
-      "Thriller"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt31631142",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": "tt31631142",
-    "showTitle": "Unchosen",
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
-    "id": "tt36206162",
-    "tmdbId": null,
-    "title": "Vaka",
-    "type": "tv",
-    "releaseDate": "2026-01-30",
-    "releaseDateDisplay": "January 30, 2026",
-    "status": "",
-    "genres": [
-      "Thriller"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt36206162",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": "tt36206162",
-    "showTitle": "Vaka",
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
-    "id": "tt21066182",
-    "tmdbId": null,
-    "title": "Wonder Man",
-    "type": "tv",
-    "releaseDate": "2026-01-27",
-    "releaseDateDisplay": "January 27, 2026",
-    "status": "",
-    "genres": [
-      "Action",
-      "Adventure",
-      "Comedy",
-      "Drama",
-      "Fantasy",
-      "Sci-Fi"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt21066182",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": "tt21066182",
-    "showTitle": "Wonder Man",
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
-    "id": "tt32897959",
-    "tmdbId": null,
-    "title": "Wuthering Heights",
-    "type": "movie",
-    "releaseDate": "2026-02-13",
-    "releaseDateDisplay": "February 13, 2026",
-    "status": "",
-    "genres": [
-      "Drama",
-      "Romance"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt32897959",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": null,
-    "showTitle": null,
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-06-11T12:45:06Z",
+  "generatedAt": "2026-06-11T12:52:08Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -1066,17 +677,17 @@ window.UPCOMING_META = {
     "Carl Franklin"
   ],
   "seenShowCount": 225,
-  "watchlistCount": 20,
-  "itemCount": 38,
+  "watchlistCount": 6,
+  "itemCount": 23,
   "tmdbCacheStats": {
     "hits": 0,
     "misses": 0,
     "errors": 0
   },
   "imdbDateEnrichment": {
-    "rowsChanged": 25,
-    "graphqlEnriched": 25,
-    "graphqlLookups": 27
+    "rowsChanged": 20,
+    "graphqlEnriched": 20,
+    "graphqlLookups": 22
   },
   "thresholds": {
     "minDirectorRatings": 3,

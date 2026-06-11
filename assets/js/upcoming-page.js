@@ -311,17 +311,41 @@
     return { key: 'e-' + year, label: String(year), order: 200 + year, granularity: 'broad' };
   }
 
+  // TBD badge text: prefer year/window over truncated prefixes like "Expected".
+  function tbdBadgeFromDisplay(display) {
+    var raw = (display || '').trim();
+    if (!raw || raw === 'Date TBD' || raw === 'TBD') {
+      return { primary: 'TBD', secondary: '' };
+    }
+    var expected = raw.match(/^expected\s+(\d{4})\s*$/i);
+    if (expected) {
+      return { primary: expected[1], secondary: '' };
+    }
+    if (/^\d{4}$/.test(raw)) {
+      return { primary: raw, secondary: '' };
+    }
+    var yearInText = raw.match(/(20\d{2}|21\d{2})/);
+    var seasonWindow = raw.match(/^(spring|summer|fall|autumn|winter)\s+(20\d{2}|21\d{2})$/i);
+    if (seasonWindow) {
+      var season = seasonWindow[1].slice(0, 1).toUpperCase() + seasonWindow[1].slice(1, 4).toLowerCase();
+      var yy = seasonWindow[2].slice(-2);
+      return { primary: season + " '" + yy, secondary: '' };
+    }
+    if (yearInText && raw.length > 10) {
+      return { primary: raw.slice(0, 10), secondary: '' };
+    }
+    if (raw.length <= 9) {
+      return { primary: raw, secondary: '' };
+    }
+    return { primary: raw.slice(0, 8), secondary: '' };
+  }
+
   // What to show on the card's day badge given the bucket granularity.
   // Returns { primary, secondary } — e.g. { primary: '5', secondary: 'Fri' } or { primary: 'Jun', secondary: '5' }.
   function cardDateBadge(item, bucket) {
     var iso = item.releaseDateIso;
     if (iso === '9999-12-31' || bucket.granularity === 'tbd') {
-      // Legacy free-form release strings like "Fall 2026" — surface them here.
-      var raw = item.releaseDateDisplay || '';
-      if (raw && raw !== 'Date TBD') {
-        return { primary: raw.length > 8 ? raw.slice(0, 8) : raw, secondary: '' };
-      }
-      return { primary: 'TBD', secondary: '' };
+      return tbdBadgeFromDisplay(item.releaseDateDisplay);
     }
     var d = new Date(iso + 'T00:00:00');
     if (isNaN(d.getTime())) return { primary: 'TBD', secondary: '' };
