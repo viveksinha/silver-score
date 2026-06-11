@@ -4,6 +4,7 @@ Build assets/js/upcoming-data.js from scraped ratings JSON (site repo root).
 
   - Auto-derived favorite directors (from directorStats)
   - Seen TV series (from allItems where type in {TV Series, TV Mini Series} and myRating>=threshold)
+  - Future-only titles from scraped IMDb watchlist (--watchlist)
   - Optional editorial overrides from scripts/upcoming-editorial.json
 
 Data source: TMDB API (person.combined_credits for directors; tv details + external_ids for shows).
@@ -29,10 +30,17 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
+try:
+    from scrape_imdb import EPISODE_TYPES
+except ImportError:
+    EPISODE_TYPES = frozenset({"TV Episode"})
+
 TV_TYPES = frozenset({"TV Series", "TV Mini Series"})
 TMDB_BASE = "https://api.themoviedb.org/3"
 TMDB_IMG_BASE = "https://image.tmdb.org/t/p/w342"
 UNKNOWN_DATE = "9999-12-31"
+# TMDB release_dates types: 2 = limited theatrical, 3 = wide theatrical (US preferred).
+US_THEATRICAL_TYPES = frozenset({2, 3})
 
 
 def _site_root() -> Path:
@@ -238,6 +246,88 @@ FUTURE_TV_STATUS = frozenset({"Returning Series", "In Production", "Planned"})
 FUTURE_MOVIE_STATUS = frozenset({"In Production", "Post Production", "Planned"})
 
 
+def _parse_iso_date(iso: str) -> date | None:
+    if not iso or iso == UNKNOWN_DATE:
+        return None
+    try:
+        return datetime.strptime(iso[:10], "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+
+def _within_release_window(iso: str, today: date, lookback_days: int, cutoff_future_days: int) -> bool:
+    """True if iso date is TBD, recent past (within lookback), or within future cutoff."""
+    if not iso or iso == UNKNOWN_DATE:
+        return True
+    d = _parse_iso_date(iso)
+    if d is None:
+        return True
+    delta = (d - today).days
+    return delta >= -lookback_days and delta <= cutoff_future_days
+
+
+def filter_upcoming_rows(
+    rows: list[dict], *, today: date, lookback_days: int, cutoff_future_days: int
+) -> list[dict]:
+    """Drop titles whose premiere is older than lookback_days (already released)."""
+    kept: list[dict] = []
+    for r in rows:
+        iso = (r.get("releaseDate") or "").strip() or UNKNOWN_DATE
+        if _within_release_window(iso, today, lookback_days, cutoff_future_days):
+            kept.append(r)
+    return kept
+
+
+def _us_theatrical_release(details: dict) -> str:
+    """Prefer US theatrical / limited theatrical date; fall back to global release_date."""
+    release_dates = details.get("release_dates") if isinstance(details, dict) else None
+    if isinstance(release_dates, dict):
+        for block in release_dates.get("results") or []:
+            if not isinstance(block, dict) or block.get("iso_3166_1") != "US":
+                continue
+            for entry in block.get("release_dates") or []:
+                if not isinstance(entry, dict):
+                    continue
+                if entry.get("type") not in US_THEATRICAL_TYPES:
+                    continue
+                raw = (entry.get("release_date") or "").strip()
+                if raw:
+                    return raw[:10]
+    global_date = (details.get("release_date") or "").strip()
+    return global_date[:10] if global_date else ""
+
+
+def _target_upcoming_season(
+    details: dict, *, today: date, lookback_days: int
+) -> dict | None:
+    """Pick the highest season number that is unaired or still within the lookback window."""
+    seasons = [
+        s
+        for s in (details.get("seasons") or [])
+        if isinstance(s, dict) and (s.get("season_number") or 0) > 0
+    ]
+    if not seasons:
+        return None
+
+    upcoming: list[dict] = []
+    for s in seasons:
+        air = (s.get("air_date") or "").strip()
+        if not air:
+            upcoming.append(s)
+            continue
+        d = _parse_iso_date(air)
+        if d is not None and (d - today).days >= -lookback_days:
+            upcoming.append(s)
+
+    if upcoming:
+        return max(upcoming, key=lambda s: s.get("season_number") or 0)
+
+    status = details.get("status") or ""
+    if status in FUTURE_TV_STATUS:
+        return seasons[-1]
+    return None
+
+
 def _format_display_date(iso: str) -> str:
     if not iso or iso == UNKNOWN_DATE:
         return "Date TBD"
@@ -350,9 +440,19 @@ def build_movies_for_director(
 
         ext = details.get("external_ids") or {}
         imdb_id = ext.get("imdb_id") or ""
-        iso_date = (
-            details.get("release_date") or details.get("first_air_date") or release_date or ""
-        ) or UNKNOWN_DATE
+        if media_type == "movie":
+            iso_date = _us_theatrical_release(details) or release_date or UNKNOWN_DATE
+        else:
+            iso_date = (
+                details.get("first_air_date") or release_date or ""
+            ) or UNKNOWN_DATE
+
+        if not _within_release_window(iso_date, today, lookback_days, cutoff_future_days):
+            continue
+        if media_type == "movie" and iso_date != UNKNOWN_DATE:
+            d = _parse_iso_date(iso_date)
+            if d is not None and (d - today).days < -lookback_days:
+                continue
 
         title = details.get("title") or details.get("name") or c.get("title") or c.get("name") or ""
         rows.append(
@@ -382,7 +482,9 @@ def build_movies_for_director(
     return rows
 
 
-def build_next_season_for_show(tmdb: TMDB, show: dict) -> dict | None:
+def build_next_season_for_show(
+    tmdb: TMDB, show: dict, *, today: date, lookback_days: int, cutoff_future_days: int
+) -> dict | None:
     imdb_id = show.get("id")
     if not isinstance(imdb_id, str):
         return None
@@ -400,29 +502,38 @@ def build_next_season_for_show(tmdb: TMDB, show: dict) -> dict | None:
         return None
     status = details.get("status") or ""
     next_ep = details.get("next_episode_to_air") or {}
-    if status not in FUTURE_TV_STATUS and not isinstance(next_ep, dict):
-        return None
-    if status not in FUTURE_TV_STATUS and not next_ep:
+
+    season = _target_upcoming_season(details, today=today, lookback_days=lookback_days)
+    if season is None:
+        if status not in FUTURE_TV_STATUS:
+            return None
+        seasons = [s for s in (details.get("seasons") or []) if isinstance(s, dict)]
+        season = seasons[-1] if seasons else None
+    if not isinstance(season, dict):
         return None
 
-    # Prefer the season referenced by next_episode_to_air; else last season in seasons[].
-    season_number = None
-    air_date = None
-    episode_count = None
-    season_name = None
+    season_number = season.get("season_number")
+    air_date = (season.get("air_date") or "").strip()
+    episode_count = season.get("episode_count")
+    season_name = season.get("name")
+
+    # Mid-season: use next episode air date when season premiere is already past.
     if isinstance(next_ep, dict) and next_ep:
-        season_number = next_ep.get("season_number")
-        air_date = next_ep.get("air_date")
-    if season_number is None:
-        seasons = details.get("seasons") or []
-        if isinstance(seasons, list) and seasons:
-            last = seasons[-1]
-            if isinstance(last, dict):
-                season_number = last.get("season_number")
-                air_date = last.get("air_date") or air_date
-                episode_count = last.get("episode_count")
-                season_name = last.get("name")
-    iso_date = (air_date or details.get("next_episode_to_air", {}).get("air_date") or UNKNOWN_DATE) or UNKNOWN_DATE
+        ep_season = next_ep.get("season_number")
+        ep_date = (next_ep.get("air_date") or "").strip()
+        if ep_season == season_number and ep_date:
+            premiere = _parse_iso_date(air_date) if air_date else None
+            if premiere is None or (premiere - today).days < -lookback_days:
+                air_date = ep_date
+
+    iso_date = air_date or UNKNOWN_DATE
+    if not _within_release_window(iso_date, today, lookback_days, cutoff_future_days):
+        return None
+
+    base_title = show.get("title") or details.get("name") or ""
+    display_title = base_title
+    if season_number is not None and season_number > 0:
+        display_title = f"{base_title} — Season {season_number}"
 
     my_rating = show.get("myRating")
     reason = (
@@ -435,7 +546,7 @@ def build_next_season_for_show(tmdb: TMDB, show: dict) -> dict | None:
     return {
         "id": imdb_id,
         "tmdbId": tv_id,
-        "title": show.get("title") or details.get("name") or "",
+        "title": display_title,
         "type": "tv",
         "releaseDate": iso_date,
         "releaseDateDisplay": _format_display_date(iso_date),
@@ -457,11 +568,414 @@ def build_next_season_for_show(tmdb: TMDB, show: dict) -> dict | None:
 
 
 # ---------------------------------------------------------------------------
+# IMDb watchlist (future-only, unrated)
+# ---------------------------------------------------------------------------
+
+
+def load_watchlist_items(path: Path) -> list[dict]:
+    if not path.is_file():
+        return []
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []
+    if not isinstance(raw, dict):
+        return []
+    items = raw.get("items") or []
+    return [i for i in items if isinstance(i, dict)]
+
+
+def filter_future_watchlist_candidates(
+    items: list[dict], *, rated_ids: set[str], today: date
+) -> list[dict]:
+    """Keep unrated, non-episode titles with year >= today or unreleased (year 0/TBD)."""
+    out: list[dict] = []
+    for item in items:
+        iid = item.get("id")
+        if not isinstance(iid, str) or not iid.startswith("tt"):
+            continue
+        if iid in rated_ids:
+            continue
+        if item.get("type") in EPISODE_TYPES:
+            continue
+        year = item.get("year") or 0
+        if year > 0 and year < today.year:
+            continue
+        out.append(item)
+    return out
+
+
+def _minimal_watchlist_row(item: dict) -> dict:
+    year = item.get("year") or 0
+    wl_type = item.get("type") or "Movie"
+    media = "tv" if wl_type in TV_TYPES else "movie"
+    imdb_id = item["id"]
+    display = str(year) if year > 0 else "Date TBD"
+    return {
+        "id": imdb_id,
+        "tmdbId": None,
+        "title": item.get("title") or "",
+        "type": media,
+        "releaseDate": UNKNOWN_DATE,
+        "releaseDateDisplay": display,
+        "status": "",
+        "genres": item.get("genres") or [],
+        "country": "",
+        "posterUrl": "",
+        "imdbUrl": item.get("url") or f"https://www.imdb.com/title/{imdb_id}",
+        "source": "watchlist",
+        "sourceReason": "On your IMDb watchlist",
+        "relatedTitleId": imdb_id if media == "tv" else None,
+        "showTitle": item.get("title") if media == "tv" else None,
+        "seasonNumber": None,
+        "episodeCount": None,
+        "description": "",
+        "tags": [],
+        "platform": "",
+    }
+
+
+def _watchlist_movie_row(
+    tmdb: TMDB,
+    item: dict,
+    *,
+    today: date,
+    lookback_days: int,
+    cutoff_future_days: int,
+) -> dict | None:
+    imdb_id = item["id"]
+    found = tmdb.find_by_imdb(imdb_id)
+    if not found:
+        return None
+    movie_results = found.get("movie_results") or []
+    if not isinstance(movie_results, list) or not movie_results:
+        return None
+    first = movie_results[0]
+    if not isinstance(first, dict):
+        return None
+    tmdb_id = first.get("id")
+    if not isinstance(tmdb_id, int):
+        return None
+    details = tmdb.movie_details(tmdb_id)
+    if not details:
+        return None
+    status = details.get("status") or ""
+    iso_date = _us_theatrical_release(details) or (details.get("release_date") or "").strip()[:10]
+    if not iso_date:
+        iso_date = UNKNOWN_DATE
+    if not _within_release_window(iso_date, today, lookback_days, cutoff_future_days):
+        return None
+    if iso_date != UNKNOWN_DATE:
+        d = _parse_iso_date(iso_date)
+        if d is not None and (d - today).days < -lookback_days:
+            return None
+    elif status not in FUTURE_MOVIE_STATUS:
+        return None
+    title = details.get("title") or item.get("title") or ""
+    ext = details.get("external_ids") or {}
+    resolved_imdb = ext.get("imdb_id") or imdb_id
+    return {
+        "id": resolved_imdb,
+        "tmdbId": tmdb_id,
+        "title": title,
+        "type": "movie",
+        "releaseDate": iso_date,
+        "releaseDateDisplay": _format_display_date(iso_date),
+        "status": status,
+        "genres": _genres_from_tmdb(details) or (item.get("genres") or []),
+        "country": _country_from_tmdb(details),
+        "posterUrl": _poster_url(details.get("poster_path")),
+        "imdbUrl": f"https://www.imdb.com/title/{resolved_imdb}",
+        "source": "watchlist",
+        "sourceReason": "On your IMDb watchlist",
+        "relatedTitleId": None,
+        "showTitle": None,
+        "seasonNumber": None,
+        "episodeCount": None,
+        "description": details.get("overview") or "",
+        "tags": [],
+        "platform": "",
+    }
+
+
+def _watchlist_tv_row(
+    tmdb: TMDB,
+    item: dict,
+    *,
+    today: date,
+    lookback_days: int,
+    cutoff_future_days: int,
+) -> dict | None:
+    show = {"id": item["id"], "title": item.get("title") or "", "myRating": None}
+    row = build_next_season_for_show(
+        tmdb,
+        show,
+        today=today,
+        lookback_days=lookback_days,
+        cutoff_future_days=cutoff_future_days,
+    )
+    if not row:
+        return None
+    row["source"] = "watchlist"
+    row["sourceReason"] = "On your IMDb watchlist"
+    if not row.get("genres"):
+        row["genres"] = item.get("genres") or []
+    return row
+
+
+def build_from_watchlist(
+    watchlist_path: Path,
+    export: dict,
+    tmdb: TMDB | None,
+    *,
+    today: date,
+    lookback_days: int,
+    cutoff_future_days: int,
+) -> list[dict]:
+    """Future-only unrated watchlist titles; TMDB enriches dates when keyed."""
+    items = load_watchlist_items(watchlist_path)
+    if not items:
+        return []
+    rated_ids = all_rated_ids_from_export(export)
+    candidates = filter_future_watchlist_candidates(items, rated_ids=rated_ids, today=today)
+    rows: list[dict] = []
+    for item in candidates:
+        wl_type = item.get("type") or "Movie"
+        row: dict | None = None
+        if tmdb:
+            if wl_type in TV_TYPES:
+                row = _watchlist_tv_row(
+                    tmdb,
+                    item,
+                    today=today,
+                    lookback_days=lookback_days,
+                    cutoff_future_days=cutoff_future_days,
+                )
+            else:
+                row = _watchlist_movie_row(
+                    tmdb,
+                    item,
+                    today=today,
+                    lookback_days=lookback_days,
+                    cutoff_future_days=cutoff_future_days,
+                )
+            if row is None and wl_type not in TV_TYPES:
+                row = _watchlist_tv_row(
+                    tmdb,
+                    item,
+                    today=today,
+                    lookback_days=lookback_days,
+                    cutoff_future_days=cutoff_future_days,
+                )
+        if row is None:
+            row = _minimal_watchlist_row(item)
+        rows.append(row)
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# Editorial validation + rated-movie filter
+# ---------------------------------------------------------------------------
+
+_MONTH_FROM_NAME = {
+    "january": 1, "jan": 1,
+    "february": 2, "feb": 2,
+    "march": 3, "mar": 3,
+    "april": 4, "apr": 4,
+    "may": 5,
+    "june": 6, "jun": 6,
+    "july": 7, "jul": 7,
+    "august": 8, "aug": 8,
+    "september": 9, "sep": 9, "sept": 9,
+    "october": 10, "oct": 10,
+    "november": 11, "nov": 11,
+    "december": 12, "dec": 12,
+}
+
+_VAGUE_DISPLAY_RE = re.compile(r"\b(spring|summer|fall|autumn|winter|expected|tbd)\b", re.I)
+
+
+def _is_vague_display(display: str) -> bool:
+    if not display:
+        return True
+    if _VAGUE_DISPLAY_RE.search(display):
+        return True
+    if re.fullmatch(r"\d{4}(?:[–\-]\d{4})?", display.strip()):
+        return True
+    return False
+
+
+def _month_from_display(display: str) -> int | None:
+    m = re.search(
+        r"\b(january|february|march|april|may|june|july|august|september|october|november|december"
+        r"|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)\b",
+        display,
+        re.I,
+    )
+    if not m:
+        return None
+    return _MONTH_FROM_NAME.get(m.group(1).lower())
+
+
+def all_rated_ids_from_export(export: dict) -> set[str]:
+    """IMDb ids already rated (movies, TV, episodes) from export."""
+    ids = export.get("allRatedIds")
+    if isinstance(ids, list) and ids:
+        return {i for i in ids if isinstance(i, str)}
+    out: set[str] = set()
+    for item in export.get("allItems") or []:
+        if isinstance(item, dict):
+            iid = item.get("id")
+            if isinstance(iid, str) and iid.startswith("tt"):
+                out.add(iid)
+    return out
+
+
+def rated_movie_ids_from_export(export: dict) -> set[str]:
+    """IMDb ids for movies already present in the ratings export."""
+    ids: set[str] = set()
+    for item in export.get("allItems") or []:
+        if not isinstance(item, dict):
+            continue
+        if item.get("type") != "Movie":
+            continue
+        iid = item.get("id")
+        if isinstance(iid, str) and iid.startswith("tt"):
+            ids.add(iid)
+    return ids
+
+
+def filter_rated_editorial_movies(editorial: dict, rated_ids: set[str]) -> tuple[dict, int]:
+    """Drop editorial movie rows whose IMDb id is already rated. TV rows are kept."""
+    if not rated_ids:
+        return editorial, 0
+    filtered: dict = {}
+    skipped = 0
+    for key, row in editorial.items():
+        if (
+            isinstance(row, dict)
+            and row.get("type") == "movie"
+            and key.startswith("tt")
+            and key in rated_ids
+        ):
+            skipped += 1
+            continue
+        filtered[key] = row
+    return filtered, skipped
+
+
+def validate_editorial(editorial: dict) -> list[str]:
+    """Return human-readable warnings for suspicious editorial date fields."""
+    warnings: list[str] = []
+    for key, row in editorial.items():
+        if not isinstance(row, dict):
+            continue
+        rd = (row.get("releaseDate") or "").strip()
+        display = (row.get("releaseDateDisplay") or "").strip()
+        title = row.get("title") or key
+        if not rd or rd == UNKNOWN_DATE:
+            continue
+
+        if re.fullmatch(r"\d{4}-06-15", rd):
+            warnings.append(
+                f"{key} ({title}): placeholder releaseDate {rd} (June 15 anchor)"
+            )
+
+        if re.fullmatch(r"\d{4}-12-31", rd) and not re.search(r"\bdecember\b", display, re.I):
+            warnings.append(
+                f"{key} ({title}): fake year-end {rd} with display \"{display}\""
+            )
+
+        iso_month: int | None = None
+        try:
+            iso_month = datetime.strptime(rd[:10], "%Y-%m-%d").month
+        except ValueError:
+            pass
+
+        disp_month = _month_from_display(display)
+        if iso_month and disp_month and iso_month != disp_month:
+            warnings.append(
+                f"{key} ({title}): ISO month {iso_month} vs display month {disp_month} "
+                f"(\"{display}\")"
+            )
+
+        season = re.search(r"\b(spring|summer|fall|autumn|winter)\b", display, re.I)
+        if season and iso_month:
+            season_name = season.group(1).lower()
+            season_ranges = {
+                "spring": {3, 4, 5},
+                "summer": {6, 7, 8},
+                "fall": {9, 10, 11},
+                "autumn": {9, 10, 11},
+                "winter": {12, 1, 2},
+            }
+            allowed = season_ranges.get(season_name, set())
+            if iso_month not in allowed:
+                warnings.append(
+                    f"{key} ({title}): releaseDate month {iso_month} conflicts with "
+                    f"\"{season.group(1)}\" in display"
+                )
+
+    return warnings
+
+
+def coerce_editorial_tbd(row: dict, key: str) -> list[str]:
+    """Safety net: vague display + concrete ISO → UNKNOWN_DATE."""
+    warnings: list[str] = []
+    display = (row.get("releaseDateDisplay") or "").strip()
+    rd = (row.get("releaseDate") or "").strip()
+    if not display or not rd or rd == UNKNOWN_DATE:
+        return warnings
+    if not _is_vague_display(display):
+        return warnings
+    try:
+        datetime.strptime(rd[:10], "%Y-%m-%d")
+    except ValueError:
+        return warnings
+    row["releaseDate"] = UNKNOWN_DATE
+    warnings.append(
+        f"{key}: coerced releaseDate {rd} → {UNKNOWN_DATE} (vague display \"{display}\")"
+    )
+    return warnings
+
+
+# ---------------------------------------------------------------------------
 # Editorial merge + output
 # ---------------------------------------------------------------------------
 
 
-EDITORIAL_KEYS = ("description", "tags", "platform", "country", "eyebrow", "releaseDateDisplay")
+EDITORIAL_KEYS = (
+    "title",
+    "type",
+    "releaseDate",
+    "releaseDateDisplay",
+    "description",
+    "tags",
+    "platform",
+    "country",
+    "eyebrow",
+    "genres",
+    "status",
+    "posterUrl",
+    "sourceReason",
+)
+
+
+def load_editorial(*paths: Path) -> dict:
+    """Load and merge editorial JSON files; later paths override earlier keys."""
+    merged: dict = {}
+    for path in paths:
+        if not path.is_file():
+            continue
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            print(f"warn: editorial JSON invalid at {path}", file=sys.stderr)
+            continue
+        if not isinstance(raw, dict):
+            continue
+        merged.update(raw)
+    return merged
 
 
 def merge_editorial(rows: list[dict], editorial: dict) -> list[dict]:
@@ -472,9 +986,13 @@ def merge_editorial(rows: list[dict], editorial: dict) -> list[dict]:
         override = editorial.get(key)
         if not isinstance(override, dict):
             continue
+        override = dict(override)
+        for w in coerce_editorial_tbd(override, key):
+            print(f"warn: editorial: {w}", file=sys.stderr)
         for k in EDITORIAL_KEYS:
             if k in override:
                 r[k] = override[k]
+        r["source"] = "editorial"
     # Editorial-only rows: add any id that's in editorial but not in rows, treated as a full record.
     present = {r.get("id") for r in rows}
     for k, v in editorial.items():
@@ -482,6 +1000,9 @@ def merge_editorial(rows: list[dict], editorial: dict) -> list[dict]:
             continue
         if not v.get("title"):
             continue
+        v = dict(v)
+        for w in coerce_editorial_tbd(v, k):
+            print(f"warn: editorial: {w}", file=sys.stderr)
         rows.append({
             "id": k,
             "tmdbId": v.get("tmdbId"),
@@ -519,8 +1040,8 @@ def dedupe_and_sort(rows: list[dict]) -> list[dict]:
         if existing is None:
             by_id[rid] = r
             continue
-        # Prefer editorial, then director (movies), then seen-tv; richer fields win.
-        priority = {"editorial": 0, "director": 1, "seen-tv": 2}
+        # Prefer editorial, then watchlist/director, then seen-tv.
+        priority = {"editorial": 0, "watchlist": 1, "director": 2, "seen-tv": 3}
         a = priority.get(existing.get("source") or "", 3)
         b = priority.get(r.get("source") or "", 3)
         if b < a:
@@ -556,6 +1077,7 @@ def main() -> int:
     default_generated = scripts_dir / "upcoming-generated.json"
     default_cache = scripts_dir / "tmdb-cache"
     default_editorial = scripts_dir / "upcoming-editorial.json"
+    default_watchlist = scripts_dir / "scraped-watchlist.json"
 
     p = argparse.ArgumentParser(description="Build upcoming-data.js from ratings + TMDB")
     p.add_argument(
@@ -572,6 +1094,12 @@ def main() -> int:
         default=default_editorial,
         help="Optional editorial overrides JSON",
     )
+    p.add_argument(
+        "--watchlist",
+        type=Path,
+        default=default_watchlist,
+        help="Scraped IMDb watchlist JSON (default: scripts/scraped-watchlist.json)",
+    )
     p.add_argument("--no-html", action="store_true", help="Skip upcoming.html cache-buster bump")
     p.add_argument("--min-director-ratings", type=int, default=3)
     p.add_argument("--min-director-avg", type=float, default=7.0)
@@ -581,6 +1109,11 @@ def main() -> int:
     p.add_argument("--ttl-days", type=int, default=7, help="TMDB cache TTL in days")
     p.add_argument("--sleep", type=float, default=0.2, help="Sleep between TMDB calls")
     p.add_argument("--dry-run", action="store_true", help="Print derived favorites + planned fetches; no network, no writes")
+    p.add_argument(
+        "--strict-editorial",
+        action="store_true",
+        help="Exit non-zero if editorial validation warnings are found",
+    )
     p.add_argument("--limit-directors", type=int, default=0, help="(debug) only process N directors")
     p.add_argument("--limit-shows", type=int, default=0, help="(debug) only process N seen-TV shows")
     args = p.parse_args()
@@ -643,62 +1176,110 @@ def main() -> int:
         return 0
 
     api_key = (os.environ.get("TMDB_API_KEY") or "").strip()
-    if not api_key:
-        print("error: set TMDB_API_KEY (or use --dry-run)", file=sys.stderr)
+    today = date.today()
+    rows: list[dict] = []
+    tmdb_stats = {"hits": 0, "misses": 0, "errors": 0}
+
+    editorial_path = args.editorial.expanduser().resolve()
+    private_editorial = root.parent / "private" / "data" / "upcoming-editorial.json"
+    editorial = load_editorial(editorial_path, private_editorial)
+
+    rated_ids = rated_movie_ids_from_export(export)
+    editorial, skipped_rated = filter_rated_editorial_movies(editorial, rated_ids)
+    if skipped_rated:
+        print(f"skipped {skipped_rated} editorial movies already in ratings export")
+
+    editorial_warnings = validate_editorial(editorial)
+    for w in editorial_warnings:
+        print(f"warn: editorial: {w}", file=sys.stderr)
+    if args.strict_editorial and editorial_warnings:
+        print("error: editorial validation failed (--strict-editorial)", file=sys.stderr)
         return 1
 
-    cache_dir = args.cache_dir.expanduser().resolve()
-    tmdb = TMDB(api_key, cache_dir, ttl_days=args.ttl_days, sleep_s=args.sleep)
-    today = date.today()
+    watchlist_path = args.watchlist.expanduser().resolve()
+    tmdb: TMDB | None = None
+    if api_key:
+        cache_dir = args.cache_dir.expanduser().resolve()
+        tmdb = TMDB(api_key, cache_dir, ttl_days=args.ttl_days, sleep_s=args.sleep)
 
-    rows: list[dict] = []
-
-    print("fetching director credits…")
-    for idx, fav in enumerate(favorites, 1):
-        new = build_movies_for_director(
+    if watchlist_path.is_file():
+        wl_rows = build_from_watchlist(
+            watchlist_path,
+            export,
             tmdb,
-            fav,
             today=today,
             lookback_days=args.lookback_days,
             cutoff_future_days=args.cutoff_future_days,
         )
-        if new:
-            print(f"  [{idx}/{len(favorites)}] {fav['name']} → {len(new)} upcoming")
-        rows.extend(new)
+        rows.extend(wl_rows)
+        print(f"watchlist: {len(wl_rows)} future unrated titles")
+    else:
+        print(f"watchlist: skipped (not found: {watchlist_path})", file=sys.stderr)
 
-    print("fetching TV statuses…")
-    tv_hits = 0
-    for idx, show in enumerate(seen_tv, 1):
-        r = build_next_season_for_show(tmdb, show)
-        if r:
-            rows.append(r)
-            tv_hits += 1
-        if idx % 25 == 0:
-            print(f"  …polled {idx}/{len(seen_tv)} shows ({tv_hits} returning/in production)")
-    print(f"  TV returning/in production: {tv_hits}")
+    if tmdb:
+        print("fetching director credits…")
+        for idx, fav in enumerate(favorites, 1):
+            new = build_movies_for_director(
+                tmdb,
+                fav,
+                today=today,
+                lookback_days=args.lookback_days,
+                cutoff_future_days=args.cutoff_future_days,
+            )
+            if new:
+                print(f"  [{idx}/{len(favorites)}] {fav['name']} → {len(new)} upcoming")
+            rows.extend(new)
 
-    # Merge editorial overrides.
-    editorial_path = args.editorial.expanduser().resolve()
-    editorial: dict = {}
-    if editorial_path.is_file():
-        try:
-            raw = json.loads(editorial_path.read_text(encoding="utf-8"))
-            if isinstance(raw, dict):
-                editorial = raw
-        except json.JSONDecodeError:
-            print(f"warn: editorial JSON invalid at {editorial_path}", file=sys.stderr)
+        print("fetching TV statuses…")
+        tv_hits = 0
+        for idx, show in enumerate(seen_tv, 1):
+            r = build_next_season_for_show(
+                tmdb,
+                show,
+                today=today,
+                lookback_days=args.lookback_days,
+                cutoff_future_days=args.cutoff_future_days,
+            )
+            if r:
+                rows.append(r)
+                tv_hits += 1
+            if idx % 25 == 0:
+                print(f"  …polled {idx}/{len(seen_tv)} shows ({tv_hits} returning/in production)")
+        print(f"  TV returning/in production: {tv_hits}")
+        tmdb_stats = tmdb.stats()
+    else:
+        print(
+            "warn: TMDB_API_KEY not set — skipping director/seen-TV TMDB fetch; "
+            "watchlist uses scrape fields only",
+            file=sys.stderr,
+        )
+
     if editorial:
         rows = merge_editorial(rows, editorial)
         print(f"merged editorial overrides for {len(editorial)} ids")
 
     rows = dedupe_and_sort(rows)
+    before_filter = len(rows)
+    rows = filter_upcoming_rows(
+        rows,
+        today=today,
+        lookback_days=args.lookback_days,
+        cutoff_future_days=args.cutoff_future_days,
+    )
+    if before_filter != len(rows):
+        print(f"filtered {before_filter - len(rows)} already-released titles (>{args.lookback_days}d ago)")
+
+    if not rows:
+        print("error: no upcoming releases after build (check TMDB_API_KEY and editorial)", file=sys.stderr)
+        return 1
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "favoriteDirectors": [f["name"] for f in favorites],
         "seenShowCount": len(seen_tv),
+        "watchlistCount": sum(1 for r in rows if r.get("source") == "watchlist"),
         "itemCount": len(rows),
-        "tmdbCacheStats": tmdb.stats(),
+        "tmdbCacheStats": tmdb_stats,
         "thresholds": {
             "minDirectorRatings": args.min_director_ratings,
             "minDirectorAvg": args.min_director_avg,

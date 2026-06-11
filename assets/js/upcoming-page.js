@@ -249,6 +249,7 @@
     'director': 'Favorite directors',
     'seen-tv': 'Returning shows',
     'editorial': 'Our picks',
+    'watchlist': 'IMDb watchlist',
   };
   var allSources = uniqueSortedValues('source', function (it) { return it.source; });
   var allStatuses = uniqueSortedValues('status', function (it) { return it.status; });
