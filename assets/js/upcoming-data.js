@@ -30,7 +30,7 @@ window.UPCOMING_RELEASES = [
     "platform": "Theaters (Universal)"
   },
   {
-    "id": "tt21092834",
+    "id": "tt32261958",
     "tmdbId": null,
     "title": "Verity",
     "type": "movie",
@@ -43,7 +43,7 @@ window.UPCOMING_RELEASES = [
     ],
     "country": "US",
     "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt21092834",
+    "imdbUrl": "https://www.imdb.com/title/tt32261958",
     "source": "editorial",
     "sourceReason": "Editor's pick",
     "relatedTitleId": null,
@@ -149,8 +149,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Apex",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-04-24",
+    "releaseDateDisplay": "April 24, 2026",
     "status": "",
     "genres": [
       "Action",
@@ -174,8 +174,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Berlin and the Lady with an Ermine",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-05-15",
+    "releaseDateDisplay": "May 15, 2026",
     "status": "",
     "genres": [
       "Crime",
@@ -196,12 +196,12 @@ window.UPCOMING_RELEASES = [
     "platform": ""
   },
   {
-    "id": "tt27995594",
+    "id": "tt27995113",
     "tmdbId": null,
     "title": "Black Doves — Season 2",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2024-12-05",
+    "releaseDateDisplay": "December 5, 2024",
     "status": "",
     "genres": [
       "Spy",
@@ -210,7 +210,7 @@ window.UPCOMING_RELEASES = [
     ],
     "country": "UK",
     "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt27995594",
+    "imdbUrl": "https://www.imdb.com/title/tt27995113",
     "source": "editorial",
     "sourceReason": "Editor's pick",
     "relatedTitleId": null,
@@ -229,8 +229,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Bone Keeper",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-04-06",
+    "releaseDateDisplay": "April 6, 2026",
     "status": "",
     "genres": [
       "Horror"
@@ -253,8 +253,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Can't Go Home",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2027",
+    "releaseDate": "2027-11-12",
+    "releaseDateDisplay": "November 12, 2027",
     "status": "",
     "genres": [
       "Action",
@@ -279,8 +279,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Cape Fear",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-06-05",
+    "releaseDateDisplay": "June 5, 2026",
     "status": "",
     "genres": [
       "Crime",
@@ -305,8 +305,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "DTF St. Louis",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-03-01",
+    "releaseDateDisplay": "March 1, 2026",
     "status": "",
     "genres": [
       "Comedy",
@@ -332,8 +332,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Disclosure Day",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-06-12",
+    "releaseDateDisplay": "June 12, 2026",
     "status": "",
     "genres": [
       "Drama",
@@ -358,8 +358,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "From — Season 4",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2022-02-20",
+    "releaseDateDisplay": "February 20, 2022",
     "status": "",
     "genres": [
       "Horror",
@@ -387,8 +387,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "In the Grey",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-05-15",
+    "releaseDateDisplay": "May 15, 2026",
     "status": "",
     "genres": [
       "Action",
@@ -442,8 +442,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Memory of a Killer",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-01-25",
+    "releaseDateDisplay": "January 25, 2026",
     "status": "",
     "genres": [
       "Action",
@@ -469,8 +469,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Mother Mary",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-04-24",
+    "releaseDateDisplay": "April 24, 2026",
     "status": "",
     "genres": [
       "Drama",
@@ -495,8 +495,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Pegasus 3",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-02-27",
+    "releaseDateDisplay": "February 27, 2026",
     "status": "",
     "genres": [
       "Comedy",
@@ -520,8 +520,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Pluribus — Season 2",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "TBD (2026–2027)",
+    "releaseDate": "2025-11-07",
+    "releaseDateDisplay": "November 7, 2025",
     "status": "",
     "genres": [
       "Sci-Fi",
@@ -549,8 +549,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Return to Silent Hill",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-01-23",
+    "releaseDateDisplay": "January 23, 2026",
     "status": "",
     "genres": [
       "Drama",
@@ -575,8 +575,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Secret Service",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-04-27",
+    "releaseDateDisplay": "April 27, 2026",
     "status": "",
     "genres": [
       "Spy",
@@ -603,8 +603,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Send Help",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-01-30",
+    "releaseDateDisplay": "January 30, 2026",
     "status": "",
     "genres": [
       "Adventure",
@@ -658,8 +658,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Shogun — Season 2",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2024-02-27",
+    "releaseDateDisplay": "February 27, 2024",
     "status": "",
     "genres": [
       "Historical",
@@ -687,8 +687,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Silo — Season 3",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2023-05-05",
+    "releaseDateDisplay": "May 5, 2023",
     "status": "",
     "genres": [
       "Sci-Fi",
@@ -799,8 +799,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "The Bride!",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-03-06",
+    "releaseDateDisplay": "March 6, 2026",
     "status": "",
     "genres": [
       "Drama",
@@ -851,7 +851,7 @@ window.UPCOMING_RELEASES = [
     "platform": "Netflix"
   },
   {
-    "id": "editorial-the-koreans",
+    "id": "tt41061832",
     "tmdbId": null,
     "title": "The Koreans",
     "type": "tv",
@@ -864,7 +864,7 @@ window.UPCOMING_RELEASES = [
     ],
     "country": "South Korea",
     "posterUrl": "",
-    "imdbUrl": "",
+    "imdbUrl": "https://www.imdb.com/title/tt41061832",
     "source": "editorial",
     "sourceReason": "Editor's pick",
     "relatedTitleId": null,
@@ -883,8 +883,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "The Testaments",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-04-08",
+    "releaseDateDisplay": "April 8, 2026",
     "status": "",
     "genres": [
       "Drama",
@@ -937,8 +937,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Unchosen",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-04-21",
+    "releaseDateDisplay": "April 21, 2026",
     "status": "",
     "genres": [
       "Drama",
@@ -962,8 +962,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Vaka",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-01-30",
+    "releaseDateDisplay": "January 30, 2026",
     "status": "",
     "genres": [
       "Thriller"
@@ -986,8 +986,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Wonder Man",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-01-27",
+    "releaseDateDisplay": "January 27, 2026",
     "status": "",
     "genres": [
       "Action",
@@ -1015,8 +1015,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "Wuthering Heights",
     "type": "movie",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-02-13",
+    "releaseDateDisplay": "February 13, 2026",
     "status": "",
     "genres": [
       "Drama",
@@ -1037,7 +1037,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-06-11T12:11:38Z",
+  "generatedAt": "2026-06-11T12:45:06Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -1072,6 +1072,11 @@ window.UPCOMING_META = {
     "hits": 0,
     "misses": 0,
     "errors": 0
+  },
+  "imdbDateEnrichment": {
+    "rowsChanged": 25,
+    "graphqlEnriched": 25,
+    "graphqlLookups": 27
   },
   "thresholds": {
     "minDirectorRatings": 3,

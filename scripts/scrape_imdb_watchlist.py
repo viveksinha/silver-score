@@ -16,7 +16,9 @@ from scrape_imdb import (
     PAGE_SLEEP,
     TYPE_MAP,
     _gql_post,
+    release_date_to_iso,
     resolve_user_id,
+    year_from_imdb_title,
 )
 
 WATCHLIST_QUERY = """query($userId: ID!, $first: Int!, $after: ID) {
@@ -34,6 +36,7 @@ WATCHLIST_QUERY = """query($userId: ID!, $first: Int!, $after: ID) {
               titleText { text }
               originalTitleText { text }
               releaseYear { year }
+              releaseDate { day month year }
               titleType { id text }
               ratingsSummary { aggregateRating voteCount }
               runtime { seconds }
@@ -55,7 +58,8 @@ def _parse_title(t: dict) -> dict:
     tid = t["id"]
     title_text = (t.get("titleText") or {}).get("text") or ""
     orig_text = (t.get("originalTitleText") or {}).get("text") or title_text
-    year = (t.get("releaseYear") or {}).get("year") or 0
+    year = year_from_imdb_title(t.get("releaseYear"), t.get("releaseDate"))
+    premiere_iso = release_date_to_iso(t.get("releaseDate"))
     tt = t.get("titleType") or {}
     type_id = tt.get("id") or "movie"
     type_text = tt.get("text") or TYPE_MAP.get(type_id, type_id)
@@ -73,7 +77,7 @@ def _parse_title(t: dict) -> dict:
         if e.get("node", {}).get("name", {}).get("nameText", {}).get("text")
     )
 
-    return {
+    row = {
         "id": tid,
         "title": title_text,
         "originalTitle": orig_text,
@@ -86,6 +90,9 @@ def _parse_title(t: dict) -> dict:
         "directors": directors,
         "url": f"https://www.imdb.com/title/{tid}",
     }
+    if premiere_iso:
+        row["releaseDate"] = premiere_iso
+    return row
 
 
 def fetch_all_watchlist(user_id: str, *, verbose: bool = False) -> tuple[str, list[dict]]:

@@ -24,6 +24,7 @@ import os
 import re
 import sys
 import time
+import unicodedata
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -31,9 +32,14 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 
 try:
-    from scrape_imdb import EPISODE_TYPES
+    from scrape_imdb import EPISODE_TYPES, _gql_post
 except ImportError:
     EPISODE_TYPES = frozenset({"TV Episode"})
+
+    def _gql_post(query: str, variables: dict | None = None, *, verbose: bool = False) -> dict:
+        raise RuntimeError("scrape_imdb._gql_post unavailable")
+
+from imdb_title_dates import ImdbDateEnricher, is_concrete_iso, is_year_only_display
 
 TV_TYPES = frozenset({"TV Series", "TV Mini Series"})
 TMDB_BASE = "https://api.themoviedb.org/3"
@@ -244,6 +250,8 @@ class TMDB:
 
 FUTURE_TV_STATUS = frozenset({"Returning Series", "In Production", "Planned"})
 FUTURE_MOVIE_STATUS = frozenset({"In Production", "Post Production", "Planned"})
+ENDED_TV_STATUS = frozenset({"Ended", "Canceled"})
+RELEASED_MOVIE_STATUS = frozenset({"Released"})
 
 
 def _parse_iso_date(iso: str) -> date | None:
@@ -501,6 +509,8 @@ def build_next_season_for_show(
     if not details:
         return None
     status = details.get("status") or ""
+    if status in ENDED_TV_STATUS:
+        return None
     next_ep = details.get("next_episode_to_air") or {}
 
     season = _target_upcoming_season(details, today=today, lookback_days=lookback_days)
@@ -585,6 +595,14 @@ def load_watchlist_items(path: Path) -> list[dict]:
     return [i for i in items if isinstance(i, dict)]
 
 
+def _watchlist_item_year(item: dict) -> int:
+    """Premiere year from scrape releaseDate when present, else releaseYear."""
+    rd = (item.get("releaseDate") or "").strip()
+    if rd and len(rd) >= 4 and rd[:4].isdigit():
+        return int(rd[:4])
+    return int(item.get("year") or 0)
+
+
 def filter_future_watchlist_candidates(
     items: list[dict], *, rated_ids: set[str], today: date
 ) -> list[dict]:
@@ -598,7 +616,7 @@ def filter_future_watchlist_candidates(
             continue
         if item.get("type") in EPISODE_TYPES:
             continue
-        year = item.get("year") or 0
+        year = _watchlist_item_year(item)
         if year > 0 and year < today.year:
             continue
         out.append(item)
@@ -606,17 +624,23 @@ def filter_future_watchlist_candidates(
 
 
 def _minimal_watchlist_row(item: dict) -> dict:
-    year = item.get("year") or 0
+    year = _watchlist_item_year(item)
     wl_type = item.get("type") or "Movie"
     media = "tv" if wl_type in TV_TYPES else "movie"
     imdb_id = item["id"]
-    display = str(year) if year > 0 else "Date TBD"
+    scrape_rd = (item.get("releaseDate") or "").strip()
+    if is_concrete_iso(scrape_rd, unknown_date=UNKNOWN_DATE):
+        iso = scrape_rd[:10]
+        display = _format_display_date(iso)
+    else:
+        iso = UNKNOWN_DATE
+        display = str(year) if year > 0 else "Date TBD"
     return {
         "id": imdb_id,
         "tmdbId": None,
         "title": item.get("title") or "",
         "type": media,
-        "releaseDate": UNKNOWN_DATE,
+        "releaseDate": iso,
         "releaseDateDisplay": display,
         "status": "",
         "genres": item.get("genres") or [],
@@ -660,6 +684,8 @@ def _watchlist_movie_row(
     if not details:
         return None
     status = details.get("status") or ""
+    if status in RELEASED_MOVIE_STATUS:
+        return None
     iso_date = _us_theatrical_release(details) or (details.get("release_date") or "").strip()[:10]
     if not iso_date:
         iso_date = UNKNOWN_DATE
@@ -767,7 +793,9 @@ def build_from_watchlist(
                     lookback_days=lookback_days,
                     cutoff_future_days=cutoff_future_days,
                 )
-        if row is None:
+            if row is None:
+                row = _minimal_watchlist_row(item)
+        else:
             row = _minimal_watchlist_row(item)
         rows.append(row)
     return rows
@@ -862,6 +890,228 @@ def filter_rated_editorial_movies(editorial: dict, rated_ids: set[str]) -> tuple
             continue
         filtered[key] = row
     return filtered, skipped
+
+
+# ---------------------------------------------------------------------------
+# IMDb premiere date enrichment (GraphQL)
+# ---------------------------------------------------------------------------
+
+
+def _needs_date_enrichment(row: dict) -> bool:
+    """True when a non-editorial row should get IMDb premiere lookup."""
+    rd = (row.get("releaseDate") or "").strip()
+    display = (row.get("releaseDateDisplay") or "").strip()
+    if is_concrete_iso(rd, unknown_date=UNKNOWN_DATE):
+        return is_year_only_display(display)
+    if rd == UNKNOWN_DATE:
+        return True
+    return is_year_only_display(display)
+
+
+def _should_enrich_editorial(row: dict) -> bool:
+    """Only fill TBD placeholders; keep hand-set windows like Fall 2026."""
+    rd = (row.get("releaseDate") or "").strip()
+    display = (row.get("releaseDateDisplay") or "").strip()
+    if is_concrete_iso(rd, unknown_date=UNKNOWN_DATE):
+        return False
+    if rd != UNKNOWN_DATE:
+        return False
+    if is_year_only_display(display):
+        return True
+    if display in ("Date TBD", "TBD"):
+        return True
+    if re.fullmatch(r"TBD \(\d{4}.*\)", display):
+        return True
+    return False
+
+
+def enrich_imdb_release_dates(
+    rows: list[dict],
+    enricher: ImdbDateEnricher,
+    *,
+    watchlist_by_id: dict[str, dict],
+) -> tuple[int, int]:
+    """
+    Fill missing premiere dates from watchlist scrape fields or IMDb GraphQL.
+
+    Returns (rows_changed, graphql_enriched) where graphql_enriched counts rows
+    updated from a GraphQL lookup (not scrape-only).
+    """
+    changed = 0
+    graphql_enriched = 0
+    for row in rows:
+        rid = row.get("id") or ""
+        if not rid.startswith("tt"):
+            continue
+
+        source = row.get("source") or ""
+        if source == "editorial":
+            if not _should_enrich_editorial(row):
+                continue
+        elif not _needs_date_enrichment(row):
+            continue
+
+        old_rd = (row.get("releaseDate") or "").strip()
+        old_display = (row.get("releaseDateDisplay") or "").strip()
+
+        scrape_iso = ""
+        wl_item = watchlist_by_id.get(rid)
+        if isinstance(wl_item, dict):
+            scrape_iso = (wl_item.get("releaseDate") or "").strip()
+
+        iso = ""
+        used_graphql = False
+        if is_concrete_iso(scrape_iso, unknown_date=UNKNOWN_DATE):
+            iso = scrape_iso[:10]
+        else:
+            gql_iso = enricher.premiere_iso(rid)
+            if gql_iso:
+                iso = gql_iso
+                used_graphql = True
+
+        if is_concrete_iso(iso, unknown_date=UNKNOWN_DATE):
+            row["releaseDate"] = iso
+            row["releaseDateDisplay"] = _format_display_date(iso)
+            if row["releaseDate"] != old_rd or row["releaseDateDisplay"] != old_display:
+                changed += 1
+                if used_graphql:
+                    graphql_enriched += 1
+            continue
+
+        if not used_graphql and not is_concrete_iso(scrape_iso, unknown_date=UNKNOWN_DATE):
+            year = enricher.premiere_year(rid)
+            used_graphql = True
+        else:
+            year = int(iso[:4]) if iso and iso[:4].isdigit() else 0
+
+        if year > 0 and (
+            old_rd == UNKNOWN_DATE
+            or is_year_only_display(old_display)
+            or old_display in ("Date TBD", "TBD", "")
+        ):
+            row["releaseDate"] = UNKNOWN_DATE
+            row["releaseDateDisplay"] = str(year)
+            changed += 1
+            if used_graphql:
+                graphql_enriched += 1
+
+    return changed, graphql_enriched
+
+
+# ---------------------------------------------------------------------------
+# IMDb title-by-id validation (GraphQL)
+# ---------------------------------------------------------------------------
+
+TITLE_BY_ID_QUERY = """query($id: ID!) {
+  title(id: $id) {
+    id
+    titleText { text }
+    originalTitleText { text }
+    titleType { id text }
+    releaseYear { year }
+  }
+}"""
+
+_IMDB_LOOKUP_SLEEP = 0.3
+_imdb_title_cache: dict[str, dict | None] = {}
+
+
+def fetch_imdb_title(imdb_id: str) -> dict | None:
+    """Return canonical IMDb title payload for `tt*` id, or None if invalid."""
+    if imdb_id in _imdb_title_cache:
+        return _imdb_title_cache[imdb_id]
+    try:
+        resp = _gql_post(TITLE_BY_ID_QUERY, {"id": imdb_id})
+    except (RuntimeError, urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+        _imdb_title_cache[imdb_id] = None
+        return None
+    title = resp.get("data", {}).get("title") if isinstance(resp, dict) else None
+    result = title if isinstance(title, dict) else None
+    _imdb_title_cache[imdb_id] = result
+    if _IMDB_LOOKUP_SLEEP > 0:
+        time.sleep(_IMDB_LOOKUP_SLEEP)
+    return result
+
+
+def _normalize_title_for_match(s: str) -> str:
+    t = unicodedata.normalize("NFKD", (s or "").lower())
+    t = "".join(c for c in t if not unicodedata.combining(c))
+    t = re.sub(r"\s*[—–-]\s*season\s+\d+.*$", "", t, flags=re.I)
+    t = re.sub(r"\s*season\s+\d+.*$", "", t, flags=re.I)
+    t = re.sub(r"[^\w\s]", " ", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def _titles_match(expected: str, imdb_title: str) -> bool:
+    a = _normalize_title_for_match(expected)
+    b = _normalize_title_for_match(imdb_title)
+    if not a or not b:
+        return False
+    if a == b:
+        return True
+    return a in b or b in a
+
+
+def _type_matches(row_type: str, imdb_type_id: str) -> bool:
+    rt = (row_type or "").lower()
+    it = (imdb_type_id or "").lower()
+    if rt == "movie":
+        return it == "movie"
+    if rt == "tv":
+        return it in ("tvseries", "tvminiseries")
+    return True
+
+
+def validate_imdb_ids(rows: list[dict]) -> list[str]:
+    """Validate `tt*` ids in final merged rows against IMDb GraphQL title lookup."""
+    warnings: list[str] = []
+    for row in rows:
+        rid = row.get("id") or ""
+        title = row.get("title") or rid
+        source = row.get("source") or "unknown"
+
+        if not rid.startswith("tt"):
+            if rid.startswith("editorial-"):
+                warnings.append(f"{rid} ({title}): missing IMDb id (editorial slug)")
+            continue
+
+        imdb_url = (row.get("imdbUrl") or "").strip()
+        if imdb_url and rid not in imdb_url:
+            warnings.append(f"{rid} ({title}): imdbUrl does not contain id {rid}")
+
+        imdb = fetch_imdb_title(rid)
+        if imdb is None:
+            warnings.append(f"{rid} ({title}): IMDb id not found or lookup failed")
+            continue
+
+        imdb_title = (imdb.get("titleText") or {}).get("text") or ""
+        if not _titles_match(title, imdb_title):
+            warnings.append(
+                f"{rid} ({title}): IMDb title \"{imdb_title}\" does not match"
+            )
+
+        type_info = imdb.get("titleType") or {}
+        imdb_type_id = type_info.get("id") or ""
+        row_type = row.get("type") or ""
+        if row_type and imdb_type_id and not _type_matches(row_type, imdb_type_id):
+            warnings.append(
+                f"{rid} ({title}): row type \"{row_type}\" vs IMDb \"{imdb_type_id}\""
+            )
+
+        release_year = (imdb.get("releaseYear") or {}).get("year")
+        rd = (row.get("releaseDate") or "").strip()
+        if release_year and rd and rd != UNKNOWN_DATE:
+            try:
+                row_year = int(rd[:4])
+                if abs(row_year - int(release_year)) > 1:
+                    warnings.append(
+                        f"{rid} ({title}): release year {row_year} vs IMDb {release_year} "
+                        f"(soft check, source={source})"
+                    )
+            except ValueError:
+                pass
+
+    return warnings
 
 
 def validate_editorial(editorial: dict) -> list[str]:
@@ -1114,6 +1364,16 @@ def main() -> int:
         action="store_true",
         help="Exit non-zero if editorial validation warnings are found",
     )
+    p.add_argument(
+        "--strict-imdb-ids",
+        action="store_true",
+        help="Exit non-zero if IMDb id validation warnings are found",
+    )
+    p.add_argument(
+        "--validate-imdb-only",
+        action="store_true",
+        help="Run merge + IMDb id validation only; skip writing upcoming-data.js",
+    )
     p.add_argument("--limit-directors", type=int, default=0, help="(debug) only process N directors")
     p.add_argument("--limit-shows", type=int, default=0, help="(debug) only process N seen-TV shows")
     args = p.parse_args()
@@ -1273,6 +1533,36 @@ def main() -> int:
         print("error: no upcoming releases after build (check TMDB_API_KEY and editorial)", file=sys.stderr)
         return 1
 
+    watchlist_by_id: dict[str, dict] = {}
+    if watchlist_path.is_file():
+        for item in load_watchlist_items(watchlist_path):
+            iid = item.get("id")
+            if isinstance(iid, str) and iid.startswith("tt"):
+                watchlist_by_id[iid] = item
+
+    print("enriching IMDb premiere dates…")
+    imdb_enricher = ImdbDateEnricher()
+    dates_changed, graphql_enriched = enrich_imdb_release_dates(
+        rows, imdb_enricher, watchlist_by_id=watchlist_by_id
+    )
+    if dates_changed:
+        print(
+            f"imdb dates: updated {dates_changed} row(s) "
+            f"({graphql_enriched} via GraphQL, {imdb_enricher.graphql_fetches} lookups)"
+        )
+
+    print("validating IMDb ids…")
+    imdb_warnings = validate_imdb_ids(rows)
+    for w in imdb_warnings:
+        print(f"warn: imdb: {w}", file=sys.stderr)
+    if args.strict_imdb_ids and imdb_warnings:
+        print("error: IMDb id validation failed (--strict-imdb-ids)", file=sys.stderr)
+        return 1
+
+    if args.validate_imdb_only:
+        print(f"validate-imdb-only: {len(rows)} rows, {len(imdb_warnings)} warning(s)")
+        return 1 if imdb_warnings else 0
+
     meta = {
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "favoriteDirectors": [f["name"] for f in favorites],
@@ -1280,6 +1570,11 @@ def main() -> int:
         "watchlistCount": sum(1 for r in rows if r.get("source") == "watchlist"),
         "itemCount": len(rows),
         "tmdbCacheStats": tmdb_stats,
+        "imdbDateEnrichment": {
+            "rowsChanged": dates_changed,
+            "graphqlEnriched": graphql_enriched,
+            "graphqlLookups": imdb_enricher.graphql_fetches,
+        },
         "thresholds": {
             "minDirectorRatings": args.min_director_ratings,
             "minDirectorAvg": args.min_director_avg,

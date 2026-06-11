@@ -90,6 +90,7 @@ RATINGS_QUERY = """query($userId: ID!, $first: Int!, $after: String) {
           titleText { text }
           originalTitleText { text }
           releaseYear { year }
+          releaseDate { day month year }
           titleType { id text }
           ratingsSummary { aggregateRating voteCount }
           runtime { seconds }
@@ -122,6 +123,30 @@ TYPE_MAP = {
 EPISODE_TYPES = {"TV Episode"}
 
 
+def release_date_to_iso(release_date: dict | None) -> str:
+    """IMDb releaseDate {day, month, year} → YYYY-MM-DD or \"\"."""
+    if not isinstance(release_date, dict):
+        return ""
+    y = release_date.get("year")
+    m = release_date.get("month")
+    d = release_date.get("day")
+    if not y or not m or not d:
+        return ""
+    try:
+        return f"{int(y):04d}-{int(m):02d}-{int(d):02d}"
+    except (TypeError, ValueError):
+        return ""
+
+
+def year_from_imdb_title(release_year: dict | None, release_date: dict | None) -> int:
+    """Prefer premiere releaseDate year over releaseYear (announced years can lag)."""
+    iso = release_date_to_iso(release_date)
+    if iso:
+        return int(iso[:4])
+    ry = release_year or {}
+    return int(ry.get("year") or 0)
+
+
 def _parse_item(edge: dict) -> dict:
     node = edge["node"]
     t = node["title"]
@@ -129,7 +154,7 @@ def _parse_item(edge: dict) -> dict:
     tid = t["id"]
     title_text = (t.get("titleText") or {}).get("text") or ""
     orig_text = (t.get("originalTitleText") or {}).get("text") or title_text
-    year = (t.get("releaseYear") or {}).get("year") or 0
+    year = year_from_imdb_title(t.get("releaseYear"), t.get("releaseDate"))
     tt = t.get("titleType") or {}
     type_id = tt.get("id") or "movie"
     type_text = tt.get("text") or TYPE_MAP.get(type_id, type_id)

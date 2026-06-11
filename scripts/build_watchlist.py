@@ -5,10 +5,11 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
-from scrape_imdb import EPISODE_TYPES
+from scrape_imdb import EPISODE_TYPES, release_date_to_iso, year_from_imdb_title
+from imdb_title_dates import ImdbDateEnricher, is_concrete_iso
 from wikidata_languages import (
     fetch_wikidata_language_labels,
     language_label_from_export_field,
@@ -57,6 +58,45 @@ def load_rated_ids(ratings_path: Path) -> set[str]:
     # Fallback: allItems only (no episodes) when allRatedIds missing
     items = raw.get("allItems") or []
     return {i["id"] for i in items if i.get("id")}
+
+
+def _item_premiere_year(item: dict) -> int:
+    rd = (item.get("releaseDate") or "").strip()
+    if rd and len(rd) >= 4 and rd[:4].isdigit():
+        return int(rd[:4])
+    return int(item.get("year") or 0)
+
+
+def correct_imdb_years(items: list[dict], *, today: date) -> int:
+    """Refresh year from IMDb premiere when scrape year is stale (e.g. announced 2026, out 2025)."""
+    corrected = 0
+    stale_cutoff = today.year - 1
+    enricher = ImdbDateEnricher()
+    for item in items:
+        iid = item.get("id")
+        if not isinstance(iid, str) or not iid.startswith("tt"):
+            continue
+        old_y = int(item.get("year") or 0)
+        rd = (item.get("releaseDate") or "").strip()
+        if is_concrete_iso(rd):
+            new_y = int(rd[:4])
+            if new_y != old_y:
+                item["year"] = new_y
+                corrected += 1
+            continue
+        if old_y > 0 and old_y < stale_cutoff:
+            continue
+        title = enricher.fetch_title_dates(iid)
+        if not title:
+            continue
+        iso = release_date_to_iso(title.get("releaseDate"))
+        if iso:
+            item["releaseDate"] = iso
+        new_y = year_from_imdb_title(title.get("releaseYear"), title.get("releaseDate"))
+        if new_y and new_y != old_y:
+            item["year"] = new_y
+            corrected += 1
+    return corrected
 
 
 def enrich_languages(items: list[dict], cache_path: Path, *, use_wikidata: bool = True) -> None:
@@ -121,6 +161,11 @@ def main() -> int:
     p.add_argument("-o", "--output", type=Path, default=default_out, help="Output watchlist-data.js")
     p.add_argument("--language-cache", type=Path, default=default_cache)
     p.add_argument("--no-wikidata", action="store_true")
+    p.add_argument(
+        "--no-year-refresh",
+        action="store_true",
+        help="Skip IMDb premiere lookup for recent/future years",
+    )
     args = p.parse_args()
 
     in_path = args.input.expanduser().resolve()
@@ -147,6 +192,11 @@ def main() -> int:
     excluded_episodes = sum(
         1 for i in raw_items if i.get("type") in EPISODE_TYPES and i.get("id") not in rated_ids
     )
+
+    if not args.no_year_refresh:
+        n_fixed = correct_imdb_years(items, today=date.today())
+        if n_fixed:
+            print(f"imdb: corrected year on {n_fixed} title(s)")
 
     cache_path = args.language_cache.expanduser().resolve()
     enrich_languages(items, cache_path, use_wikidata=not args.no_wikidata)
