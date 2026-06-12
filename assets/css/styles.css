@@ -2,12 +2,14 @@
    Default skin: Marquee Noir (:root)
    Essays/Stories: Newspaper Desk (body[data-pillar="essays"])
    Home rail headings: Poster Wall (body.home-page .home-band .section-title)
-   Logo + hero: Golden Age (nav .logo-wordmark, .hero h1, .mag-hero h1) */
+   Page titles: --font-page-title (Playfair default; Newsreader on essays)
+   Nav wordmark only: Golden Age (nav .logo-wordmark) */
 
 :root {
   /* Marquee Noir — site default */
   --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  --font-page-title: var(--font-display);
   --font-logo: "Cormorant Garamond", ui-serif, Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-poster: "Bebas Neue", "Oswald", ui-sans-serif, sans-serif;
@@ -278,7 +280,8 @@ body.home-page .home-band .section-title {
 }
 
 /* ---------------------------------------------------------------
-   Skin: Golden Age — logo wordmark + hero display titles
+   Page titles — one display family per context (hero, cover, prose h1)
+   Essays remap --font-display → Newsreader; --font-page-title follows.
 --------------------------------------------------------------- */
 :root {
   --hero-title-gradient: linear-gradient(
@@ -299,14 +302,25 @@ body.home-page .home-band .section-title {
   );
 }
 .hero h1,
-.mag-hero h1 {
-  font-family: var(--font-logo);
+.mag-hero h1,
+.prose-article > h1 {
+  font-family: var(--font-page-title);
   font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+}
+/* Gold gradient on hero/cover titles only — not essay prose h1 */
+.hero h1,
+.mag-hero h1 {
   letter-spacing: 0.02em;
   background: var(--hero-title-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+body[data-pillar="essays"] .hero h1 {
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  color: var(--text);
 }
 
 *,
@@ -395,6 +409,7 @@ h3 {
 }
 
 h1 {
+  font-family: var(--font-page-title);
   font-size: var(--fs-3xl);
   font-weight: 700;
 }
