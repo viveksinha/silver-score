@@ -2353,8 +2353,13 @@ body.home-page .chapter--cover .mag-hero h1 {
   background: none;
   -webkit-background-clip: unset;
   background-clip: unset;
-  -webkit-text-fill-color: var(--accent);
-  color: var(--accent);
+  /* Explicit red — .chapter--cover remaps --accent to gold for landing wash */
+  -webkit-text-fill-color: #c41e3a;
+  color: #c41e3a;
+}
+:root[data-theme="light"] body.home-page .chapter--cover .mag-hero h1 {
+  -webkit-text-fill-color: #9b2335;
+  color: #9b2335;
 }
 @media (min-width: 860px) {
   body.home-page .chapter--cover .mag-hero {
