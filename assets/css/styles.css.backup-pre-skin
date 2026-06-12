@@ -1,16 +1,12 @@
-/* Silver Score — multi-skin typography (revert: cp styles.css.backup-pre-skin styles.css)
-   Default skin: Marquee Noir (:root)
-   Essays/Stories: Newspaper Desk (body[data-pillar="essays"])
-   Home rail headings: Poster Wall (body.home-page .home-band .section-title)
-   Logo + hero: Golden Age (nav .logo-wordmark, .hero h1, .mag-hero h1) */
+/* REVERT: copy this file back to styles.css to undo the multi-skin typography rollout.
+   cp styles.css.backup-pre-skin styles.css */
+/* Silver Score — website-product-ux (tokens + components) */
 
 :root {
-  /* Marquee Noir — site default */
-  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Playfair Display", ui-serif, Georgia, serif;
-  --font-logo: "Cormorant Garamond", ui-serif, Georgia, serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --font-poster: "Bebas Neue", "Oswald", ui-sans-serif, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-logo: "Fraunces", "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
 
   /* Type scale (fluid-ish; not using clamp() everywhere — just the scale) */
   --fs-xs: 0.72rem;
@@ -40,18 +36,18 @@
   --measure-lede: 42rem;
   --measure-prose: 56rem;
 
-  --bg: #0d0a0a;
-  --surface: #161214;
-  --surface2: #1e1a1c;
-  --surface3: #262224;
-  --border: #322c2e;
-  --border-strong: #443c3f;
-  --text: #ece6e0;
-  --text-secondary: #a89f98;
-  --text-dim: #6f6660;
-  --accent: #c41e3a;
-  --accent-light: rgba(196, 30, 58, 0.15);
-  --accent-strong: rgba(196, 30, 58, 0.32);
+  --bg: #0b0c10;
+  --surface: #17171c;
+  --surface2: #1f1e26;
+  --surface3: #27262d;
+  --border: #2e2d35;
+  --border-strong: #3e3d47;
+  --text: #e8e6f0;
+  --text-secondary: #9b97a8;
+  --text-dim: #6b6778;
+  --accent: #818cf8;
+  --accent-light: rgba(99, 102, 241, 0.15);
+  --accent-strong: rgba(99, 102, 241, 0.3);
 
   --green: #34d399;
   --green-bg: rgba(52, 211, 153, 0.12);
@@ -87,10 +83,10 @@
   --brand-hbo: #8b5cf6;
   --brand-uktv: #2dd4bf;
   --brand-cinema: #f59e0b;
-  --radius: 6px;
-  --radius-sm: 4px;
-  --radius-lg: 12px;
-  --hero-gradient: linear-gradient(135deg, #0d0a0a 0%, #1a0810 48%, #2a0a14 100%);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+  --hero-gradient: linear-gradient(135deg, #1a1830 0%, #0c0b0e 50%, #101523 100%);
 
   --nav-height: 3.5rem;
   --table-sticky-top: 0;
@@ -99,23 +95,23 @@
   /* Nav logo — solid wordmark + visible img (no mask / background-clip) */
   --logo-icon-size: 2rem;
   --logo-icon-gap: 0.55rem;
-  --logo-text: #d4af37;
+  --logo-text: #ebe3d4;
 }
 
 :root[data-theme="light"] {
-  --bg: #f5f0e6;
-  --surface: #faf6ee;
-  --surface2: #f0ebe1;
-  --surface3: #e8e2d6;
-  --border: #ddd5c8;
-  --border-strong: #c9bfb0;
-  --text: #1a1410;
-  --text-secondary: #6b6258;
-  --text-dim: #9a9086;
-  --accent: #9b2335;
-  --accent-light: rgba(155, 35, 53, 0.1);
-  --accent-strong: rgba(155, 35, 53, 0.2);
-  --accent-2: #c41e3a;
+  --bg: #faf9f7;
+  --surface: #ffffff;
+  --surface2: #f3f1ee;
+  --surface3: #ebe8e4;
+  --border: #e5e2dc;
+  --border-strong: #d1cdc5;
+  --text: #1a1816;
+  --text-secondary: #6b6560;
+  --text-dim: #9b9590;
+  --accent: #6366f1;
+  --accent-light: rgba(99, 102, 241, 0.08);
+  --accent-strong: rgba(99, 102, 241, 0.18);
+  --accent-2: #8b8cf0;
 
   --green: #16a34a;
   --green-bg: #dcfce7;
@@ -142,9 +138,9 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
-  --hero-gradient: linear-gradient(135deg, #f5f0e6 0%, #ebe4d4 50%, #e4dbd0 100%);
+  --hero-gradient: linear-gradient(135deg, #eeeaf8 0%, #faf9f7 50%, #e8eeff 100%);
 
-  --logo-text: #9a7b2f;
+  --logo-text: #1f1a14;
 }
 
 /* Legacy alias used in inline JS strings */
@@ -164,13 +160,11 @@
    distinct concept from the "data" color lane (bucket colors for rating
    buckets, platform brands, etc.) which stays fixed. */
 :root {
-  --accent-2: #e85d6f; /* Marquee Noir paired warm red */
+  --accent-2: #a5b4fc; /* default: indigo-300 paired with indigo-400 */
 }
 [data-pillar="noir"] {
-  --accent: #c41e3a;
-  --accent-light: rgba(196, 30, 58, 0.15);
-  --accent-strong: rgba(196, 30, 58, 0.32);
-  --accent-2: #e85d6f;
+  /* house accent — indigo; listed for symmetry / explicit labeling */
+  --accent-2: #a5b4fc;
 }
 [data-pillar="world"] {
   --accent: var(--accent-world);
@@ -185,10 +179,10 @@
   --accent-2: #d8b4fe;
 }
 [data-pillar="essays"] {
-  --accent: #d64045;
-  --accent-light: rgba(214, 64, 69, 0.12);
-  --accent-strong: rgba(214, 64, 69, 0.28);
-  --accent-2: #2d5a3d;
+  --accent: var(--orange);
+  --accent-light: var(--orange-bg);
+  --accent-strong: color-mix(in srgb, var(--orange) 32%, transparent);
+  --accent-2: #fcd34d;
 }
 [data-pillar="upcoming"] {
   --accent: var(--green);
@@ -205,108 +199,13 @@
   --accent-2: #a855f7;
 }
 :root[data-theme="light"] [data-pillar="essays"] {
-  --accent-2: #2d5a3d;
+  --accent-2: #f59e0b;
 }
 :root[data-theme="light"] [data-pillar="upcoming"] {
   --accent-2: #059669;
 }
 :root[data-theme="light"] [data-pillar="noir"] {
-  --accent: #9b2335;
-  --accent-light: rgba(155, 35, 53, 0.1);
-  --accent-strong: rgba(155, 35, 53, 0.2);
-  --accent-2: #c41e3a;
-}
-
-/* ---------------------------------------------------------------
-   Skin: Newspaper Desk — essays hub + essay pages
---------------------------------------------------------------- */
-body[data-pillar="essays"] {
-  --font-sans: "Newsreader", ui-serif, Georgia, serif;
-  --font-display: "Newsreader", ui-serif, Georgia, serif;
-  --font-mono: "Courier Prime", ui-monospace, monospace;
-  --bg: #1a1a1a;
-  --surface: #222222;
-  --surface2: #2a2a2a;
-  --surface3: #333333;
-  --border: #3a3a3a;
-  --border-strong: #4a4a4a;
-  --text: #f2f0ec;
-  --text-secondary: #b5b0a8;
-  --text-dim: #7a756e;
-  --measure-prose: 45ch;
-  --hero-gradient: linear-gradient(135deg, #1a1a1a 0%, #1f1c1a 50%, #1a1816 100%);
-}
-:root[data-theme="light"] body[data-pillar="essays"] {
-  --bg: #faf8f5;
-  --surface: #ffffff;
-  --surface2: #f5f3f0;
-  --surface3: #ebe8e4;
-  --border: #ddd8d2;
-  --border-strong: #c9c3bb;
-  --text: #1a1816;
-  --text-secondary: #5c5650;
-  --text-dim: #8a837c;
-  --hero-gradient: linear-gradient(135deg, #faf8f5 0%, #f5f1eb 50%, #efeae2 100%);
-}
-body[data-pillar="essays"] .prose-article {
-  border-left: 2px solid color-mix(in srgb, var(--accent) 40%, var(--border));
-  padding-left: 1.25rem;
-}
-body[data-pillar="essays"] .prose-article p {
-  max-width: var(--measure-prose);
-}
-body[data-pillar="essays"] .prose-article h2 {
-  border-top: 1px solid var(--border);
-  padding-top: 1.5rem;
-}
-body[data-pillar="essays"] h1,
-body[data-pillar="essays"] h2,
-body[data-pillar="essays"] h3 {
-  font-weight: 700;
-}
-
-/* ---------------------------------------------------------------
-   Skin: Poster Wall — home shelf/radar/world rail headings only
---------------------------------------------------------------- */
-body.home-page .home-band .section-title {
-  font-family: var(--font-poster);
-  font-weight: 400;
-  font-size: 1.75rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  line-height: 1.05;
-}
-
-/* ---------------------------------------------------------------
-   Skin: Golden Age — logo wordmark + hero display titles
---------------------------------------------------------------- */
-:root {
-  --hero-title-gradient: linear-gradient(
-    135deg,
-    #f5e6b8 0%,
-    #d4af37 42%,
-    #c9a227 78%,
-    #e8dcc0 100%
-  );
-}
-:root[data-theme="light"] {
-  --hero-title-gradient: linear-gradient(
-    135deg,
-    #5c4a1a 0%,
-    #9a7b2f 45%,
-    #c9a227 78%,
-    #7a6224 100%
-  );
-}
-.hero h1,
-.mag-hero h1 {
-  font-family: var(--font-logo);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  background: var(--hero-title-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  --accent-2: #4f46e5;
 }
 
 *,
@@ -494,9 +393,9 @@ nav .logo-icon {
 nav .logo-wordmark {
   font-family: var(--font-logo);
   font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 900;
   font-synthesis: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   line-height: 1;
   color: var(--logo-text);
 }
@@ -688,6 +587,10 @@ nav .nav-links a.active {
   text-align: center;
 }
 .hero h1 {
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.75rem;
 }
 .hero p {
@@ -2195,18 +2098,23 @@ footer {
    Home page — landing cover: emerald (green + teal token mix), companion teal washes
    ----------------------------------------------------------------- */
 body.home-page .chapter--cover {
-  --home-landing-accent: #d4af37;
+  --home-landing-accent: color-mix(in srgb, var(--green) 44%, var(--accent-world) 56%);
   --accent: var(--home-landing-accent);
-  --accent-light: color-mix(in srgb, var(--home-landing-accent) 22%, transparent);
-  --accent-strong: color-mix(in srgb, var(--home-landing-accent) 38%, transparent);
-  --accent-2: #c9a227;
+  --accent-light: color-mix(in srgb, var(--home-landing-accent) 24%, transparent);
+  --accent-strong: color-mix(in srgb, var(--home-landing-accent) 40%, transparent);
+  --accent-2: color-mix(in srgb, var(--accent-world) 52%, var(--green) 48%);
 }
 :root[data-theme="light"] body.home-page .chapter--cover {
-  --home-landing-accent: #9a7b2f;
+  /* Dark emerald: teal–green deepened with body text (light mode reads richer than mint) */
+  --home-landing-accent: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--green) 32%, var(--accent-world) 68%) 70%,
+    var(--text) 30%
+  );
   --accent: var(--home-landing-accent);
-  --accent-light: color-mix(in srgb, var(--home-landing-accent) 14%, var(--surface) 86%);
-  --accent-strong: color-mix(in srgb, var(--home-landing-accent) 42%, transparent);
-  --accent-2: #c9a227;
+  --accent-light: color-mix(in srgb, var(--home-landing-accent) 16%, var(--surface) 84%);
+  --accent-strong: color-mix(in srgb, var(--home-landing-accent) 48%, transparent);
+  --accent-2: color-mix(in srgb, var(--accent-world) 50%, var(--text) 50%);
 }
 body.home-page .mag-hero {
   padding: 3.5rem 1.25rem 2.5rem;
@@ -2215,38 +2123,38 @@ body.home-page .mag-hero {
   background:
     radial-gradient(
       ellipse 84% 64% at 12% -10%,
-      color-mix(in srgb, var(--home-landing-accent) 28%, transparent),
+      color-mix(in srgb, var(--home-landing-accent) 34%, transparent),
       transparent 58%
     ),
     radial-gradient(
       ellipse 70% 52% at 92% 8%,
-      color-mix(in srgb, #2a0a14 18%, transparent),
+      color-mix(in srgb, var(--accent-world) 22%, transparent),
       transparent 54%
     ),
     linear-gradient(
       152deg,
-      #0d0a0a 0%,
-      color-mix(in srgb, var(--bg) 88%, #1a0810 12%) 46%,
-      color-mix(in srgb, var(--bg) 82%, #2a0a14 18%) 100%
+      color-mix(in srgb, var(--bg) 78%, var(--green) 22%) 0%,
+      var(--bg) 46%,
+      color-mix(in srgb, var(--bg) 80%, var(--accent-world) 20%) 100%
     );
 }
 :root[data-theme="light"] body.home-page .mag-hero {
   background:
     radial-gradient(
       ellipse 84% 64% at 10% -4%,
-      color-mix(in srgb, var(--home-landing-accent) 32%, transparent),
+      color-mix(in srgb, var(--home-landing-accent) 42%, transparent),
       transparent 56%
     ),
     radial-gradient(
       ellipse 70% 52% at 94% 6%,
-      color-mix(in srgb, #9b2335 12%, transparent),
+      color-mix(in srgb, var(--accent-world) 32%, transparent),
       transparent 52%
     ),
     linear-gradient(
       148deg,
-      #f5f0e6 0%,
-      color-mix(in srgb, var(--bg) 90%, #ebe4d4 10%) 46%,
-      color-mix(in srgb, var(--surface) 78%, #e4dbd0 22%) 100%
+      color-mix(in srgb, var(--surface) 72%, var(--home-landing-accent) 28%) 0%,
+      color-mix(in srgb, var(--bg) 82%, var(--accent-world) 18%) 46%,
+      color-mix(in srgb, var(--surface) 68%, var(--home-landing-accent) 32%) 100%
     );
 }
 body.home-page .chapter--cover .mag-hero {
@@ -2262,12 +2170,40 @@ body.home-page .chapter--cover .mag-hero {
   border-radius: 0;
   box-shadow: none;
   background: transparent;
-  --hero-caption-bg: color-mix(in srgb, #1a1410 72%, #2a2018 28%);
-  --hero-eyebrow-color: #d4af37;
+  --hero-royal-gradient: linear-gradient(
+    108deg,
+    #0a1428 0%,
+    #0f2248 8%,
+    #0c2838 16%,
+    #0d3324 26%,
+    #14532d 38%,
+    #166534 48%,
+    #1a5c4a 56%,
+    #3d2870 64%,
+    #c9b48a 67%,
+    #6d28d9 74%,
+    #a78bfa 86%,
+    #e8e6f2 100%
+  );
+  --hero-caption-bg: color-mix(in srgb, #e8eef5 48%, #e8f0ec 52%);
+  --hero-eyebrow-color: #4b5d8f;
 }
 :root[data-theme="light"] body.home-page .chapter--cover .mag-hero {
-  --hero-caption-bg: color-mix(in srgb, #f5f0e6 70%, #ebe4d4 30%);
-  --hero-eyebrow-color: #9a7b2f;
+  --hero-royal-gradient: linear-gradient(
+    108deg,
+    #0c1222 0%,
+    #1a1f4a 14%,
+    #1e3a5f 24%,
+    #064e3b 36%,
+    #065f46 48%,
+    #047857 58%,
+    #2d4a6b 68%,
+    #4c1d95 78%,
+    #5b21b6 88%,
+    #312e81 100%
+  );
+  --hero-caption-bg: color-mix(in srgb, #f5f3f8 55%, #e8f5ef 45%);
+  --hero-eyebrow-color: #3d4f7a;
 }
 body.home-page .chapter--cover .mag-hero::before,
 body.home-page .chapter--cover .mag-hero::after {
@@ -2293,10 +2229,14 @@ body.home-page .chapter--cover .mag-hero .eyebrow {
 }
 body.home-page .chapter--cover .mag-hero h1 {
   max-width: 30ch;
-  font-weight: 700;
+  font-weight: 800;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+  background: var(--hero-royal-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 @media (min-width: 860px) {
   body.home-page .chapter--cover .mag-hero {
