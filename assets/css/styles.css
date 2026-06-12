@@ -458,11 +458,7 @@ nav[data-compact="true"] {
   background: color-mix(in srgb, var(--surface) 94%, transparent);
   --logo-icon-size: 1.6rem;
 }
-/* When nav is compacted, propagate a shorter --nav-height globally so sticky
-   table headers reposition beneath it. */
-body[data-nav-compact="true"] {
-  --nav-height: 3rem;
-}
+/* --nav-height is synced to measured nav height in nav.js (compact + font load). */
 nav[data-compact="true"] .logo-wordmark {
   font-size: 1.3rem;
 }
@@ -1114,14 +1110,18 @@ nav .nav-links a.active {
 .table-scroll--recent {
   max-height: min(52vh, 28rem);
 }
-/* Page-scroll table: vertical scroll on the page, horizontal scroll in-wrapper
-   so sticky thead stays column-aligned with tbody on narrow viewports. */
+/* Page-scroll table: page scrolls vertically; wrapper must not create a vertical
+   scrollport (overflow-x/y on an ancestor breaks position:sticky vs viewport).
+   Wide tables rely on viewport horizontal scroll on narrow screens. */
 .table-scroll--page {
   max-height: none;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
+  overflow: visible;
   --table-sticky-top: var(--nav-height);
+}
+@media (max-width: 859px) {
+  .table-scroll--page .data-table {
+    min-width: 34rem;
+  }
 }
 .table-scroll-hint {
   display: none;
