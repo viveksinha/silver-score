@@ -98,6 +98,10 @@
   --table-sticky-top: 0;
   --transition: 160ms ease;
 
+  /* Scrollbars — thumb/track follow theme tokens */
+  --scrollbar-thumb: var(--border-strong);
+  --scrollbar-track: var(--surface2);
+
   /* Nav logo — solid wordmark + visible img (no mask / background-clip) */
   --logo-icon-size: 2rem;
   --logo-icon-gap: 0.55rem;
@@ -364,6 +368,50 @@ body::before {
 body > * {
   position: relative;
   z-index: 1;
+}
+
+/* ---------------------------------------------------------------
+   Theme-aware scrollbars — viewport + common scroll containers
+   (Firefox: scrollbar-color; WebKit: ::-webkit-scrollbar-*)
+--------------------------------------------------------------- */
+html,
+.table-scroll,
+.featured-rail,
+.stats-grid--band,
+.full-shelf-grid,
+.filter-group--scroll .filter-group__track {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+html::-webkit-scrollbar,
+.table-scroll::-webkit-scrollbar,
+.featured-rail::-webkit-scrollbar,
+.stats-grid--band::-webkit-scrollbar,
+.full-shelf-grid::-webkit-scrollbar,
+.filter-group--scroll .filter-group__track::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+html::-webkit-scrollbar-thumb,
+.table-scroll::-webkit-scrollbar-thumb,
+.featured-rail::-webkit-scrollbar-thumb,
+.stats-grid--band::-webkit-scrollbar-thumb,
+.full-shelf-grid::-webkit-scrollbar-thumb,
+.filter-group--scroll .filter-group__track::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+html::-webkit-scrollbar-track,
+.table-scroll::-webkit-scrollbar-track,
+.featured-rail::-webkit-scrollbar-track,
+.stats-grid--band::-webkit-scrollbar-track,
+.full-shelf-grid::-webkit-scrollbar-track,
+.filter-group--scroll .filter-group__track::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+html::-webkit-scrollbar-corner,
+.table-scroll::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track);
 }
 
 /* Reusable page title — replaces inline style="margin-top:1.5rem" on h1 in
@@ -1736,8 +1784,6 @@ nav .nav-links a.active {
   flex-wrap: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-strong) transparent;
   scroll-snap-type: x proximity;
   padding-bottom: 0.2rem;
   -webkit-overflow-scrolling: touch;
@@ -1758,16 +1804,6 @@ nav .nav-links a.active {
 .filter-group--scroll .filter-group__track .filter-chip {
   flex-shrink: 0;
   scroll-snap-align: start;
-}
-.filter-group--scroll .filter-group__track::-webkit-scrollbar {
-  height: 6px;
-}
-.filter-group--scroll .filter-group__track::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 3px;
-}
-.filter-group--scroll .filter-group__track::-webkit-scrollbar-track {
-  background: transparent;
 }
 .filter-chip {
   font-family: var(--font-sans);
