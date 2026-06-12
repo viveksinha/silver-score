@@ -650,7 +650,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-06-11T14:57:47Z",
+  "generatedAt": "2026-06-12T09:50:31Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -661,10 +661,10 @@ window.UPCOMING_META = {
     "Thomas Schlamme",
     "Daniel Sackheim",
     "Frederick E.O. Toye",
-    "Martin Scorsese",
     "Adam Bernstein",
     "James Mangold",
     "Peter Jackson",
+    "Martin Scorsese",
     "Ben Richardson",
     "Craig Zobel",
     "Deborah Chow",
