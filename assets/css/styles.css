@@ -1,6 +1,6 @@
 /* Silver Score — multi-skin typography (revert: cp styles.css.backup-pre-skin styles.css)
    Default skin: Marquee Noir (:root)
-   Essays/Stories: Newspaper Desk (body[data-pillar="essays"])
+   Essays: Newspaper Desk (body[data-pillar="essays"]); Stories hub headers use Playfair (body.stories-page)
    Home rail headings: Poster Wall (body.home-page .home-band .section-title)
    Page titles: --font-page-title (Playfair default; Newsreader on essays)
    Nav wordmark only: Golden Age (nav .logo-wordmark) */
@@ -2548,6 +2548,23 @@ body.home-page .featured-rail .featured-card .why {
   color: var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+/* Stories hub — Marquee Noir page titles; essay pillar accents + body prose */
+body.stories-page {
+  --font-page-title: "Playfair Display", ui-serif, Georgia, serif;
+}
+body.stories-page .hero h1,
+body.stories-page .section-title {
+  font-family: var(--font-page-title);
+}
+/* Essays pillar strips gold gradient from hero h1 — restore for hub parity with Browse */
+body.stories-page .hero h1 {
+  background: var(--hero-title-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: unset;
 }
 
 /* Stories hub — center hero + section intros (rails stay horizontal scroll) */
