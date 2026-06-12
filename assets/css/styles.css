@@ -2350,6 +2350,11 @@ body.home-page .chapter--cover .mag-hero h1 {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  -webkit-text-fill-color: var(--accent);
+  color: var(--accent);
 }
 @media (min-width: 860px) {
   body.home-page .chapter--cover .mag-hero {
