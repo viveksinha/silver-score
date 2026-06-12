@@ -225,6 +225,8 @@
 body[data-pillar="essays"] {
   --font-sans: "Newsreader", ui-serif, Georgia, serif;
   --font-display: "Newsreader", ui-serif, Georgia, serif;
+  /* Re-bind on body so page titles pick up Newsreader ( :root --font-page-title resolves early ) */
+  --font-page-title: var(--font-display);
   --font-mono: "Courier Prime", ui-monospace, monospace;
   --bg: #1a1a1a;
   --surface: #222222;
@@ -2505,6 +2507,25 @@ body.home-page .featured-rail .featured-card .why {
   color: var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+/* Stories hub — center hero + section intros (rails stay horizontal scroll) */
+.stories-page .hero-jump-links {
+  justify-content: center;
+}
+.stories-page .section {
+  text-align: center;
+}
+.stories-page .section-title {
+  justify-content: center;
+}
+.stories-page .section-lede {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 52ch;
+}
+.stories-page .stories-hub-rail-wrap {
+  text-align: left;
 }
 
 /* Stories page — compact horizontal rails (whole-card links) */
