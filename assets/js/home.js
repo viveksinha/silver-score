@@ -152,34 +152,6 @@
     return (Date.now() - t) / (1000 * 60 * 60 * 24);
   }
 
-  function formatRatedOn(iso) {
-    if (!iso) return '—';
-    var pad = iso.length <= 10 ? 'T12:00:00' : '';
-    var d = new Date(iso + pad);
-    if (isNaN(d.getTime())) return iso;
-    try {
-      if (iso.length > 10) {
-        return new Intl.DateTimeFormat(undefined, {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-        }).format(d);
-      }
-      return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(d);
-    } catch (e) {
-      return iso;
-    }
-  }
-
-  function relativeRated(iso) {
-    var days = daysSinceRated(iso);
-    if (days >= 99998) return '';
-    if (days < 1) return 'Recently';
-    if (days < 7) return 'This week';
-    if (days < 30) return 'This month';
-    if (days < 365) return 'This year';
-    return '';
-  }
-
   function isLikelyNonEnglish(i) {
     var o = (i.originalTitle || '').trim();
     var t = (i.title || '').trim();
@@ -709,7 +681,6 @@
     document.getElementById('recent-table-body').innerHTML = recentRowsFiltered()
       .map(function (i) {
         var rowLang = displayLang(i);
-        var rel = relativeRated(i.dateRated);
         var genres = (i.genres || [])
           .map(function (g) {
             return (
@@ -723,13 +694,6 @@
           .join(', ');
         return (
           '<tr>' +
-          '<td><time class="recent-time" datetime="' +
-          i.dateRated +
-          '">' +
-          formatRatedOn(i.dateRated) +
-          '</time>' +
-          (rel ? ' <span class="recent-rel">' + rel + '</span>' : '') +
-          '</td>' +
           '<td><a href="' +
           i.url +
           '" target="_blank" rel="noopener noreferrer"><strong>' +
