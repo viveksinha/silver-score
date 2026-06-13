@@ -2341,10 +2341,6 @@ body.home-page .chapter--cover .mag-hero__photo {
   mask-image: none;
   -webkit-mask-image: none;
 }
-body.home-page .chapter--cover .mag-hero__photo::before,
-body.home-page .chapter--cover .mag-hero__photo::after {
-  content: none;
-}
 body.home-page .chapter--cover .mag-hero .eyebrow {
   display: inline-block;
   padding: 0.4rem 0.85rem;
@@ -3258,50 +3254,6 @@ body[data-pillar="new-releases"] .hero.hero--fresh-silver .hero-silver {
   gap: 1rem;
   overflow-x: hidden;
   padding: 0 0 0.5rem;
-}
-
-/* Scroll-hint fade on rails — soft edge gradients indicating more content.
-   Hidden at scroll start/end via .is-scroll-start / .is-scroll-end in nav.js. */
-.featured-rail-wrap {
-  position: relative;
-}
-.featured-rail-wrap::before,
-.featured-rail-wrap::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 4rem;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 1;
-  transition: opacity 200ms ease;
-}
-.featured-rail-wrap::before {
-  left: 0;
-  background: linear-gradient(
-    to left,
-    transparent,
-    color-mix(in srgb, var(--bg) 70%, transparent) 40%,
-    var(--bg) 100%
-  );
-  border-radius: var(--radius) 0 0 var(--radius);
-}
-.featured-rail-wrap::after {
-  right: 0;
-  background: linear-gradient(
-    to right,
-    transparent,
-    color-mix(in srgb, var(--bg) 70%, transparent) 40%,
-    var(--bg) 100%
-  );
-  border-radius: 0 var(--radius) var(--radius) 0;
-}
-.featured-rail-wrap.is-scroll-start::before {
-  opacity: 0;
-}
-.featured-rail-wrap.is-scroll-end::after {
-  opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

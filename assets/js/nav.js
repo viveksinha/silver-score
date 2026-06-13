@@ -113,31 +113,9 @@
     update();
   }
 
-  function setupScrollHintRails() {
-    var rails = document.querySelectorAll('.featured-rail-wrap');
-    if (!rails.length) return;
-    rails.forEach(function (wrap) {
-      var scroller = wrap.querySelector('.featured-rail');
-      if (!scroller) return;
-      function check() {
-        var max = scroller.scrollWidth - scroller.clientWidth;
-        var notScrollable = max <= 2;
-        var atStart = notScrollable || scroller.scrollLeft <= 2;
-        var atEnd = notScrollable || scroller.scrollLeft >= max - 2;
-        wrap.classList.toggle('is-scroll-start', atStart);
-        wrap.classList.toggle('is-scroll-end', atEnd);
-      }
-      scroller.addEventListener('scroll', check, { passive: true });
-      window.addEventListener('resize', check);
-      setTimeout(check, 200);
-      check();
-    });
-  }
-
   function init() {
     navEl = document.querySelector('nav[aria-label="Main"]') || document.querySelector('nav');
     if (!navEl) {
-      setupScrollHintRails();
       return;
     }
     toggleBtn = navEl.querySelector('.nav-toggle');
@@ -156,7 +134,6 @@
       });
     }
     setupScrollCompact();
-    setupScrollHintRails();
     syncNavHeightVar();
     window.addEventListener('resize', syncNavHeightVar);
     if (document.fonts && document.fonts.ready) {
