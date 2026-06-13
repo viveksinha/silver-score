@@ -52,9 +52,17 @@ jobs:
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "chore: refresh ratings data $(date -u +%Y-%m-%d)"
+          MSG="chore: refresh ratings data $(date -u +%Y-%m-%d)"
+          git commit -m "$MSG"
           for attempt in 1 2 3; do
-            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            git fetch origin main
+            git reset --soft origin/main
+            if git diff --cached --quiet; then
+              echo "Remote already contains this refresh"
+              exit 0
+            fi
+            git commit -m "$MSG"
+            git push origin HEAD:main && exit 0
             echo "Push attempt $attempt failed; retrying in ${attempt}0s..."
             sleep $((attempt * 10))
           done
