@@ -121,7 +121,10 @@
       if (!scroller) return;
       function check() {
         var max = scroller.scrollWidth - scroller.clientWidth;
-        var atEnd = max <= 2 || scroller.scrollLeft >= max - 2;
+        var notScrollable = max <= 2;
+        var atStart = notScrollable || scroller.scrollLeft <= 2;
+        var atEnd = notScrollable || scroller.scrollLeft >= max - 2;
+        wrap.classList.toggle('is-scroll-start', atStart);
         wrap.classList.toggle('is-scroll-end', atEnd);
       }
       scroller.addEventListener('scroll', check, { passive: true });
