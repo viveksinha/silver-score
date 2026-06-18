@@ -572,7 +572,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-06-17T10:21:05Z",
+  "generatedAt": "2026-06-18T10:01:08Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
