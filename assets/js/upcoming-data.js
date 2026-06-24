@@ -572,7 +572,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-06-23T08:52:43Z",
+  "generatedAt": "2026-06-24T08:48:30Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -583,7 +583,6 @@ window.UPCOMING_META = {
     "Thomas Schlamme",
     "Daniel Sackheim",
     "Frederick E.O. Toye",
-    "Adam Bernstein",
     "James Mangold",
     "Peter Jackson",
     "Martin Scorsese",
@@ -598,7 +597,8 @@ window.UPCOMING_META = {
     "Keith Gordon",
     "Stephen Williams",
     "Quentin Tarantino",
-    "Carl Franklin"
+    "Carl Franklin",
+    "Lesli Linka Glatter"
   ],
   "seenShowCount": 230,
   "watchlistCount": 3,
