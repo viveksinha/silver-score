@@ -516,8 +516,8 @@ window.UPCOMING_RELEASES = [
     "tmdbId": null,
     "title": "The Case",
     "type": "tv",
-    "releaseDate": "9999-12-31",
-    "releaseDateDisplay": "2026",
+    "releaseDate": "2026-08-20",
+    "releaseDateDisplay": "August 20, 2026",
     "status": "",
     "genres": [
       "Crime",
@@ -599,7 +599,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-06-25T08:43:29Z",
+  "generatedAt": "2026-06-26T08:44:59Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -636,8 +636,8 @@ window.UPCOMING_META = {
     "errors": 0
   },
   "imdbDateEnrichment": {
-    "rowsChanged": 1,
-    "graphqlEnriched": 1,
+    "rowsChanged": 2,
+    "graphqlEnriched": 2,
     "graphqlLookups": 3
   },
   "thresholds": {
