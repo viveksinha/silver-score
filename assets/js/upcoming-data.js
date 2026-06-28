@@ -56,33 +56,6 @@ window.UPCOMING_RELEASES = [
     "platform": ""
   },
   {
-    "id": "tt34771210",
-    "tmdbId": null,
-    "title": "I Will Find You",
-    "type": "tv",
-    "releaseDate": "2026-06-18",
-    "releaseDateDisplay": "June 18, 2026",
-    "status": "",
-    "genres": [
-      "Crime",
-      "Drama",
-      "Mystery",
-      "Thriller"
-    ],
-    "country": "",
-    "posterUrl": "",
-    "imdbUrl": "https://www.imdb.com/title/tt34771210",
-    "source": "watchlist",
-    "sourceReason": "On your IMDb watchlist",
-    "relatedTitleId": "tt34771210",
-    "showTitle": "I Will Find You",
-    "seasonNumber": null,
-    "episodeCount": null,
-    "description": "",
-    "tags": [],
-    "platform": ""
-  },
-  {
     "id": "tt33764258",
     "tmdbId": null,
     "title": "The Odyssey",
@@ -653,7 +626,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-06-27T08:21:47Z",
+  "generatedAt": "2026-06-28T08:37:10Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -681,9 +654,9 @@ window.UPCOMING_META = {
     "Carl Franklin",
     "Lesli Linka Glatter"
   ],
-  "seenShowCount": 230,
-  "watchlistCount": 6,
-  "itemCount": 23,
+  "seenShowCount": 231,
+  "watchlistCount": 5,
+  "itemCount": 22,
   "tmdbCacheStats": {
     "hits": 0,
     "misses": 0,
