@@ -599,7 +599,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-07-03T08:42:26Z",
+  "generatedAt": "2026-07-04T08:16:30Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -627,7 +627,7 @@ window.UPCOMING_META = {
     "Carl Franklin",
     "Lesli Linka Glatter"
   ],
-  "seenShowCount": 231,
+  "seenShowCount": 230,
   "watchlistCount": 4,
   "itemCount": 21,
   "tmdbCacheStats": {
