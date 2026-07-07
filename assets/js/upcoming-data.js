@@ -29,6 +29,31 @@ window.UPCOMING_RELEASES = [
     "platform": ""
   },
   {
+    "id": "tt42605728",
+    "tmdbId": null,
+    "title": "The American Experiment",
+    "type": "tv",
+    "releaseDate": "2026-06-24",
+    "releaseDateDisplay": "June 24, 2026",
+    "status": "",
+    "genres": [
+      "Documentary",
+      "History"
+    ],
+    "country": "",
+    "posterUrl": "",
+    "imdbUrl": "https://www.imdb.com/title/tt42605728",
+    "source": "watchlist",
+    "sourceReason": "On your IMDb watchlist",
+    "relatedTitleId": "tt42605728",
+    "showTitle": "The American Experiment",
+    "seasonNumber": null,
+    "episodeCount": null,
+    "description": "",
+    "tags": [],
+    "platform": ""
+  },
+  {
     "id": "tt33764258",
     "tmdbId": null,
     "title": "The Odyssey",
@@ -599,7 +624,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-07-06T09:48:11Z",
+  "generatedAt": "2026-07-07T09:00:17Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -628,8 +653,8 @@ window.UPCOMING_META = {
     "Lesli Linka Glatter"
   ],
   "seenShowCount": 230,
-  "watchlistCount": 4,
-  "itemCount": 21,
+  "watchlistCount": 5,
+  "itemCount": 22,
   "tmdbCacheStats": {
     "hits": 0,
     "misses": 0,
