@@ -624,7 +624,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-07-07T09:00:17Z",
+  "generatedAt": "2026-07-08T08:02:32Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -650,7 +650,7 @@ window.UPCOMING_META = {
     "Stephen Williams",
     "Quentin Tarantino",
     "Carl Franklin",
-    "Lesli Linka Glatter"
+    "Zetna Fuentes"
   ],
   "seenShowCount": 230,
   "watchlistCount": 5,
