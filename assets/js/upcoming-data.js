@@ -54,6 +54,57 @@ window.UPCOMING_RELEASES = [
     "platform": ""
   },
   {
+    "id": "tt36270432",
+    "tmdbId": null,
+    "title": "Notes from the Last Row",
+    "type": "tv",
+    "releaseDate": "2026-06-26",
+    "releaseDateDisplay": "June 26, 2026",
+    "status": "",
+    "genres": [
+      "Drama"
+    ],
+    "country": "",
+    "posterUrl": "",
+    "imdbUrl": "https://www.imdb.com/title/tt36270432",
+    "source": "watchlist",
+    "sourceReason": "On your IMDb watchlist",
+    "relatedTitleId": "tt36270432",
+    "showTitle": "Notes from the Last Row",
+    "seasonNumber": null,
+    "episodeCount": null,
+    "description": "",
+    "tags": [],
+    "platform": ""
+  },
+  {
+    "id": "tt35051401",
+    "tmdbId": null,
+    "title": "The East Palace",
+    "type": "tv",
+    "releaseDate": "2026-07-17",
+    "releaseDateDisplay": "July 17, 2026",
+    "status": "",
+    "genres": [
+      "Action",
+      "Fantasy",
+      "History",
+      "Horror"
+    ],
+    "country": "",
+    "posterUrl": "",
+    "imdbUrl": "https://www.imdb.com/title/tt35051401",
+    "source": "watchlist",
+    "sourceReason": "On your IMDb watchlist",
+    "relatedTitleId": "tt35051401",
+    "showTitle": "The East Palace",
+    "seasonNumber": null,
+    "episodeCount": null,
+    "description": "",
+    "tags": [],
+    "platform": ""
+  },
+  {
     "id": "tt33764258",
     "tmdbId": null,
     "title": "The Odyssey",
@@ -110,6 +161,34 @@ window.UPCOMING_RELEASES = [
     "platform": ""
   },
   {
+    "id": "tt21285562",
+    "tmdbId": null,
+    "title": "The Dog Stars",
+    "type": "movie",
+    "releaseDate": "2026-08-28",
+    "releaseDateDisplay": "August 28, 2026",
+    "status": "",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama",
+      "Sci-Fi",
+      "Thriller"
+    ],
+    "country": "",
+    "posterUrl": "",
+    "imdbUrl": "https://www.imdb.com/title/tt21285562",
+    "source": "watchlist",
+    "sourceReason": "On your IMDb watchlist",
+    "relatedTitleId": null,
+    "showTitle": null,
+    "seasonNumber": null,
+    "episodeCount": null,
+    "description": "",
+    "tags": [],
+    "platform": ""
+  },
+  {
     "id": "tt32261958",
     "tmdbId": null,
     "title": "Verity",
@@ -136,6 +215,31 @@ window.UPCOMING_RELEASES = [
       "Adaptation"
     ],
     "platform": "Theaters (Amazon MGM)"
+  },
+  {
+    "id": "tt13609648",
+    "tmdbId": null,
+    "title": "Sense and Sensibility",
+    "type": "movie",
+    "releaseDate": "2026-10-16",
+    "releaseDateDisplay": "October 16, 2026",
+    "status": "",
+    "genres": [
+      "Drama",
+      "Romance"
+    ],
+    "country": "",
+    "posterUrl": "",
+    "imdbUrl": "https://www.imdb.com/title/tt13609648",
+    "source": "watchlist",
+    "sourceReason": "On your IMDb watchlist",
+    "relatedTitleId": null,
+    "showTitle": null,
+    "seasonNumber": null,
+    "episodeCount": null,
+    "description": "",
+    "tags": [],
+    "platform": ""
   },
   {
     "id": "tt11947656",
@@ -244,6 +348,33 @@ window.UPCOMING_RELEASES = [
     "sourceReason": "On your IMDb watchlist",
     "relatedTitleId": "tt4316680",
     "showTitle": "Can't Go Home",
+    "seasonNumber": null,
+    "episodeCount": null,
+    "description": "",
+    "tags": [],
+    "platform": ""
+  },
+  {
+    "id": "tt32328070",
+    "tmdbId": null,
+    "title": "The Lord of the Rings: The Hunt for Gollum",
+    "type": "movie",
+    "releaseDate": "2027-12-17",
+    "releaseDateDisplay": "December 17, 2027",
+    "status": "",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama",
+      "Fantasy"
+    ],
+    "country": "",
+    "posterUrl": "",
+    "imdbUrl": "https://www.imdb.com/title/tt32328070",
+    "source": "watchlist",
+    "sourceReason": "On your IMDb watchlist",
+    "relatedTitleId": null,
+    "showTitle": null,
     "seasonNumber": null,
     "episodeCount": null,
     "description": "",
@@ -624,7 +755,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-07-09T09:03:26Z",
+  "generatedAt": "2026-07-10T08:54:33Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -653,8 +784,8 @@ window.UPCOMING_META = {
     "Zetna Fuentes"
   ],
   "seenShowCount": 230,
-  "watchlistCount": 5,
-  "itemCount": 22,
+  "watchlistCount": 10,
+  "itemCount": 27,
   "tmdbCacheStats": {
     "hits": 0,
     "misses": 0,
