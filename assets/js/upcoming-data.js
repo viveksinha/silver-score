@@ -861,7 +861,7 @@ window.UPCOMING_RELEASES = [
   }
 ];
 window.UPCOMING_META = {
-  "generatedAt": "2026-07-18T07:22:27Z",
+  "generatedAt": "2026-07-19T07:53:12Z",
   "favoriteDirectors": [
     "Mark Mylod",
     "Christopher Nolan",
@@ -880,16 +880,16 @@ window.UPCOMING_META = {
     "Craig Zobel",
     "Deborah Chow",
     "Ethan Coen",
+    "Helen Shaver",
     "Joel Coen",
     "Na Hong-jin",
     "Sergio Leone",
     "Denis Villeneuve",
     "Keith Gordon",
     "Stephen Williams",
-    "Quentin Tarantino",
-    "Zetna Fuentes"
+    "Quentin Tarantino"
   ],
-  "seenShowCount": 234,
+  "seenShowCount": 236,
   "watchlistCount": 14,
   "itemCount": 31,
   "tmdbCacheStats": {
