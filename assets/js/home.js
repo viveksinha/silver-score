@@ -36,11 +36,7 @@
     return WATCH_HOURS_LABEL + ' hrs';
   }
 
-  function votesN(i) {
-    var v = i.votes;
-    if (v == null || v === '') return 0;
-    return Number(v);
-  }
+  var votesN = S.votesN;
 
   var ENGLISH_LANG_KEYS = {
     english: true,
@@ -60,12 +56,7 @@
     return String(L);
   }
 
-  function escapeHtmlText(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  }
+  var escapeHtmlText = S.escapeHtmlText;
 
   /** Double-quoted attribute value for aria-label etc. */
   function attrEscape(s) {
@@ -116,22 +107,12 @@
     return [];
   }
 
-  function imdbGenreUrl(g) {
-    return (
-      'https://www.imdb.com/search/title/?genres=' +
-      encodeURIComponent(g.toLowerCase().replace(/ /g, '-'))
-    );
-  }
+  var imdbGenreUrl = S.imdbGenreUrl;
   function imdbPersonUrl(n) {
     return 'https://www.imdb.com/find/?q=' + encodeURIComponent(n) + '&s=nm';
   }
 
-  function formatBadge(type) {
-    if (type === 'Movie') return '<span class="format-badge film">Film</span>';
-    if (type === 'TV Series') return '<span class="format-badge series">Series</span>';
-    if (type === 'TV Mini Series') return '<span class="format-badge mini">Miniseries</span>';
-    return '<span class="format-badge">' + (type || '—') + '</span>';
-  }
+  var formatBadge = S.formatBadge;
 
   function directorVibeScore(d) {
     var starTier = d.avg >= 9 ? 3 : d.avg >= 8.5 ? 2 : d.avg >= 8 ? 1 : 0;
@@ -839,12 +820,7 @@
     .join('');
 
   var PAGE_SIZE = 10;
-  var tieTitle = function (a, b) {
-    return String(a.title || '').localeCompare(String(b.title || ''), undefined, {
-      sensitivity: 'base',
-      numeric: true,
-    });
-  };
+  var tieTitle = S.tieTitle;
   var tieName = function (a, b) {
     return String(a.name || '').localeCompare(String(b.name || ''), undefined, {
       sensitivity: 'base',

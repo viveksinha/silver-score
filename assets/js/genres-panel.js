@@ -40,19 +40,13 @@ function initGenrePanel(data) {
     });
   }
 
-  function votesN(i) {
-    const v = i.votes;
-    if (v == null || v === '') return 0;
-    return Number(v);
-  }
+  const votesN = S.votesN;
   const rtCell =
     typeof silverScoreRt !== 'undefined'
       ? (i) => silverScoreRt.cellHtml(i)
       : () => '—';
 
-  function imdbGenreUrl(g) {
-    return `https://www.imdb.com/search/title/?genres=${encodeURIComponent(g.toLowerCase().replace(/ /g, '-'))}`;
-  }
+  const imdbGenreUrl = S.imdbGenreUrl;
 
   const insightGenreStats = G.filterGenreStatsForInsights(data.genreStats);
   const countEl = document.getElementById('genre-count');
@@ -267,8 +261,7 @@ function initGenrePanel(data) {
     S && typeof S.languageKey === 'function'
       ? (i) => S.languageKey(i)
       : (i) => String((i && (i.languageLabel || i.languageHint)) || '').trim();
-  const tieTitle = (a, b) =>
-    String(a.title || '').localeCompare(String(b.title || ''), undefined, { sensitivity: 'base', numeric: true });
+  const tieTitle = S.tieTitle;
   const genreTopSort = { key: 'myRating', dir: 'desc' };
   const genreTopSpec = {
     title: { type: 'string', val: (i) => i.title },

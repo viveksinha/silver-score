@@ -1,4 +1,4 @@
-/* Silver Score — multi-skin typography (revert: cp styles.css.backup-pre-skin styles.css)
+/* Silver Score — multi-skin typography (pre-skin baseline retired; see git history)
    Default skin: Marquee Noir (:root)
    Essays: Newspaper Desk (body[data-pillar="essays"]); Stories hub headers use Playfair (body.stories-page)
    Home rail headings: Poster Wall (body.home-page .home-band .section-title)
@@ -42,6 +42,7 @@
   --measure-lede: 42rem;
   --measure-prose: 56rem;
 
+  color-scheme: dark;
   --bg: #0d0a0a;
   --surface: #161214;
   --surface2: #1e1a1c;
@@ -109,6 +110,7 @@
 }
 
 :root[data-theme="light"] {
+  color-scheme: light;
   --bg: #f5f0e6;
   --surface: #faf6ee;
   --surface2: #f0ebe1;
@@ -2166,6 +2168,10 @@ footer {
   z-index: 1;
   pointer-events: none;
   background-image: url("../images/title-image-watercolor.jpg");
+  background-image: image-set(
+    url("../images/title-image-watercolor.webp") type("image/webp"),
+    url("../images/title-image-watercolor.jpg") type("image/jpeg")
+  );
   background-size: cover;
   background-position: center 42%;
   background-repeat: no-repeat;
@@ -3426,3 +3432,14 @@ body[data-pillar="new-releases"] .hero.hero--fresh-silver .hero-silver {
   }
 }
 
+
+/* No-JS notice injected right after <body> on data-driven pages */
+.noscript-note {
+  margin: 0;
+  padding: 0.75rem 1.25rem;
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border, rgba(154, 143, 130, 0.3));
+}
+.noscript-note a { color: var(--accent); }

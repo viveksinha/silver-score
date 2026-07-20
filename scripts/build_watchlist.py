@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import re
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -142,6 +143,19 @@ def write_watchlist_js(out: Path, meta: dict, items: list[dict]) -> None:
     )
 
 
+def sync_watchlist_cache_buster(site: Path, cache_bust: str) -> list[Path]:
+    """Bump watchlist-data.js ?v= on every page that loads it."""
+    pattern = re.compile(r'(src="(?:\.\./)?assets/js/watchlist-data\.js\?v=)[^"]+')
+    updated: list[Path] = []
+    for html in [site / "index.html", *(site / "pages").glob("*.html")]:
+        text = html.read_text(encoding="utf-8")
+        new = pattern.sub(rf"\g<1>{cache_bust}", text)
+        if new != text:
+            html.write_text(new, encoding="utf-8")
+            updated.append(html)
+    return updated
+
+
 def main() -> int:
     scripts_dir = Path(__file__).resolve().parent
     site = _site_root()
@@ -215,6 +229,10 @@ def main() -> int:
 
     out_path = args.output.expanduser().resolve()
     write_watchlist_js(out_path, meta, items)
+
+    cache_bust = datetime.now().strftime("%Y%m%d")
+    for path in sync_watchlist_cache_buster(site, cache_bust):
+        print(f"updated watchlist-data.js cache buster: {path.relative_to(site)}")
 
     print(
         f"wrote {out_path.name} ({meta['totalUnrated']} unrated of {total_raw} scraped; "

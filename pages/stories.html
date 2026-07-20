@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0d0a0a">
   <title>Stories — Silver Score</title>
   <script>
   (function(){
@@ -14,21 +16,32 @@
     document.documentElement.setAttribute('data-theme', t);
   })();
   </script>
-  <script src="../assets/js/load-fonts.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+  <link rel="dns-prefetch" href="https://gc.zgo.at">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://viveksinha.github.io/silver-score/pages/stories.html">
   <meta property="og:title" content="Stories — Silver Score">
   <meta property="og:description" content="Our lists, essays, and calendar — under-the-radar picks, long reads, release lanes.">
-  <meta property="og:image" content="../assets/og/stories.svg">
+  <meta property="og:image" content="https://viveksinha.github.io/silver-score/assets/og/stories.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Silver Score — lists, essays, and what's next">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Stories — Silver Score">
   <meta name="twitter:description" content="Our lists, essays, and calendar — under-the-radar picks, long reads, release lanes.">
-  <meta name="twitter:image" content="../assets/og/stories.svg">
+  <meta name="twitter:image" content="https://viveksinha.github.io/silver-score/assets/og/stories.jpg">
   <meta name="description" content="Our lists, essays, and calendar — under-the-radar picks, long reads, release lanes.">
-  <link rel="stylesheet" href="../assets/css/styles.css?v=14">
+  <link rel="canonical" href="https://viveksinha.github.io/silver-score/pages/stories.html">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=17">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
 <body class="stories-page" data-pillar="essays">
+  <noscript><p class="noscript-note">Silver Score renders its tables and shelves with JavaScript. The essays linked from <a href="stories.html">Stories</a> read fine without it.</p></noscript>
 
 <a class="skip-link" href="#main">Skip to content</a>
 
@@ -76,7 +89,7 @@
     <p class="section-lede">Saved on IMDb, not logged here yet — highest crowd scores first.</p>
     <p class="section-lede"><a href="watchlist.html">See all</a> on the full watchlist shelf.</p>
     <div class="featured-rail-wrap stories-hub-rail-wrap">
-      <ul class="featured-rail stories-hub-rail" id="watchlist-hub" aria-label="IMDb watchlist highlights"></ul>
+      <ul class="featured-rail stories-hub-rail" id="watchlist-hub" aria-label="IMDb watchlist highlights"><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li></ul>
     </div>
   </section>
 
@@ -85,7 +98,7 @@
     <p class="section-lede">Titles we rated 8+ when fewer than 50k people had voted on IMDb.</p>
     <p class="section-lede"><a href="hidden-gems.html">The full ranked table</a> lives on the hidden-gems page.</p>
     <div class="featured-rail-wrap stories-hub-rail-wrap">
-      <ul class="featured-rail stories-hub-rail" id="radar-hub" aria-label="Under the radar stories"></ul>
+      <ul class="featured-rail stories-hub-rail" id="radar-hub" aria-label="Under the radar stories"><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li></ul>
     </div>
   </section>
 
@@ -94,7 +107,7 @@
     <p class="section-lede">One argument per list.</p>
     <p class="section-lede">IMDb links, language when IMDb lists it, our score next to the crowd’s.</p>
     <div class="featured-rail-wrap stories-hub-rail-wrap">
-      <ul class="featured-rail stories-hub-rail" id="list-hub" aria-label="Curated lists"></ul>
+      <ul class="featured-rail stories-hub-rail" id="list-hub" aria-label="Curated lists"><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li></ul>
     </div>
   </section>
 
@@ -102,7 +115,7 @@
     <h2 class="section-title" id="essays-hub-heading">Essays <span class="badge">Long reads</span></h2>
     <p class="section-lede">Longer pieces on the genres and patterns we keep returning to together.</p>
     <div class="featured-rail-wrap stories-hub-rail-wrap">
-      <ul class="featured-rail stories-hub-rail" id="essay-hub" aria-label="Essays"></ul>
+      <ul class="featured-rail stories-hub-rail" id="essay-hub" aria-label="Essays"><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li></ul>
     </div>
   </section>
 
@@ -111,7 +124,7 @@
     <p class="section-lede">What we’re waiting on, sorted by region.</p>
     <p class="section-lede"><a href="upcoming.html">Upcoming</a> has the full release board.</p>
     <div class="featured-rail-wrap stories-hub-rail-wrap">
-      <ul class="featured-rail stories-hub-rail" id="highlight-hub" aria-label="Calendar lanes"></ul>
+      <ul class="featured-rail stories-hub-rail" id="highlight-hub" aria-label="Calendar lanes"><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li><li class="skel skel--rail-card"></li></ul>
     </div>
   </section>
 
@@ -130,9 +143,9 @@
 <script src="../assets/js/theme.js"></script>
 <script src="../assets/js/nav.js"></script>
 <script src="../assets/js/pageviews.js"></script>
-<script src="../assets/js/data.js"></script>
+<script src="../assets/js/data.js?v=20260719"></script>
 <script src="../assets/js/magazine.js"></script>
-<script src="../assets/js/watchlist-data.js"></script>
+<script src="../assets/js/watchlist-data.js?v=20260719"></script>
 <script>
 (function () {
   var HUB_MAX = 6;

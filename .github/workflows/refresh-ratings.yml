@@ -43,6 +43,10 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: python scripts/build_upcoming.py --input scripts/scraped-ratings.json --watchlist scripts/scraped-watchlist.json
 
+      - name: Validate IMDb links in static HTML
+        continue-on-error: true
+        run: python scripts/validate_html_imdb_links.py --strict
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"

@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0d0a0a">
   <title>List — Silver Score</title>
   <script>
   (function(){
@@ -14,12 +16,32 @@
     document.documentElement.setAttribute('data-theme', t);
   })();
   </script>
-  <script src="../assets/js/load-fonts.js"></script>
-  <link rel="stylesheet" href="../assets/css/styles.css?v=14">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+  <link rel="dns-prefetch" href="https://gc.zgo.at">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://viveksinha.github.io/silver-score/pages/list.html">
+  <meta property="og:title" content="List">
+  <meta property="og:description" content="Curated, ranked lists from the Silver Score shelves — spy TV, slow burns, Nordic noir, and the titles we keep defending.">
+  <meta property="og:image" content="https://viveksinha.github.io/silver-score/assets/og/list.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Silver Score — ranked lists">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="List">
+  <meta name="twitter:description" content="Curated, ranked lists from the Silver Score shelves — spy TV, slow burns, Nordic noir, and the titles we keep defending.">
+  <meta name="twitter:image" content="https://viveksinha.github.io/silver-score/assets/og/list.jpg">
+  <meta name="description" content="Curated, ranked lists from the Silver Score shelves — spy TV, slow burns, Nordic noir, and the titles we keep defending.">
+  <link rel="canonical" href="https://viveksinha.github.io/silver-score/pages/list.html">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=17">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
 <body>
+  <noscript><p class="noscript-note">Silver Score renders its tables and shelves with JavaScript. The essays linked from <a href="stories.html">Stories</a> read fine without it.</p></noscript>
 
 <a class="skip-link" href="#main">Skip to content</a>
 
@@ -90,18 +112,23 @@
       <table class="data-table" id="list-table">
         <thead>
           <tr>
-            <th data-sort-key="title" data-sort-default="asc">Title</th>
-            <th data-sort-key="language" data-sort-default="asc" class="col--hide-sm">Original language</th>
-            <th data-sort-key="year" data-sort-default="desc">Year</th>
-            <th data-sort-key="type" data-sort-default="asc">Format</th>
-            <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
-            <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
-            <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
-            <th class="col--hide-sm">RT</th>
-            <th data-sort-key="genres" data-sort-default="asc" class="col--hide-md">Genres</th>
+            <th scope="col" data-sort-key="title" data-sort-default="asc">Title</th>
+            <th scope="col" data-sort-key="language" data-sort-default="asc" class="col--hide-sm">Original language</th>
+            <th scope="col" data-sort-key="year" data-sort-default="desc">Year</th>
+            <th scope="col" data-sort-key="type" data-sort-default="asc">Format</th>
+            <th scope="col" data-sort-key="myRating" data-sort-default="desc">Our rating</th>
+            <th scope="col" data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
+            <th scope="col" data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
+            <th scope="col" class="col--hide-sm">RT</th>
+            <th scope="col" data-sort-key="genres" data-sort-default="asc" class="col--hide-md">Genres</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          <tr><td colspan="9"><div class="skel skel--line long"></div></td></tr>
+          <tr><td colspan="9"><div class="skel skel--line"></div></td></tr>
+          <tr><td colspan="9"><div class="skel skel--line long"></div></td></tr>
+          <tr><td colspan="9"><div class="skel skel--line short"></div></td></tr>
+        </tbody>
       </table>
     </div>
     <p class="table-scroll-hint" aria-hidden="true">Swipe for more columns</p>
@@ -116,7 +143,7 @@
 <script src="../assets/js/theme.js"></script>
 <script src="../assets/js/nav.js"></script>
 <script src="../assets/js/pageviews.js"></script>
-<script src="../assets/js/data.js"></script>
+<script src="../assets/js/data.js?v=20260719"></script>
 <script src="../assets/js/table-sort.js"></script>
 <script src="../assets/js/rt-link.js"></script>
 <script src="../assets/js/magazine.js"></script>

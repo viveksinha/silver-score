@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0d0a0a">
   <title>Silver Score — Cinema magazine &amp; watchlist</title>
   <script>
   (function(){
@@ -14,21 +16,35 @@
     document.documentElement.setAttribute('data-theme', t);
   })();
   </script>
-  <script src="assets/js/load-fonts.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+  <link rel="dns-prefetch" href="https://gc.zgo.at">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://viveksinha.github.io/silver-score/">
   <meta property="og:title" content="Silver Score — Cinema magazine & watchlist">
   <meta property="og:description" content="Two of us, one couch, honest scores — about 8,500+ hours logged, fifteen years of ratings on IMDb-backed titles.">
-  <meta property="og:image" content="assets/og/home.svg">
+  <meta property="og:image" content="https://viveksinha.github.io/silver-score/assets/og/home.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Silver Score — we log everything we finish">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Silver Score — Cinema magazine & watchlist">
   <meta name="twitter:description" content="Two of us, one couch, honest scores — about 8,500+ hours logged, fifteen years of ratings on IMDb-backed titles.">
-  <meta name="twitter:image" content="assets/og/home.svg">
+  <meta name="twitter:image" content="https://viveksinha.github.io/silver-score/assets/og/home.jpg">
   <meta name="description" content="Two of us, one couch, honest scores — about 8,500+ hours logged, fifteen years of ratings on IMDb-backed titles.">
-  <link rel="stylesheet" href="assets/css/styles.css?v=16">
+  <link rel="canonical" href="https://viveksinha.github.io/silver-score/">
+  <link rel="stylesheet" href="assets/css/styles.css?v=17">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="feed.xml">
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "WebSite", "name": "Silver Score", "url": "https://viveksinha.github.io/silver-score/", "description": "Two of us, one couch, honest scores — about 8,500+ hours logged, fifteen years of ratings on IMDb-backed titles."}
+  </script>
 </head>
 <body class="home-page">
+  <noscript><p class="noscript-note">Silver Score renders its tables and shelves with JavaScript. The essays linked from <a href="pages/stories.html">Stories</a> read fine without it.</p></noscript>
 
 <a class="skip-link" href="#main">Skip to content</a>
 
@@ -207,11 +223,11 @@
         <table class="data-table" id="directors-table">
           <thead>
             <tr>
-              <th>#</th>
-              <th data-sort-key="name" data-sort-default="asc">Director</th>
-              <th data-sort-key="count" data-sort-default="desc">Titles</th>
-              <th data-sort-key="avg" data-sort-default="desc">Our avg</th>
-              <th data-sort-key="vibe" data-sort-default="desc">Score</th>
+              <th scope="col">#</th>
+              <th scope="col" data-sort-key="name" data-sort-default="asc">Director</th>
+              <th scope="col" data-sort-key="count" data-sort-default="desc">Titles</th>
+              <th scope="col" data-sort-key="avg" data-sort-default="desc">Our avg</th>
+              <th scope="col" data-sort-key="vibe" data-sort-default="desc">Score</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -229,7 +245,7 @@
       </div>
       <div class="table-scroll">
         <table class="data-table" id="loved-table">
-          <thead><tr><th data-sort-key="title" data-sort-default="asc">Title</th><th data-sort-key="year" data-sort-default="desc">Year</th><th data-sort-key="myRating" data-sort-default="desc">Our rating</th><th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th><th data-sort-key="votes" data-sort-default="desc">IMDb votes</th><th>RT</th><th data-sort-key="gap" data-sort-default="desc">Gap</th></tr></thead>
+          <thead><tr><th scope="col" data-sort-key="title" data-sort-default="asc">Title</th><th scope="col" data-sort-key="year" data-sort-default="desc">Year</th><th scope="col" data-sort-key="myRating" data-sort-default="desc">Our rating</th><th scope="col" data-sort-key="imdbRating" data-sort-default="desc">IMDb</th><th scope="col" data-sort-key="votes" data-sort-default="desc">IMDb votes</th><th scope="col">RT</th><th scope="col" data-sort-key="gap" data-sort-default="desc">Gap</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -244,7 +260,7 @@
       </div>
       <div class="table-scroll">
         <table class="data-table" id="top-table">
-          <thead><tr><th data-sort-key="title" data-sort-default="asc">Title</th><th data-sort-key="year" data-sort-default="desc">Year</th><th data-sort-key="type" data-sort-default="asc">Format</th><th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th><th data-sort-key="votes" data-sort-default="desc">IMDb votes</th><th>RT</th><th data-sort-key="genres" data-sort-default="asc">Genres</th></tr></thead>
+          <thead><tr><th scope="col" data-sort-key="title" data-sort-default="asc">Title</th><th scope="col" data-sort-key="year" data-sort-default="desc">Year</th><th scope="col" data-sort-key="type" data-sort-default="asc">Format</th><th scope="col" data-sort-key="imdbRating" data-sort-default="desc">IMDb</th><th scope="col" data-sort-key="votes" data-sort-default="desc">IMDb votes</th><th scope="col">RT</th><th scope="col" data-sort-key="genres" data-sort-default="asc">Genres</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -271,15 +287,15 @@
         <table class="data-table" id="recent-table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Original language</th>
-              <th>Year</th>
-              <th>Format</th>
-              <th>Our rating</th>
-              <th>IMDb</th>
-              <th>IMDb votes</th>
-              <th>RT</th>
-              <th>Genres</th>
+              <th scope="col">Title</th>
+              <th scope="col">Original language</th>
+              <th scope="col">Year</th>
+              <th scope="col">Format</th>
+              <th scope="col">Our rating</th>
+              <th scope="col">IMDb</th>
+              <th scope="col">IMDb votes</th>
+              <th scope="col">RT</th>
+              <th scope="col">Genres</th>
             </tr>
           </thead>
           <tbody id="recent-table-body"><tr><td colspan="9"><span class="skel skel--line long"></span></td></tr><tr><td colspan="9"><span class="skel skel--line long"></span></td></tr><tr><td colspan="9"><span class="skel skel--line long"></span></td></tr></tbody>
@@ -321,7 +337,7 @@
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/pageviews.js"></script>
-<script src="assets/js/data.js"></script>
+<script src="assets/js/data.js?v=20260719"></script>
 <script src="assets/js/genre-insights.js"></script>
 <script src="assets/js/infinite-scroll.js"></script>
 <script src="assets/js/table-sort.js"></script>

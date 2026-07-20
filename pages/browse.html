@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0d0a0a">
   <title>Browse &amp; Archive — Silver Score</title>
   <script>
   (function(){
@@ -14,21 +16,32 @@
     document.documentElement.setAttribute('data-theme', t);
   })();
   </script>
-  <script src="../assets/js/load-fonts.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+  <link rel="dns-prefetch" href="https://gc.zgo.at">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://viveksinha.github.io/silver-score/pages/browse.html">
   <meta property="og:title" content="Browse — Silver Score">
   <meta property="og:description" content="The full archive — search 931 titles and genres.">
-  <meta property="og:image" content="../assets/og/browse.svg">
+  <meta property="og:image" content="https://viveksinha.github.io/silver-score/assets/og/browse.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Silver Score — browse everything we've rated">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Browse — Silver Score">
   <meta name="twitter:description" content="The full archive — search 931 titles and genres.">
-  <meta name="twitter:image" content="../assets/og/browse.svg">
+  <meta name="twitter:image" content="https://viveksinha.github.io/silver-score/assets/og/browse.jpg">
   <meta name="description" content="The full archive — search 931 titles and genres.">
-  <link rel="stylesheet" href="../assets/css/styles.css?v=14">
+  <link rel="canonical" href="https://viveksinha.github.io/silver-score/pages/browse.html">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=17">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="Silver Score RSS" href="../feed.xml">
 </head>
 <body class="browse-page">
+  <noscript><p class="noscript-note">Silver Score renders its tables and shelves with JavaScript. The essays linked from <a href="stories.html">Stories</a> read fine without it.</p></noscript>
 
 <a class="skip-link" href="#main">Skip to content</a>
 
@@ -74,7 +87,7 @@
   <div class="browse-panels section">
     <div class="tab-panels-toolbar" role="tablist" aria-label="Browse mode">
       <button type="button" class="panel-tab active" role="tab" aria-selected="true" id="tab-archive" data-panel="archive">All titles</button>
-      <button type="button" class="panel-tab" role="tab" aria-selected="false" id="tab-genre" data-panel="genre-dna">Genres</button>
+      <button type="button" class="panel-tab" role="tab" aria-selected="false" tabindex="-1" id="tab-genre" data-panel="genre-dna">Genres</button>
     </div>
 
     <div id="panel-archive" class="tab-panel active" role="tabpanel" aria-labelledby="tab-archive">
@@ -122,19 +135,24 @@
         <table class="data-table" id="browse-table">
           <thead>
             <tr>
-              <th data-sort-key="title" data-sort-default="asc">Title</th>
-              <th data-sort-key="language" data-sort-default="asc" class="col--hide-sm">Original language</th>
-              <th data-sort-key="year" data-sort-default="desc">Year</th>
-              <th data-sort-key="type" data-sort-default="asc">Format</th>
-              <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
-              <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
-              <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
-              <th class="col--hide-sm">RT</th>
-              <th data-sort-key="genres" data-sort-default="asc" class="col--hide-md">Genres</th>
-              <th data-sort-key="dateRated" data-sort-default="desc" class="col--hide-md">Rated on</th>
+              <th scope="col" data-sort-key="title" data-sort-default="asc">Title</th>
+              <th scope="col" data-sort-key="language" data-sort-default="asc" class="col--hide-sm">Original language</th>
+              <th scope="col" data-sort-key="year" data-sort-default="desc">Year</th>
+              <th scope="col" data-sort-key="type" data-sort-default="asc">Format</th>
+              <th scope="col" data-sort-key="myRating" data-sort-default="desc">Our rating</th>
+              <th scope="col" data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
+              <th scope="col" data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
+              <th scope="col" class="col--hide-sm">RT</th>
+              <th scope="col" data-sort-key="genres" data-sort-default="asc" class="col--hide-md">Genres</th>
+              <th scope="col" data-sort-key="dateRated" data-sort-default="desc" class="col--hide-md">Rated on</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+          <tr><td colspan="9"><div class="skel skel--line long"></div></td></tr>
+          <tr><td colspan="9"><div class="skel skel--line"></div></td></tr>
+          <tr><td colspan="9"><div class="skel skel--line long"></div></td></tr>
+          <tr><td colspan="9"><div class="skel skel--line short"></div></td></tr>
+        </tbody>
         </table>
       </div>
       <p class="table-scroll-hint" aria-hidden="true">Swipe for more columns</p>
@@ -167,14 +185,14 @@
           <table class="data-table" id="genre-compare">
             <thead>
               <tr>
-                <th data-sort-key="genre" data-sort-default="asc">Genre</th>
-                <th data-sort-key="count">Count</th>
-                <th data-sort-key="avgMyRating">Our avg</th>
-                <th data-sort-key="avgImdbRating">IMDb avg</th>
-                <th data-sort-key="gap">Gap</th>
-                <th data-sort-key="shrunkGap" data-sort-default="desc">Shrunk gap</th>
-                <th data-sort-key="gapSe" data-sort-default="asc" class="col--hide-md">SE (gap)</th>
-                <th data-sort-key="vsImdb" data-sort-default="desc" class="col--hide-md">vs IMDb</th>
+                <th scope="col" data-sort-key="genre" data-sort-default="asc">Genre</th>
+                <th scope="col" data-sort-key="count">Count</th>
+                <th scope="col" data-sort-key="avgMyRating">Our avg</th>
+                <th scope="col" data-sort-key="avgImdbRating">IMDb avg</th>
+                <th scope="col" data-sort-key="gap">Gap</th>
+                <th scope="col" data-sort-key="shrunkGap" data-sort-default="desc">Shrunk gap</th>
+                <th scope="col" data-sort-key="gapSe" data-sort-default="asc" class="col--hide-md">SE (gap)</th>
+                <th scope="col" data-sort-key="vsImdb" data-sort-default="desc" class="col--hide-md">vs IMDb</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -194,15 +212,15 @@
           <table class="data-table" id="genre-top">
             <thead>
               <tr>
-                <th>#</th>
-                <th data-sort-key="title" data-sort-default="asc">Title</th>
-                <th data-sort-key="language" data-sort-default="asc" class="col--hide-sm">Original language</th>
-                <th data-sort-key="year" data-sort-default="desc">Year</th>
-                <th data-sort-key="myRating" data-sort-default="desc">Our rating</th>
-                <th data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
-                <th data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
-                <th class="col--hide-sm">RT</th>
-                <th data-sort-key="type" data-sort-default="asc">Type</th>
+                <th scope="col">#</th>
+                <th scope="col" data-sort-key="title" data-sort-default="asc">Title</th>
+                <th scope="col" data-sort-key="language" data-sort-default="asc" class="col--hide-sm">Original language</th>
+                <th scope="col" data-sort-key="year" data-sort-default="desc">Year</th>
+                <th scope="col" data-sort-key="myRating" data-sort-default="desc">Our rating</th>
+                <th scope="col" data-sort-key="imdbRating" data-sort-default="desc">IMDb</th>
+                <th scope="col" data-sort-key="votes" data-sort-default="desc">IMDb votes</th>
+                <th scope="col" class="col--hide-sm">RT</th>
+                <th scope="col" data-sort-key="type" data-sort-default="asc">Type</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -222,7 +240,7 @@
 <script src="../assets/js/theme.js"></script>
 <script src="../assets/js/nav.js"></script>
 <script src="../assets/js/pageviews.js"></script>
-<script src="../assets/js/data.js"></script>
+<script src="../assets/js/data.js?v=20260719"></script>
 <script src="../assets/js/genre-insights.js"></script>
 <script src="../assets/js/infinite-scroll.js"></script>
 <script src="../assets/js/table-sort.js"></script>
@@ -233,27 +251,16 @@
   const data = DATA;
   const S = silverScoreTableSort;
 
-  function formatBadge(type) {
-    if (type === 'Movie') return '<span class="format-badge film">Film</span>';
-    if (type === 'TV Series') return '<span class="format-badge series">Series</span>';
-    if (type === 'TV Mini Series') return '<span class="format-badge mini">Miniseries</span>';
-    if (type && type.includes('Documentary')) return '<span class="format-badge doc">Doc</span>';
-    return '<span class="format-badge">' + (type || '—') + '</span>';
-  }
+  const formatBadge = S.formatBadge;
 
   const allItems = data.allItems;
   let filtered = [];
   const PAGE_SIZE = 15;
   let genreInited = false;
   let archiveScroll = null;
-  const tieTitle = (a, b) =>
-    String(a.title || '').localeCompare(String(b.title || ''), undefined, { sensitivity: 'base', numeric: true });
+  const tieTitle = S.tieTitle;
   const browseSortState = { key: 'myRating', dir: 'desc' };
-  function votesN(i) {
-    const v = i.votes;
-    if (v == null || v === '') return 0;
-    return Number(v);
-  }
+  const votesN = S.votesN;
   const browseSpec = {
     title: { type: 'string', val: (i) => i.title },
     language: { type: 'string', val: (i) => i.languageLabel || i.languageHint || '', tiebreak: tieTitle },
@@ -298,9 +305,7 @@
     }
   }
 
-  function imdbGenreUrl(g) {
-    return `https://www.imdb.com/search/title/?genres=${encodeURIComponent(g.toLowerCase().replace(/ /g, '-'))}`;
-  }
+  const imdbGenreUrl = S.imdbGenreUrl;
 
   const genreSet = new Set();
   allItems.forEach((i) => i.genres.forEach((g) => genreSet.add(g)));
@@ -438,6 +443,7 @@
       const on = t.dataset.panel === id;
       t.classList.toggle('active', on);
       t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
     });
     const showArchive = id === 'archive';
     archive.classList.toggle('active', showArchive);
@@ -450,6 +456,23 @@
 
   document.querySelectorAll('.panel-tab').forEach((btn) => {
     btn.addEventListener('click', () => setPanel(btn.dataset.panel));
+  });
+
+  const tablist = document.querySelector('.tab-panels-toolbar');
+  tablist.addEventListener('keydown', (e) => {
+    const tabs = Array.from(tablist.querySelectorAll('.panel-tab'));
+    const i = tabs.indexOf(document.activeElement);
+    if (i === -1) return;
+    let next = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = tabs[(i + 1) % tabs.length];
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = tabs[(i - 1 + tabs.length) % tabs.length];
+    else if (e.key === 'Home') next = tabs[0];
+    else if (e.key === 'End') next = tabs[tabs.length - 1];
+    if (next) {
+      e.preventDefault();
+      next.focus();
+      setPanel(next.dataset.panel);
+    }
   });
 
   if (location.hash === '#genre-dna') setPanel('genre-dna');

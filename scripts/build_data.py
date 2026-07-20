@@ -155,6 +155,19 @@ def write_data_js(out: Path, data: dict) -> None:
     )
 
 
+def sync_data_cache_buster(site: Path, cache_bust: str) -> list[Path]:
+    """Bump data.js ?v= on every page that loads it (same pattern as build_upcoming)."""
+    pattern = re.compile(r'(src="(?:\.\./)?assets/js/data\.js\?v=)[^"]+')
+    updated: list[Path] = []
+    for html in [site / "index.html", *(site / "pages").glob("*.html")]:
+        text = html.read_text(encoding="utf-8")
+        new = pattern.sub(rf"\g<1>{cache_bust}", text)
+        if new != text:
+            html.write_text(new, encoding="utf-8")
+            updated.append(html)
+    return updated
+
+
 def footer_stamp(now: datetime | None = None) -> str:
     now = now or datetime.now()
     return now.strftime("%B %Y")
@@ -291,6 +304,9 @@ def main() -> int:
         changed = sync_html_stamps(site, total, int(data["mainItems"]), stamp)
         for path in changed:
             print(f"updated stamps: {path.relative_to(site)}")
+        cache_bust = datetime.now().strftime("%Y%m%d")
+        for path in sync_data_cache_buster(site, cache_bust):
+            print(f"updated data.js cache buster: {path.relative_to(site)}")
     else:
         print("skipped HTML stamp sync (--no-html)")
 

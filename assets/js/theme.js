@@ -6,8 +6,14 @@
     return document.documentElement.getAttribute('data-theme') || 'dark';
   }
 
+  function syncThemeColor(theme) {
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#f5f0e6' : '#0d0a0a');
+  }
+
   function apply(next) {
     document.documentElement.setAttribute('data-theme', next);
+    syncThemeColor(next);
     try {
       localStorage.setItem(KEY, next);
     } catch (e) {}
@@ -42,6 +48,7 @@
       }
     } catch (e) {}
     syncButton();
+    syncThemeColor(current());
     var btn = document.getElementById('theme-toggle');
     if (btn) {
       btn.addEventListener('click', function () {

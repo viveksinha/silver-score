@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://viveksinha.github.io/silver-score/sitemap.xml

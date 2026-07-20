@@ -180,11 +180,48 @@
     }
   }
 
+  /* Shared row helpers — single source; consumed by home.js, watchlist-page.js,
+     genres-panel.js, and the browse inline controller. */
+
+  function votesN(i) {
+    var v = i.votes;
+    if (v == null || v === '') return 0;
+    return Number(v);
+  }
+
+  function formatBadge(type) {
+    if (type === 'Movie') return '<span class="format-badge film">Film</span>';
+    if (type === 'TV Series') return '<span class="format-badge series">Series</span>';
+    if (type === 'TV Mini Series') return '<span class="format-badge mini">Miniseries</span>';
+    if (type && type.indexOf('Documentary') !== -1) return '<span class="format-badge doc">Doc</span>';
+    return '<span class="format-badge">' + (type || '—') + '</span>';
+  }
+
+  function imdbGenreUrl(g) {
+    return (
+      'https://www.imdb.com/search/title/?genres=' +
+      encodeURIComponent(g.toLowerCase().replace(/ /g, '-'))
+    );
+  }
+
+  function tieTitle(a, b) {
+    return String(a.title || '').localeCompare(String(b.title || ''), undefined, {
+      sensitivity: 'base',
+      numeric: true,
+    });
+  }
+
   global.silverScoreTableSort = {
     sortRows: sortRows,
     bindSortableTable: bindSortableTable,
     languageKey: languageKey,
     fillLanguageFilterOptions: fillLanguageFilterOptions,
     languagePillHtml: languagePillHtml,
+    escapeHtmlText: escapeHtmlText,
+    escapeHtmlAttr: escapeHtmlAttr,
+    votesN: votesN,
+    formatBadge: formatBadge,
+    imdbGenreUrl: imdbGenreUrl,
+    tieTitle: tieTitle,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
