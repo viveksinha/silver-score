@@ -259,6 +259,9 @@ body[data-pillar="essays"] {
   --hero-gradient: linear-gradient(135deg, #faf8f5 0%, #f5f1eb 50%, #efeae2 100%);
 }
 body[data-pillar="essays"] .prose-article {
+  /* Cap the article at the reading measure (+ left rail) so the existing
+     margin auto centers the newspaper column instead of pinning it left. */
+  max-width: calc(var(--measure-prose) + 1.25rem + 2px);
   border-left: 2px solid color-mix(in srgb, var(--accent) 40%, var(--border));
   padding-left: 1.25rem;
 }
