@@ -24,8 +24,20 @@ import urllib.request
 from pathlib import Path
 
 GRAPHQL_URL = "https://api.graphql.imdb.com/"
-UA = "SilverScoreBuild/1.0 (https://github.com/viveksinha/silver-score; link check)"
 BATCH = 25
+
+# IMDb 403s self-identifying bot UAs; reuse the browser-like headers + retries
+# that scrape_imdb/build_upcoming already use against the same endpoint.
+try:
+    from scrape_imdb import HEADERS as GQL_HEADERS, _gql_post
+except ImportError:
+    _gql_post = None
+    GQL_HEADERS = {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+        "x-imdb-client-name": "imdb-web-next",
+        "x-imdb-user-country": "US",
+    }
 
 
 def _urlopen(req: urllib.request.Request, *, timeout: float = 60):
@@ -78,13 +90,17 @@ def fetch_titles(ids: list[str]) -> dict[str, dict]:
             f"originalTitleText {{ text }} releaseYear {{ year }} }}"
             for n, tid in enumerate(chunk)
         )
-        req = urllib.request.Request(
-            GRAPHQL_URL,
-            data=json.dumps({"query": "{" + fields + "}"}).encode(),
-            headers={"Content-Type": "application/json", "User-Agent": UA},
-        )
-        with _urlopen(req) as resp:
-            payload = json.load(resp)
+        query = "{" + fields + "}"
+        if _gql_post is not None:
+            payload = _gql_post(query)
+        else:
+            req = urllib.request.Request(
+                GRAPHQL_URL,
+                data=json.dumps({"query": query}).encode(),
+                headers=GQL_HEADERS,
+            )
+            with _urlopen(req) as resp:
+                payload = json.load(resp)
         data = payload.get("data") or {}
         for n, tid in enumerate(chunk):
             node = data.get(f"t{n}")
